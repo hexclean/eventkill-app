@@ -38,9 +38,6 @@ function DeletedCards(props) {
 					<Text style={styles.partnerName}>{props.partner}</Text>
 				</View>
 			</View>
-			<View style={styles.createdAtView}>
-				<Text style={styles.createdAt}>Idő: 2021.10.12 - 15:30</Text>
-			</View>
 		</View>
 	);
 }
@@ -103,9 +100,7 @@ const styles = StyleSheet.create({
 	},
 	box: {
 		padding: 12,
-		// marginBottom: 20,
-		// justifyContent: "space-around",
-		// marginHorizontal: 5,
+		opacity: 0.5,
 		backgroundColor: "white",
 		borderRadius: 8,
 		marginVertical: 10,
