@@ -1,3 +1,4 @@
 {
-	"cSpell.words": ["Ionicons", "Swipeable"]
+	"cSpell.words": ["Ionicons", "Swipeable"],
+	"git.ignoreLimitWarning": true
 }
