@@ -1,17 +1,17 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import React from "react";
+import {
+	View,
+	Text,
+	StyleSheet,
+	Image,
+	TouchableWithoutFeedback,
+	Alert,
+} from "react-native";
 import { useFonts } from "expo-font";
-import { Card, Avatar } from "react-native-paper";
-import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-import Swipeout from "react-native-swipeout";
+import { Agenda } from "react-native-calendars";
+
 // Components
 import Screen from "../components/shared/Screen";
-
-// onPress={() => navigation.navigate("Home")}
-const timeToString = time => {
-	const date = new Date(time);
-	return date.toISOString().split("T")[0];
-};
 
 const SettingsScreen = ({ navigation }) => {
 	const [loaded] = useFonts({
@@ -21,12 +21,21 @@ const SettingsScreen = ({ navigation }) => {
 	if (!loaded) {
 		return null;
 	}
-	var deleteMeetById = [
-		{
-			text: "Törlés",
-			onPress: 1,
-		},
-	];
+	const deleteMeet = () => {
+		Alert.alert(
+			"Meeting lemondása",
+			"Leszeretnéd mondani a meetinget?",
+			[
+				{
+					text: "Mégse",
+					onPress: () => console.log("Cancel Pressed"),
+					style: "cancel",
+				},
+				{ text: "Igen", onPress: () => console.log("OK Pressed") },
+			],
+			{ cancelable: false }
+		);
+	};
 
 	return (
 		<Screen>
@@ -107,18 +116,14 @@ const SettingsScreen = ({ navigation }) => {
 					return (
 						<View style={styles.noMeets}>
 							<View style={styles.boxHeader}>
-								<Text style={styles.helloName}>No meeting!</Text>
+								<Text style={styles.helloName}>Nincs meeting</Text>
 							</View>
 						</View>
 					);
 				}}
 				renderItem={items => {
 					return (
-						<Swipeout
-							style={{ marginTop: 17, marginRight: 10 }}
-							right={deleteMeetById}
-						>
-							{/* <TouchableOpacity onPress={() => console.log(items)}> */}
+						<TouchableWithoutFeedback onLongPress={deleteMeet}>
 							<View style={styles.box}>
 								<View style={styles.boxHeader}>
 									<Text style={styles.helloName}>{items.title}</Text>
@@ -138,8 +143,7 @@ const SettingsScreen = ({ navigation }) => {
 									</View>
 								</View>
 							</View>
-							{/* </TouchableOpacity> */}
-						</Swipeout>
+						</TouchableWithoutFeedback>
 					);
 				}}
 			/>

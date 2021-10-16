@@ -6,7 +6,6 @@ import {
 	TouchableWithoutFeedback,
 	Image,
 } from "react-native";
-import Swipeout from "react-native-swipeout";
 import { useFonts } from "expo-font";
 
 function Card(props) {
@@ -18,19 +17,13 @@ function Card(props) {
 		return null;
 	}
 
-	var deleteMeetById = [
-		{
-			text: "Törlés",
-			onPress: props.deleteMeet,
-		},
-	];
 	return (
-		// <TouchableWithoutFeedback>
-
-		<View style={styles.box}>
-			<Swipeout right={deleteMeetById}>
+		<TouchableWithoutFeedback onLongPress={props.deleteMeet}>
+			<View style={styles.box}>
 				<View style={styles.boxHeader}>
-					<Text style={styles.helloName}>{props.title}</Text>
+					<Text style={styles.helloName}>
+						{props.title} - {props.id}
+					</Text>
 					<Text style={styles.time}>{props.time}</Text>
 				</View>
 
@@ -46,10 +39,8 @@ function Card(props) {
 						<Text style={styles.partnerName}>{props.partner}</Text>
 					</View>
 				</View>
-			</Swipeout>
-		</View>
-
-		// </TouchableWithoutFeedback>
+			</View>
+		</TouchableWithoutFeedback>
 	);
 }
 

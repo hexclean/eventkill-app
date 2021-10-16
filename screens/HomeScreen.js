@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
 	View,
 	Text,
@@ -8,11 +8,9 @@ import {
 	Image,
 	TouchableOpacity,
 } from "react-native";
-
 import { useFonts } from "expo-font";
 
 import Screen from "../components/shared/Screen";
-
 import Card from "../components/Card";
 
 let initialMessages = [
@@ -52,15 +50,6 @@ let initialMessages = [
 			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
 		partner: "Primalskill",
 	},
-	{
-		active: 1,
-		id: "5",
-		title: "Development Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Primalskill",
-	},
 ];
 
 export default function HomeScreen({ navigation }) {
@@ -76,17 +65,34 @@ export default function HomeScreen({ navigation }) {
 		return null;
 	}
 
-	const handleRemoveItem = items => {
-		const newList = list.filter(item => item.id !== items.id);
-		setList(newList);
-		if (items.active === 1) {
-			Alert.alert(
-				"Meeting elhalasztva!",
-				"Az ügyfeled is lemondta a meetinget, így elmarad!",
-				[{ text: "Rendben", onPress: () => console.log("OK Pressed") }],
-				{ cancelable: false }
-			);
-		}
+	const deleteMeet = items => {
+		Alert.alert(
+			"Meeting lemondása",
+			"Leszeretnéd mondani a meetinget?",
+			[
+				{
+					text: "Mégse",
+					onPress: () => console.log("Cancel Pressed"),
+					style: "cancel",
+				},
+				{
+					text: "Igen",
+					onPress: () => {
+						const newList = list.filter(item => item.id !== items.id);
+						setList(newList);
+						if (items.active === 1) {
+							Alert.alert(
+								"Meeting elhalasztva!",
+								"Az ügyfeled is lemondta a meetinget, így elmarad!",
+								[{ text: "Rendben", onPress: () => console.log("OK Pressed") }],
+								{ cancelable: false }
+							);
+						}
+					},
+				},
+			],
+			{ cancelable: false }
+		);
 	};
 
 	return (
@@ -112,7 +118,8 @@ export default function HomeScreen({ navigation }) {
 				keyExtractor={listing => listing.id.toString()}
 				renderItem={({ item }) => (
 					<Card
-						deleteMeet={() => handleRemoveItem(item)}
+						id={item.id}
+						deleteMeet={() => deleteMeet(item)}
 						meetId={item.id}
 						title={item.title}
 						time={item.time}

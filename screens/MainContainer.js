@@ -3,19 +3,18 @@ import * as React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
-
+import { Zocial } from "@expo/vector-icons";
 // Screens
 import HomeScreen from "./HomeScreen";
 import DetailsScreen from "./DetailsScreen";
 import SettingsScreen from "./SettingsScreen";
-import Login from "./Login";
-import Register from "./Register";
+import Meets from "./Meets";
 // Screen names
 const homeName = "Home";
 const detailName = "Details";
 const settingsName = "Settings";
 const loginName = "Login";
-const registerName = "Register";
+const meetsName = "Meets";
 
 const Tab = createBottomTabNavigator();
 
@@ -31,14 +30,19 @@ export default function MainContainer() {
 
 						if (rn === homeName) {
 							iconName = focused ? "home" : "home";
+							color = focused ? "#F78F1E" : "#3C4E63";
 						} else if (rn === detailName) {
 							iconName = focused ? "plus" : "plus";
+							color = focused ? "#F78F1E" : "#3C4E63";
 						} else if (rn === settingsName) {
 							iconName = focused ? "calendar" : "calendar";
+							color = focused ? "#F78F1E" : "#3C4E63";
 						} else if (rn === homeName) {
 							iconName = focused ? "calendar" : "calendar";
-						} else if (rn === registerName) {
-							iconName = focused ? "calendar" : "calendar";
+							color = focused ? "#F78F1E" : "#3C4E63";
+						} else if (rn === meetsName) {
+							iconName = focused ? "bars" : "bars";
+							color = focused ? "#F78F1E" : "#3C4E63";
 						}
 						return <AntDesign name={iconName} size={size} color={color} />;
 					},
@@ -75,6 +79,11 @@ export default function MainContainer() {
 					options={{ tabBarShowLabel: false }}
 					name={detailName}
 					component={DetailsScreen}
+				/>
+				<Tab.Screen
+					options={{ tabBarShowLabel: false }}
+					name={meetsName}
+					component={Meets}
 				/>
 				<Tab.Screen
 					options={{ tabBarShowLabel: false }}
