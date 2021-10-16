@@ -11,18 +11,16 @@ import { TabView, SceneMap } from "react-native-tab-view";
 
 // Components
 import Screen from "../components/shared/Screen";
-import FirstTab from "./FirstTab";
+import PendingInvitation from "./PendingInvitation";
+import DeletedMeets from "./DeletedMeets";
 
-const FirstRoute = () => <FirstTab />;
+const PendingInvitationTab = () => <PendingInvitation />;
 
-const SecondRoute = () => (
-	<View style={{ flex: 1, backgroundColor: "#673ab7" }} />
-);
+const DeletedMeetsTab = () => <DeletedMeets />;
 
 const renderScene = SceneMap({
-	first: FirstRoute,
-	second: SecondRoute,
-	deleted: SecondRoute,
+	first: PendingInvitationTab,
+	deleted: DeletedMeetsTab,
 });
 
 const Meets = ({ navigation }) => {
@@ -30,9 +28,9 @@ const Meets = ({ navigation }) => {
 
 	const [index, setIndex] = React.useState(0);
 	const [routes] = React.useState([
-		{ key: "first", title: "Ma" },
-		{ key: "second", title: "Függőben" },
-		{ key: "deleted", title: "Törölt" },
+		// { key: "first", title: "Ma" },
+		{ key: "first", title: "Függőben" },
+		{ key: "deleted", title: "Elhalasztott" },
 	]);
 
 	return (

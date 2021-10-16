@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import {
 	View,
 	StyleSheet,
 	Text,
-	TouchableWithoutFeedback,
+	TouchableHighlight,
 	Image,
 } from "react-native";
 import { useFonts } from "expo-font";
 
-function Card(props) {
+function DeletedCards(props) {
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
 		PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
@@ -18,35 +18,37 @@ function Card(props) {
 	}
 
 	return (
-		<TouchableWithoutFeedback onLongPress={props.deleteMeet}>
-			<View style={styles.box}>
-				<View style={styles.boxHeader}>
-					<Text style={styles.helloName}>
-						{props.title} - {props.id}
-					</Text>
-					<Text style={styles.time}>{props.time}</Text>
-				</View>
+		<View style={styles.box}>
+			<View style={styles.boxHeader}>
+				<Text style={styles.helloName}>
+					{props.title} - {props.id}
+				</Text>
+				<Text style={styles.time}>{props.time}</Text>
+			</View>
 
-				<View style={styles.descriptionView}>
-					<Text style={styles.description}>{props.description}</Text>
-				</View>
-				<View style={styles.partner}>
-					<Image
-						style={styles.withImage}
-						source={require("../assets/profile.png")}
-					/>
-					<View style={styles.partnerView}>
-						<Text style={styles.partnerName}>{props.partner}</Text>
-					</View>
+			<View style={styles.descriptionView}>
+				<Text style={styles.description}>{props.description}</Text>
+			</View>
+			<View style={styles.partner}>
+				<Image
+					style={styles.withImage}
+					source={require("../assets/profile.png")}
+				/>
+				<View style={styles.partnerView}>
+					<Text style={styles.partnerName}>{props.partner}</Text>
 				</View>
 			</View>
-		</TouchableWithoutFeedback>
+			<View style={styles.createdAtView}>
+				<Text style={styles.createdAt}>Idő: 2021.10.12 - 15:30</Text>
+			</View>
+		</View>
 	);
 }
 
 const styles = StyleSheet.create({
 	// start tabview
-	createdAt: { fontFamily: "PoppinsLight", fontSize: 14, padding: 3 },
+	createdAtView: { paddingTop: 6 },
+	createdAt: { fontFamily: "PoppinsMedium", fontSize: 14, padding: 3 },
 
 	status: {
 		flexDirection: "row",
@@ -138,4 +140,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default Card;
+export default DeletedCards;

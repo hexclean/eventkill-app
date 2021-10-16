@@ -11,7 +11,7 @@ import { useFonts } from "expo-font";
 
 // Components
 import Screen from "../components/shared/Screen";
-import Card from "../components/Card";
+import DeletedCards from "../components/DeletedCards";
 
 let initialMessages = [
 	{
@@ -56,7 +56,7 @@ let initialMessages = [
 	},
 ];
 
-export default function FirstTab() {
+export default function PendingInvitation() {
 	const [list, setList] = React.useState(initialMessages);
 	// useEffect(() => {
 	// 	console.log("again");
@@ -78,7 +78,7 @@ export default function FirstTab() {
 				data={list}
 				keyExtractor={listing => listing.id.toString()}
 				renderItem={({ item }) => (
-					<Card
+					<DeletedCards
 						id={item.id}
 						deleteMeet={() => deleteMeet(item)}
 						meetId={item.id}
