@@ -1,11 +1,5 @@
 import React, { useRef } from "react";
-import {
-	View,
-	StyleSheet,
-	Text,
-	TouchableHighlight,
-	Image,
-} from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
 
 function PendingCards(props) {
@@ -43,16 +37,16 @@ function PendingCards(props) {
 					<Text style={styles.questionText}>Meghívó</Text>
 				</View>
 
-				<TouchableHighlight onPress={() => console.log("elutasitas", props.id)}>
+				<TouchableOpacity onPress={() => console.log("elutasitas", props.id)}>
 					<View style={styles.declineView}>
 						<Text style={styles.declineText}>Elutasítás</Text>
 					</View>
-				</TouchableHighlight>
-				<TouchableHighlight onPress={() => console.log("elfogadas", props.id)}>
+				</TouchableOpacity>
+				<TouchableOpacity onPress={() => console.log("elfogadas", props.id)}>
 					<View style={styles.acceptView}>
 						<Text style={styles.acceptText}>Elfogadás</Text>
 					</View>
-				</TouchableHighlight>
+				</TouchableOpacity>
 			</View>
 			<View style={styles.createdAtView}>
 				<Text style={styles.createdAt}>Kiküldve: 2021.10.12 - 15:30</Text>

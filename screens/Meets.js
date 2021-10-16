@@ -8,6 +8,7 @@ import {
 	TouchableOpacity,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
+import { Ionicons } from "@expo/vector-icons";
 
 // Components
 import Screen from "../components/shared/Screen";
@@ -36,17 +37,12 @@ const Meets = ({ navigation }) => {
 	return (
 		<Screen>
 			<View style={styles.welcome}>
-				<Text style={styles.welcomeName}>Szia, József 👋</Text>
+				<Text style={styles.start}>Gyors áttekintés</Text>
 				<TouchableOpacity onPress={() => console.log("profile")}>
-					<Image
-						style={styles.profile}
-						source={require("../assets/profile.png")}
-					/>
+					<Ionicons name="ios-add-circle" size={30} color="#F78F1E" />
 				</TouchableOpacity>
 			</View>
-			<View style={styles.title}>
-				<Text style={styles.start}>A mai megbeszéléseid</Text>
-			</View>
+			<View style={styles.title}></View>
 			<TabView
 				navigationState={{ index, routes }}
 				renderScene={renderScene}
@@ -64,10 +60,9 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		// marginVertical: 10,
-		paddingBottom: 6,
+		paddingBottom: 18,
 	},
 	welcome: {
-		marginBottom: 5,
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
@@ -81,7 +76,6 @@ const styles = StyleSheet.create({
 	},
 	start: {
 		fontFamily: "PoppinsBold",
-		paddingTop: 7,
 		fontSize: 20,
 	},
 });

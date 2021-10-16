@@ -107,7 +107,7 @@ export default function HomeScreen({ navigation }) {
 				</TouchableOpacity>
 			</View>
 			<View style={styles.title}>
-				<Text style={styles.start}>A mai megbeszéléseid</Text>
+				<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
 			</View>
 
 			<FlatList

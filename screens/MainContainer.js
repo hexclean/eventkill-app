@@ -75,11 +75,11 @@ export default function MainContainer() {
 					component={HomeScreen}
 					options={{ tabBarShowLabel: false }}
 				/>
-				<Tab.Screen
+				{/* <Tab.Screen
 					options={{ tabBarShowLabel: false }}
 					name={detailName}
 					component={DetailsScreen}
-				/>
+				/> */}
 				<Tab.Screen
 					options={{ tabBarShowLabel: false }}
 					name={meetsName}
