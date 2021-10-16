@@ -13,7 +13,7 @@ import FormButton from "../components/FormButton";
 import SocialButton from "../components/SocialButton";
 // import { AuthContext } from "../navigation/AuthProvider";
 
-const LoginScreen = ({ navigation }) => {
+const Login = ({ navigation }) => {
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
 
@@ -44,7 +44,7 @@ const LoginScreen = ({ navigation }) => {
 
 			<FormButton
 				buttonTitle="Sign In"
-				onPress={() => login(email, password)}
+				onPress={() => navigation.navigate("Home")}
 			/>
 
 			<TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
@@ -83,7 +83,7 @@ const LoginScreen = ({ navigation }) => {
 	);
 };
 
-export default LoginScreen;
+export default Login;
 
 const styles = StyleSheet.create({
 	container: {

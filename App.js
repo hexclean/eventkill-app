@@ -5,5 +5,5 @@ import MainContainer from "./screens/MainContainer";
 import Login from "./screens/Login";
 import Register from "./screens/Register";
 export default function App() {
-	return <Register />;
+	return <MainContainer />;
 }

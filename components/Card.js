@@ -7,7 +7,6 @@ import {
 	Image,
 } from "react-native";
 import Swipeout from "react-native-swipeout";
-import { Swipeable } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 
 function Card(props) {

@@ -35,6 +35,10 @@ export default function MainContainer() {
 							iconName = focused ? "plus" : "plus";
 						} else if (rn === settingsName) {
 							iconName = focused ? "calendar" : "calendar";
+						} else if (rn === homeName) {
+							iconName = focused ? "calendar" : "calendar";
+						} else if (rn === registerName) {
+							iconName = focused ? "calendar" : "calendar";
 						}
 						return <AntDesign name={iconName} size={size} color={color} />;
 					},
@@ -76,16 +80,6 @@ export default function MainContainer() {
 					options={{ tabBarShowLabel: false }}
 					name={settingsName}
 					component={SettingsScreen}
-				/>
-				<Tab.Screen
-					options={{ tabBarShowLabel: false }}
-					name={loginName}
-					component={Login}
-				/>
-				<Tab.Screen
-					options={{ tabBarShowLabel: false }}
-					name={registerName}
-					component={Register}
 				/>
 			</Tab.Navigator>
 		</NavigationContainer>

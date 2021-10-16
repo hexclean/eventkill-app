@@ -3,11 +3,9 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import { useFonts } from "expo-font";
 import { Card, Avatar } from "react-native-paper";
 import { Calendar, CalendarList, Agenda } from "react-native-calendars";
-// import WeeklyCalendar from "react-native-weekly-calendar";
+import Swipeout from "react-native-swipeout";
 // Components
-import PendingCard from "../components/PendingCard";
 import Screen from "../components/shared/Screen";
-import MeetItemDeleteAction from "../components/MeetItemDeleteAction";
 
 // onPress={() => navigation.navigate("Home")}
 const timeToString = time => {
@@ -23,6 +21,12 @@ const SettingsScreen = ({ navigation }) => {
 	if (!loaded) {
 		return null;
 	}
+	var deleteMeetById = [
+		{
+			text: "Törlés",
+			onPress: 1,
+		},
+	];
 
 	return (
 		<Screen>
@@ -110,10 +114,11 @@ const SettingsScreen = ({ navigation }) => {
 				}}
 				renderItem={items => {
 					return (
-						<TouchableOpacity
-							onPress={() => console.log(items)}
+						<Swipeout
 							style={{ marginTop: 17, marginRight: 10 }}
+							right={deleteMeetById}
 						>
+							{/* <TouchableOpacity onPress={() => console.log(items)}> */}
 							<View style={styles.box}>
 								<View style={styles.boxHeader}>
 									<Text style={styles.helloName}>{items.title}</Text>
@@ -133,7 +138,8 @@ const SettingsScreen = ({ navigation }) => {
 									</View>
 								</View>
 							</View>
-						</TouchableOpacity>
+							{/* </TouchableOpacity> */}
+						</Swipeout>
 					);
 				}}
 			/>
