@@ -15,14 +15,17 @@ import SocialButton from "../components/SocialButton";
 import authApi from "../api/auth";
 import useAuth from "../auth/useAuth";
 const Login = ({ navigation }) => {
-	const { logIn } = useAuth();
+	const auth = useAuth();
+	const [loginFailed, setLoginFailed] = useState(false);
 
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
 
 	const handleSubmit = async ({ email, password }) => {
 		const result = await authApi.login("erdosjozsef20@gmail.com", "123456");
-		logIn(result.data.result[0].token);
+		if (!result.ok) return setLoginFailed(true);
+		setLoginFailed(false);
+		auth.logIn(result.data);
 	};
 
 	return (
