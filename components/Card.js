@@ -1,11 +1,5 @@
 import React from "react";
-import {
-	View,
-	StyleSheet,
-	Text,
-	TouchableWithoutFeedback,
-	Image,
-} from "react-native";
+import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
 
 function Card(props) {
@@ -18,7 +12,7 @@ function Card(props) {
 	}
 
 	return (
-		<TouchableWithoutFeedback onLongPress={props.deleteMeet}>
+		<TouchableOpacity onLongPress={props.deleteMeet}>
 			<View style={styles.box}>
 				<View style={styles.boxHeader}>
 					<Text style={styles.helloName}>
@@ -36,11 +30,11 @@ function Card(props) {
 						source={require("../assets/profile.png")}
 					/>
 					<View style={styles.partnerView}>
-						<Text style={styles.partnerName}>{props.partner}</Text>
+						<Text style={styles.partnerName}>{props.name}</Text>
 					</View>
 				</View>
 			</View>
-		</TouchableWithoutFeedback>
+		</TouchableOpacity>
 	);
 }
 

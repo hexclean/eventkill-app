@@ -1,12 +1,5 @@
-import React, { useState } from "react";
-import {
-	View,
-	Text,
-	StyleSheet,
-	FlatList,
-	TouchableOpacity,
-	Image,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { View, Text, StyleSheet, FlatList } from "react-native";
 import { useFonts } from "expo-font";
 
 // Components
@@ -58,9 +51,7 @@ let initialMessages = [
 
 export default function PendingInvitation() {
 	const [list, setList] = React.useState(initialMessages);
-	// useEffect(() => {
-	// 	console.log("again");
-	// });
+
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
 		PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),

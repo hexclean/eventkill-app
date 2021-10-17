@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -7,63 +7,31 @@ import {
 	FlatList,
 	Image,
 	TouchableOpacity,
+	Button,
 } from "react-native";
 import { useFonts } from "expo-font";
 
+// Components
 import Screen from "../components/shared/Screen";
 import Card from "../components/Card";
-
-let initialMessages = [
-	{
-		active: 0,
-		id: "1",
-		title: "Design Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Mobilszoft - erdos.jozsef@mobilszoft.hu",
-	},
-	{
-		active: 0,
-		id: "2",
-		title: "Development Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Primalskill",
-	},
-	{
-		active: 1,
-		id: "3",
-		title: "Development Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Primalskill",
-	},
-	{
-		active: 1,
-		id: "4",
-		title: "Development Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Primalskill",
-	},
-];
+import Loading from "../components/shared/Loading";
+import listingsApi from "../api/listings";
+import useApi from "../hooks/useApi";
+import useAuth from "../auth/useAuth";
 
 export default function HomeScreen({ navigation }) {
-	const [list, setList] = React.useState(initialMessages);
+	const { user, logOut } = useAuth();
 
+	const getListingsApi = useApi(listingsApi.getListings);
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
 		PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
 		PoppinsBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
 	});
 
-	if (!loaded) {
-		return null;
-	}
+	useEffect(() => {
+		getListingsApi.request(1, 2, 3);
+	}, []);
 
 	const deleteMeet = items => {
 		Alert.alert(
@@ -95,11 +63,21 @@ export default function HomeScreen({ navigation }) {
 		);
 	};
 
+	if (!loaded) {
+		return null;
+	}
+
 	return (
 		<Screen>
+			{getListingsApi.error && (
+				<>
+					<Text>error</Text>
+					<Button title="Retry" onPress={() => logOut()} />
+				</>
+			)}
 			<View style={styles.welcome}>
-				<Text style={styles.welcomeName}>Szia, József 👋</Text>
-				<TouchableOpacity onPress={() => console.log("profile")}>
+				<Text style={styles.welcomeName}>Szia, {user.name}👋</Text>
+				<TouchableOpacity onPress={() => logOut()}>
 					<Image
 						style={styles.profile}
 						source={require("../assets/profile.png")}
@@ -109,12 +87,11 @@ export default function HomeScreen({ navigation }) {
 			<View style={styles.title}>
 				<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
 			</View>
-
 			<FlatList
 				style={styles.list}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
-				data={list}
+				data={getListingsApi.data}
 				keyExtractor={listing => listing.id.toString()}
 				renderItem={({ item }) => (
 					<Card
@@ -129,16 +106,14 @@ export default function HomeScreen({ navigation }) {
 				)}
 			/>
 		</Screen>
-
-		// <TabView
-		// 	navigationState={{ index, routes }}
-		// 	renderScene={renderScene}
-		// 	onIndexChange={setIndex}
-		// 	initialLayout={{ width: layout.width }}
-		// />
 	);
 }
 const styles = StyleSheet.create({
+	loading: {
+		justifyContent: "center",
+		alignItems: "center",
+		flex: 1,
+	},
 	profile: {
 		height: 30,
 		width: 30,

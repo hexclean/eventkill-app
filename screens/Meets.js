@@ -39,15 +39,15 @@ const Meets = ({ navigation }) => {
 			<View style={styles.welcome}>
 				<Text style={styles.start}>Gyors áttekintés</Text>
 				<TouchableOpacity onPress={() => console.log("profile")}>
-					<Ionicons name="ios-add-circle" size={30} color="#F78F1E" />
+					<Ionicons name="ios-add-circle" size={30} color="black" />
 				</TouchableOpacity>
 			</View>
-			<View style={styles.title}></View>
 			<TabView
 				navigationState={{ index, routes }}
 				renderScene={renderScene}
 				onIndexChange={setIndex}
 				initialLayout={{ width: layout.width }}
+				tabStyle={{ backgroundColor: "red" }}
 			/>
 		</Screen>
 	);
@@ -58,20 +58,17 @@ const styles = StyleSheet.create({
 		height: 30,
 		width: 30,
 	},
-	title: {
-		// marginVertical: 10,
-		paddingBottom: 18,
-	},
+
 	welcome: {
 		flexDirection: "row",
 		justifyContent: "space-between",
+		marginBottom: 13,
 	},
 	list: {
 		paddingTop: 20,
 	},
 	welcomeName: {
 		fontSize: 17,
-		// fontWeight: "400",
 		fontFamily: "PoppinsRegular",
 	},
 	start: {

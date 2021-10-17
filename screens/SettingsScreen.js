@@ -1,19 +1,31 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
 	View,
 	Text,
 	StyleSheet,
 	Image,
+	TouchableOpacity,
 	TouchableWithoutFeedback,
 	Alert,
 } from "react-native";
 import { useFonts } from "expo-font";
 import { Agenda } from "react-native-calendars";
-
+import { Ionicons } from "@expo/vector-icons";
 // Components
 import Screen from "../components/shared/Screen";
+import listingsApi from "../api/listings";
 
 const SettingsScreen = ({ navigation }) => {
+	const [meets, setMeets] = useState([]);
+	useEffect(() => {
+		loadListings();
+	}, []);
+
+	const loadListings = async () => {
+		const response = await listingsApi.getCalendarMeets();
+		setMeets(response.data.result);
+	};
+
 	const [loaded] = useFonts({
 		PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
 		PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
@@ -105,20 +117,35 @@ const SettingsScreen = ({ navigation }) => {
 							partner: "Primalskill",
 						},
 					],
-					"2021-10-14": [],
-					"2021-10-13": [],
-					"2021-10-12": [],
-					"2021-10-11": [],
-					"2021-10-10": [],
+					// "2021-10-14": [],
+					// "2021-10-13": [],
+					// "2021-10-12": [],
+					// "2021-10-11": [],
+					// "2021-10-10": [],
 				}}
 				selected={"2021-10-16"}
-				renderEmptyDate={() => {
+				// renderEmptyDate={() => {
+				// 	return (
+				// 		<View style={styles.noMeets}>
+				// 			<View style={styles.boxHeader}>
+				// 				<Text style={styles.helloName}>Nincs meeting</Text>
+				// 			</View>
+				// 		</View>
+				// 	);
+				// }}
+				renderEmptyData={() => {
 					return (
-						<View style={styles.noMeets}>
-							<View style={styles.boxHeader}>
-								<Text style={styles.helloName}>Nincs meeting</Text>
+						<TouchableOpacity>
+							<View style={styles.noMeets}>
+								<Text style={styles.helloName}>Meeting létrehozása</Text>
+								<Ionicons
+									style={styles.addMeet}
+									name="ios-add-circle"
+									size={24}
+									color="#F78F1E"
+								/>
 							</View>
-						</View>
+						</TouchableOpacity>
 					);
 				}}
 				renderItem={items => {
@@ -152,6 +179,9 @@ const SettingsScreen = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+	addMeet: {
+		paddingLeft: 10,
+	},
 	noMeets: {
 		padding: 12,
 		backgroundColor: "white",
@@ -164,7 +194,7 @@ const styles = StyleSheet.create({
 		},
 		shadowOpacity: 0.22,
 		shadowRadius: 2.22,
-
+		flexDirection: "row",
 		elevation: 3,
 	},
 	partnerName: {

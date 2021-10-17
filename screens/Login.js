@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import {
 	View,
 	Text,
@@ -12,12 +12,18 @@ import FormInput from "../components/FormInput";
 import FormButton from "../components/FormButton";
 import SocialButton from "../components/SocialButton";
 // import { AuthContext } from "../navigation/AuthProvider";
-
+import authApi from "../api/auth";
+import useAuth from "../auth/useAuth";
 const Login = ({ navigation }) => {
+	const { logIn } = useAuth();
+
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
 
-	// const { login, googleLogin, fbLogin } = useContext(AuthContext);
+	const handleSubmit = async ({ email, password }) => {
+		const result = await authApi.login("erdosjozsef20@gmail.com", "123456");
+		logIn(result.data.result[0].token);
+	};
 
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
@@ -42,10 +48,7 @@ const Login = ({ navigation }) => {
 				secureTextEntry={true}
 			/>
 
-			<FormButton
-				buttonTitle="Sign In"
-				onPress={() => navigation.navigate("Home")}
-			/>
+			<FormButton buttonTitle="Sign In" onPress={handleSubmit} />
 
 			<TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
 				<Text style={styles.navButtonText}>Forgot Password?</Text>
