@@ -14,9 +14,7 @@ function PendingCards(props) {
 	return (
 		<View style={styles.box}>
 			<View style={styles.boxHeader}>
-				<Text style={styles.helloName}>
-					{props.title} - {props.id}
-				</Text>
+				<Text style={styles.helloName}>{props.title}</Text>
 				<Text style={styles.time}>{props.time}</Text>
 			</View>
 
@@ -29,7 +27,9 @@ function PendingCards(props) {
 					source={require("../assets/profile.png")}
 				/>
 				<View style={styles.partnerView}>
-					<Text style={styles.partnerName}>{props.partner}</Text>
+					<Text style={styles.partnerName}>
+						{props.partner[0].company} - {props.partner[0].name}
+					</Text>
 				</View>
 			</View>
 			<View style={styles.status}>

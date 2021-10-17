@@ -22,7 +22,7 @@ import useAuth from "../auth/useAuth";
 export default function HomeScreen({ navigation }) {
 	const { user, logOut } = useAuth();
 
-	const getListingsApi = useApi(meetsApi.getTodayMeets);
+	const getTodayMeetsApi = useApi(meetsApi.getTodayMeets);
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
 		PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
@@ -30,7 +30,7 @@ export default function HomeScreen({ navigation }) {
 	});
 
 	useEffect(() => {
-		getListingsApi.request(1, 2, 3);
+		getTodayMeetsApi.request(1, 2, 3);
 	}, []);
 
 	const deleteMeet = items => {
@@ -69,7 +69,7 @@ export default function HomeScreen({ navigation }) {
 
 	return (
 		<Screen>
-			{getListingsApi.error && (
+			{getTodayMeetsApi.error && (
 				<>
 					<Text>error</Text>
 					<Button title="Retry" />
@@ -91,7 +91,7 @@ export default function HomeScreen({ navigation }) {
 				style={styles.list}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
-				data={getListingsApi.data}
+				data={getTodayMeetsApi.data}
 				keyExtractor={listing => listing.id.toString()}
 				renderItem={({ item }) => (
 					<Card

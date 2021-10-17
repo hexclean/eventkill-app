@@ -1,56 +1,21 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, FlatList } from "react-native";
 import { useFonts } from "expo-font";
+import { useIsFocused } from "@react-navigation/native";
 
 // Components
 import Screen from "../components/shared/Screen";
 import PendingCards from "../components/PendingCards";
+import useApi from "../hooks/useApi";
+import meetsApi from "../api/meets";
 
-let initialMessages = [
-	{
-		status: 0,
-		active: 0,
-		id: "1",
-		title: "Design Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Mobilszoft - erdos.jozsef@mobilszoft.hu",
-	},
-	{
-		status: 1,
-		active: 0,
-		id: "2",
-		title: "Development Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Primalskill",
-	},
-	{
-		status: 0,
-		active: 1,
-		id: "3",
-		title: "Development Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Primalskill",
-	},
-	{
-		status: 1,
-		active: 1,
-		id: "4",
-		title: "Development Meeting",
-		time: "10:00 - 12:00",
-		description:
-			"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-		partner: "Primalskill",
-	},
-];
+export default function PendingInvitation({ navigation, props }) {
+	const getPendingMeetsApi = useApi(meetsApi.getPendingMeets);
+	const isFocused = useIsFocused();
 
-export default function PendingInvitation() {
-	const [list, setList] = React.useState(initialMessages);
+	useEffect(() => {
+		getPendingMeetsApi.request();
+	}, []);
 
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
@@ -66,7 +31,7 @@ export default function PendingInvitation() {
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
-				data={list}
+				data={getPendingMeetsApi.data}
 				keyExtractor={listing => listing.id.toString()}
 				renderItem={({ item }) => (
 					<PendingCards
@@ -74,7 +39,7 @@ export default function PendingInvitation() {
 						deleteMeet={() => deleteMeet(item)}
 						meetId={item.id}
 						title={item.title}
-						time={item.time}
+						time={item.startDate}
 						description={item.description}
 						partner={item.partner}
 					/>

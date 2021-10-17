@@ -14,17 +14,15 @@ import { Ionicons } from "@expo/vector-icons";
 // Components
 import Screen from "../components/shared/Screen";
 import listingsApi from "../api/meets";
+import useApi from "../hooks/useApi";
+import meetsApi from "../api/meets";
 
 const SettingsScreen = ({ navigation }) => {
-	const [meets, setMeets] = useState([]);
-	useEffect(() => {
-		loadListings();
-	}, []);
+	const getCalendarMeetsApi = useApi(meetsApi.getCalendarMeets);
 
-	const loadListings = async () => {
-		const response = await listingsApi.getCalendarMeets();
-		setMeets(response.data.result);
-	};
+	useEffect(() => {
+		getCalendarMeetsApi.request();
+	}, []);
 
 	const [loaded] = useFonts({
 		PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
@@ -52,77 +50,7 @@ const SettingsScreen = ({ navigation }) => {
 	return (
 		<Screen>
 			<Agenda
-				items={{
-					"2021-10-01": [
-						{
-							id: 1,
-							title: "Design Meeting",
-							time: "10:00 - 11:00",
-							description:
-								"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-							partner: "Mobilszoft - erdos.jozsef@mobilszoft.hu",
-						},
-						{
-							id: 2,
-							title: "Design Meeting",
-							time: "10:00 - 12:00",
-							description:
-								"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-							partner: "Mobilszoft - erdos.jozsef@mobilszoft.hu",
-						},
-					],
-					"2021-10-15": [
-						{
-							id: 3,
-							title: "Development Meeting",
-							time: "08:00 - 12:00",
-							description:
-								"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-							partner: "Primalskill",
-						},
-						{
-							id: 4,
-							title: "Design Meeting",
-							time: "18:00 - 20:00",
-							description:
-								"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-							partner: "Mobilszoft - erdos.jozsef@mobilszoft.hu",
-						},
-					],
-					"2021-10-16": [
-						{
-							id: 3,
-							title: "Development Meeting",
-							time: "08:00 - 12:00",
-							description:
-								"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-							partner: "Primalskill",
-						},
-						{
-							id: 4,
-							title: "Design Meeting",
-							time: "18:00 - 20:00",
-							description:
-								"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-							partner: "Mobilszoft - erdos.jozsef@mobilszoft.hu",
-						},
-					],
-					"2021-10-18": [
-						{
-							id: "3",
-							title: "Development Meeting",
-							time: "10:00 - 12:00",
-							description:
-								"We will discuss the previous sprint bugs. If you have any questions please tell me!",
-							partner: "Primalskill",
-						},
-					],
-					// "2021-10-14": [],
-					// "2021-10-13": [],
-					// "2021-10-12": [],
-					// "2021-10-11": [],
-					// "2021-10-10": [],
-				}}
+				items={getCalendarMeetsApi.data}
 				selected={"2021-10-16"}
 				// renderEmptyDate={() => {
 				// 	return (
@@ -166,7 +94,9 @@ const SettingsScreen = ({ navigation }) => {
 										source={require("../assets/profile.png")}
 									/>
 									<View style={styles.partnerView}>
-										<Text style={styles.partnerName}>{items.partner}</Text>
+										<Text style={styles.partnerName}>
+											{items.partner[0].company} - {items.partner[0].name}
+										</Text>
 									</View>
 								</View>
 							</View>

@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import {
 	View,
 	StyleSheet,
@@ -35,7 +35,7 @@ function DeletedCards(props) {
 					source={require("../assets/profile.png")}
 				/>
 				<View style={styles.partnerView}>
-					<Text style={styles.partnerName}>{props.partner}</Text>
+					<Text style={styles.partnerName}>{props.partner[0].company}</Text>
 				</View>
 			</View>
 		</View>
