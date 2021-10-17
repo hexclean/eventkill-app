@@ -13,7 +13,7 @@ import { Agenda } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
 // Components
 import Screen from "../components/shared/Screen";
-import listingsApi from "../api/listings";
+import listingsApi from "../api/meets";
 
 const SettingsScreen = ({ navigation }) => {
 	const [meets, setMeets] = useState([]);

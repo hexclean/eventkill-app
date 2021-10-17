@@ -15,14 +15,14 @@ import { useFonts } from "expo-font";
 import Screen from "../components/shared/Screen";
 import Card from "../components/Card";
 import Loading from "../components/shared/Loading";
-import listingsApi from "../api/listings";
+import meetsApi from "../api/meets";
 import useApi from "../hooks/useApi";
 import useAuth from "../auth/useAuth";
 
 export default function HomeScreen({ navigation }) {
 	const { user, logOut } = useAuth();
 
-	const getListingsApi = useApi(listingsApi.getListings);
+	const getListingsApi = useApi(meetsApi.getTodayMeets);
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
 		PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
@@ -72,7 +72,7 @@ export default function HomeScreen({ navigation }) {
 			{getListingsApi.error && (
 				<>
 					<Text>error</Text>
-					<Button title="Retry" onPress={() => logOut()} />
+					<Button title="Retry" />
 				</>
 			)}
 			<View style={styles.welcome}>

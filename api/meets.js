@@ -2,11 +2,13 @@ import client from "./client";
 
 const endpoint = "/meets/today";
 const calendarMeets = "/meets/calendar";
+const pendingMeets = "/meets/pending";
 
-const getListings = (a, b, c) => client.get(endpoint);
+const getTodayMeets = () => client.get(endpoint);
 const getCalendarMeets = () => client.get(calendarMeets);
+const getPendingMeets = () => client.get(pendingMeets);
 
 export default {
-	getListings,
+	getTodayMeets,
 	getCalendarMeets,
 };
