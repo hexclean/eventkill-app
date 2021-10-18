@@ -18,7 +18,7 @@ function SplashScreen({ navigation }) {
 				<Button
 					title="Register"
 					color="secondary"
-					onPress={() => navigation.navigate(routes.REGISTER)}
+					onPress={() => navigation.navigate(routes.LOGIN)}
 				/>
 			</View>
 		</>

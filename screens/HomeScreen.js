@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
 	View,
 	Text,
@@ -17,9 +17,11 @@ import Card from "../components/Card";
 import meetsApi from "../api/meets";
 import useApi from "../hooks/useApi";
 import useAuth from "../auth/useAuth";
+import Loading from "../components/shared/Loading";
 
 export default function HomeScreen({ navigation }) {
 	const { user, logOut } = useAuth();
+	const [error, setError] = useState(false);
 
 	const getTodayMeetsApi = useApi(meetsApi.getTodayMeets);
 	const [loaded] = useFonts({
@@ -29,7 +31,7 @@ export default function HomeScreen({ navigation }) {
 	});
 
 	useEffect(() => {
-		getTodayMeetsApi.request(1, 2, 3);
+		getTodayMeetsApi.request();
 	}, []);
 
 	const deleteMeet = items => {
@@ -67,42 +69,44 @@ export default function HomeScreen({ navigation }) {
 	}
 
 	return (
-		<Screen>
-			{getTodayMeetsApi.error && (
-				<>
-					<Text>error</Text>
-					<Button title="Retry" />
-				</>
-			)}
-			<View style={styles.welcome}>
-				<Text style={styles.welcomeName}>Szia, {user.name}👋</Text>
-				{/* <TouchableOpacity onPress={() => logOut()}> */}
-				<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
-					<Feather name="settings" size={25} color="#F78F1E" />
-				</TouchableOpacity>
-			</View>
-			<View style={styles.title}>
-				<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
-			</View>
-			<FlatList
-				style={styles.list}
-				showsVerticalScrollIndicator={false}
-				showsHorizontalScrollIndicator={false}
-				data={getTodayMeetsApi.data}
-				keyExtractor={listing => listing.id.toString()}
-				renderItem={({ item }) => (
-					<Card
-						id={item.id}
-						deleteMeet={() => deleteMeet(item)}
-						meetId={item.id}
-						title={item.title}
-						time={item.time}
-						description={item.description}
-						partner={item.partner}
-					/>
+		<>
+			<Loading visible={getTodayMeetsApi.loading} />
+			<Screen>
+				{getTodayMeetsApi.error && (
+					<>
+						<Text>Couldn't retrieve the listings.</Text>
+					</>
 				)}
-			/>
-		</Screen>
+				<View style={styles.welcome}>
+					<Text style={styles.welcomeName}>Szia, {user.name}👋</Text>
+					<TouchableOpacity onPress={() => logOut()}>
+						{/* <TouchableOpacity onPress={() => navigation.navigate("Profile")}> */}
+						<Feather name="settings" size={25} color="#F78F1E" />
+					</TouchableOpacity>
+				</View>
+				<View style={styles.title}>
+					<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
+				</View>
+				<FlatList
+					style={styles.list}
+					showsVerticalScrollIndicator={false}
+					showsHorizontalScrollIndicator={false}
+					data={getTodayMeetsApi.data}
+					keyExtractor={listing => listing.id.toString()}
+					renderItem={({ item }) => (
+						<Card
+							id={item.id}
+							deleteMeet={() => deleteMeet(item)}
+							meetId={item.id}
+							title={item.title}
+							time={item.time}
+							description={item.description}
+							partner={item.partner}
+						/>
+					)}
+				/>
+			</Screen>
+		</>
 	);
 }
 const styles = StyleSheet.create({

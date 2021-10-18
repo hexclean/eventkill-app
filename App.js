@@ -9,6 +9,7 @@ import AppNavigator from "./navigation/AppNavigator";
 import AuthNavigator from "./navigation/AuthNavigator";
 import Profile from "./screens/Profile/Profile";
 import Notifications from "./screens/Profile/Notifications";
+import About from "./screens/Profile/About";
 
 export default function App() {
 	const [user, setUser] = useState();
@@ -30,14 +31,14 @@ export default function App() {
 	}
 
 	return (
-		<NavigationContainer>
-			<Profile />
-		</NavigationContainer>
-
 		// <NavigationContainer>
-		// 	<AuthContext.Provider value={{ user, setUser }}>
-		// 		{user ? <AppNavigator /> : <AuthNavigator />}
-		// 	</AuthContext.Provider>
+		// 	<Profile />
 		// </NavigationContainer>
+
+		<NavigationContainer>
+			<AuthContext.Provider value={{ user, setUser }}>
+				{user ? <AppNavigator /> : <AuthNavigator />}
+			</AuthContext.Provider>
+		</NavigationContainer>
 	);
 }

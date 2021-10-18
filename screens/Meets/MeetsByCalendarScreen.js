@@ -16,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Screen from "../../components/shared/Screen";
 import useApi from "../../hooks/useApi";
 import meetsApi from "../../api/meets";
-// import fonts from "../../components/shared/Fonts";
+import Loading from "../../components/shared/Loading";
 
 const MeetsByCalendarScreen = () => {
 	const getCalendarMeetsApi = useApi(meetsApi.getCalendarMeets);
@@ -49,54 +49,62 @@ const MeetsByCalendarScreen = () => {
 	};
 
 	return (
-		<Screen>
-			<Agenda
-				items={getCalendarMeetsApi.data}
-				selected={"2021-10-16"}
-				renderEmptyData={() => {
-					return (
-						<TouchableOpacity>
-							<View style={styles.noMeets}>
-								<Text style={styles.helloName}>Meeting létrehozása</Text>
-								<Ionicons
-									style={styles.addMeet}
-									name="ios-add-circle"
-									size={24}
-									color="#F78F1E"
-								/>
-							</View>
-						</TouchableOpacity>
-					);
-				}}
-				renderItem={items => {
-					return (
-						<TouchableWithoutFeedback onLongPress={deleteMeet}>
-							<View style={styles.box}>
-								<View style={styles.boxHeader}>
-									<Text style={styles.helloName}>{items.title}</Text>
-									<Text style={styles.time}>{items.time}</Text>
-								</View>
-
-								<View style={styles.descriptionView}>
-									<Text style={styles.description}>{items.description}</Text>
-								</View>
-								<View style={styles.partner}>
-									<Image
-										style={styles.withImage}
-										source={require("../../assets/profile.png")}
+		<>
+			<Loading visible={getCalendarMeetsApi.loading} />
+			<Screen>
+				{getCalendarMeetsApi.error && (
+					<>
+						<Text>Couldn't retrieve the listings.</Text>
+					</>
+				)}
+				<Agenda
+					items={getCalendarMeetsApi.data}
+					selected={"2021-10-16"}
+					renderEmptyData={() => {
+						return (
+							<TouchableOpacity>
+								<View style={styles.noMeets}>
+									<Text style={styles.helloName}>Meeting létrehozása</Text>
+									<Ionicons
+										style={styles.addMeet}
+										name="ios-add-circle"
+										size={24}
+										color="#F78F1E"
 									/>
-									<View style={styles.partnerView}>
-										<Text style={styles.partnerName}>
-											{items.partner[0].company} - {items.partner[0].name}
-										</Text>
+								</View>
+							</TouchableOpacity>
+						);
+					}}
+					renderItem={items => {
+						return (
+							<TouchableWithoutFeedback onLongPress={deleteMeet}>
+								<View style={styles.box}>
+									<View style={styles.boxHeader}>
+										<Text style={styles.helloName}>{items.title}</Text>
+										<Text style={styles.time}>{items.time}</Text>
+									</View>
+
+									<View style={styles.descriptionView}>
+										<Text style={styles.description}>{items.description}</Text>
+									</View>
+									<View style={styles.partner}>
+										<Image
+											style={styles.withImage}
+											source={require("../../assets/profile.png")}
+										/>
+										<View style={styles.partnerView}>
+											<Text style={styles.partnerName}>
+												{items.partner[0].company} - {items.partner[0].name}
+											</Text>
+										</View>
 									</View>
 								</View>
-							</View>
-						</TouchableWithoutFeedback>
-					);
-				}}
-			/>
-		</Screen>
+							</TouchableWithoutFeedback>
+						);
+					}}
+				/>
+			</Screen>
+		</>
 	);
 };
 
