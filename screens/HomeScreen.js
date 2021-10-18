@@ -21,7 +21,19 @@ import Loading from "../components/shared/Loading";
 
 export default function HomeScreen({ navigation }) {
 	const { user, logOut } = useAuth();
-	const [error, setError] = useState(false);
+	const [meet, setMeet] = useState();
+
+	const handleSubmit = async meet => {
+		setMeet({
+			description: "rom app",
+		});
+		const result = await meetsApi.createMeet(meet);
+
+		if (!result.ok) {
+			console.log(result);
+			return alert("Could not save the listing");
+		}
+	};
 
 	const getTodayMeetsApi = useApi(meetsApi.getTodayMeets);
 	const [loaded] = useFonts({
@@ -79,7 +91,8 @@ export default function HomeScreen({ navigation }) {
 				)}
 				<View style={styles.welcome}>
 					<Text style={styles.welcomeName}>Szia, {user.name}👋</Text>
-					<TouchableOpacity onPress={() => logOut()}>
+					<TouchableOpacity onPress={() => handleSubmit(meet)}>
+						{/* <TouchableOpacity onPress={() => logOut()}> */}
 						{/* <TouchableOpacity onPress={() => navigation.navigate("Profile")}> */}
 						<Feather name="settings" size={25} color="#F78F1E" />
 					</TouchableOpacity>
