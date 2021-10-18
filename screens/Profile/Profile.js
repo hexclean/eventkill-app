@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	View,
 	StyleSheet,
@@ -12,19 +12,29 @@ import { useFonts } from "expo-font";
 import { MaterialIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import actionApi from "../../api/actions";
+import useApi from "../../hooks/useApi";
 
 // Components
-import Screen from "../../components/shared/Screen";
+import Screen from "../../components/Screen";
 
 const Profile = props => {
 	const [name, setName] = useState("Erdős József");
 	const [company, setCompany] = useState("Mobilszoft");
+	const postEditName = useApi(actionApi.editProfile);
+	const postEditCompany = useApi(actionApi.editCompany);
+
+	useEffect(() => {
+		postEditName.request();
+	}, [name, company]);
 
 	const handleChangeName = e => {
+		postEditName.request(e);
 		setName(e);
 	};
 
 	const handleChangeCompany = e => {
+		postEditCompany.request(e);
 		setCompany(e);
 	};
 

@@ -3,7 +3,7 @@ import { StyleSheet, FlatList } from "react-native";
 import { useFonts } from "expo-font";
 
 // Components
-import Screen from "../../components/shared/Screen";
+import Screen from "../../components/Screen";
 import DeletedCards from "../../components/DeletedCards";
 import useApi from "../../hooks/useApi";
 import meetsApi from "../../api/meets";

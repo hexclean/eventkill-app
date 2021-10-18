@@ -12,12 +12,12 @@ import { useFonts } from "expo-font";
 import { Feather } from "@expo/vector-icons";
 
 // Components
-import Screen from "../components/shared/Screen";
+import Screen from "../components/Screen";
 import Card from "../components/Card";
 import meetsApi from "../api/meets";
 import useApi from "../hooks/useApi";
 import useAuth from "../auth/useAuth";
-import Loading from "../components/shared/Loading";
+import Loading from "../components/ActivityIndicator";
 
 export default function HomeScreen({ navigation }) {
 	const { user, logOut } = useAuth();
@@ -36,6 +36,7 @@ export default function HomeScreen({ navigation }) {
 	};
 
 	const getTodayMeetsApi = useApi(meetsApi.getTodayMeets);
+
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
 		PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
@@ -90,9 +91,9 @@ export default function HomeScreen({ navigation }) {
 					</>
 				)}
 				<View style={styles.welcome}>
-					<Text style={styles.welcomeName}>Szia, {user.name}👋</Text>
-					<TouchableOpacity onPress={() => handleSubmit(meet)}>
-						{/* <TouchableOpacity onPress={() => logOut()}> */}
+					<Text style={styles.welcomeName}>Szia, {user.id}👋</Text>
+					{/* <TouchableOpacity onPress={() => handleSubmit(meet)}> */}
+					<TouchableOpacity onPress={() => logOut()}>
 						{/* <TouchableOpacity onPress={() => navigation.navigate("Profile")}> */}
 						<Feather name="settings" size={25} color="#F78F1E" />
 					</TouchableOpacity>

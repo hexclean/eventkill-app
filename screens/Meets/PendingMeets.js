@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FlatList } from "react-native";
 
 // Components
-import Screen from "../../components/shared/Screen";
+import Screen from "../../components/Screen";
 import PendingCards from "../../components/PendingCards";
 import useApi from "../../hooks/useApi";
 import meetsApi from "../../api/meets";

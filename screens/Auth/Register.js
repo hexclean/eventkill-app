@@ -1,127 +1,96 @@
-import React, { useContext, useState } from "react";
-import {
-	View,
-	Text,
-	TouchableOpacity,
-	Image,
-	Platform,
-	StyleSheet,
-	ScrollView,
-} from "react-native";
-import FormInput from "../../components/FormInput";
-import FormButton from "../../components/FormButton";
-import SocialButton from "../../components/SocialButton";
-// import { AuthContext } from "../navigation/AuthProvider";
+import React, { useState } from "react";
+import { StyleSheet } from "react-native";
+import * as Yup from "yup";
 
-const Register = ({ navigation }) => {
-	const [email, setEmail] = useState();
-	const [password, setPassword] = useState();
-	const [confirmPassword, setConfirmPassword] = useState();
-	// const { login, googleLogin, fbLogin } = useContext(AuthContext);
+import Screen from "../../components/Screen";
+import usersApi from "../../api/users";
+import authApi from "../../api/auth";
+import useAuth from "../../auth/useAuth";
+import {
+	ErrorMessage,
+	Form,
+	FormField,
+	SubmitButton,
+} from "../../components/forms";
+import useApi from "../../hooks/useApi";
+import ActivityIndicator from "../../components/ActivityIndicator";
+
+const validationSchema = Yup.object().shape({
+	name: Yup.string().required().label("Name"),
+	email: Yup.string().required().email().label("Email"),
+	password: Yup.string().required().min(4).label("Password"),
+});
+
+function RegisterScreen() {
+	const registerApi = useApi(usersApi.register);
+	const loginApi = useApi(authApi.login);
+	const auth = useAuth();
+	const [error, setError] = useState();
+
+	const handleSubmit = async userInfo => {
+		const result = await registerApi.request(userInfo);
+
+		if (!result.ok) {
+			if (result.data) setError(result.data.error);
+			else {
+				setError("An unexpected error occurred.");
+				console.log(result);
+			}
+			return;
+		}
+
+		const { data: authToken } = await loginApi.request(
+			userInfo.email,
+			userInfo.password
+		);
+		auth.logIn(authToken);
+	};
 
 	return (
-		<ScrollView contentContainerStyle={styles.container}>
-			<Image source={require("../../assets/sapiens.png")} style={styles.logo} />
-			<Text style={styles.text}>Meets</Text>
-
-			<FormInput
-				labelValue={email}
-				onChangeText={userEmail => setEmail(userEmail)}
-				placeholderText="Email"
-				iconType="user"
-				keyboardType="email-address"
-				autoCapitalize="none"
-				autoCorrect={false}
-			/>
-
-			<FormInput
-				labelValue={password}
-				onChangeText={userPassword => setPassword(userPassword)}
-				placeholderText="Password"
-				iconType="lock"
-				secureTextEntry={true}
-			/>
-
-			<FormInput
-				labelValue={confirmPassword}
-				onChangeText={userPassword => setConfirmPassword(userPassword)}
-				placeholderText="Confirm Password"
-				iconType="lock"
-				secureTextEntry={true}
-			/>
-
-			<FormButton
-				buttonTitle="Sign In"
-				onPress={() => login(email, password)}
-			/>
-
-			<TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
-				<Text style={styles.navButtonText}>Forgot Password?</Text>
-			</TouchableOpacity>
-
-			{Platform.OS === "android" ? (
-				<View>
-					<SocialButton
-						buttonTitle="Sign In with Facebook"
-						btnType="facebook"
-						color="#4867aa"
-						backgroundColor="#e6eaf4"
-						onPress={() => fbLogin()}
+		<>
+			<ActivityIndicator visible={registerApi.loading || loginApi.loading} />
+			<Screen style={styles.container}>
+				<Form
+					initialValues={{ name: "", email: "", password: "" }}
+					onSubmit={handleSubmit}
+					validationSchema={validationSchema}
+				>
+					<ErrorMessage error={error} visible={error} />
+					<FormField
+						autoCorrect={false}
+						icon="account"
+						name="name"
+						placeholder="Name"
 					/>
-
-					<SocialButton
-						buttonTitle="Sign In with Google"
-						btnType="google"
-						color="#de4d41"
-						backgroundColor="#f5e7ea"
-						onPress={() => googleLogin()}
+					<FormField
+						autoCapitalize="none"
+						autoCorrect={false}
+						icon="email"
+						keyboardType="email-address"
+						name="email"
+						placeholder="Email"
+						textContentType="emailAddress"
 					/>
-				</View>
-			) : null}
-
-			<TouchableOpacity
-				style={styles.forgotButton}
-				onPress={() => navigation.navigate("Home")}
-			>
-				<Text style={styles.navButtonText}>
-					Don't have an acount? Create here
-				</Text>
-			</TouchableOpacity>
-		</ScrollView>
+					<FormField
+						autoCapitalize="none"
+						autoCorrect={false}
+						icon="lock"
+						name="password"
+						placeholder="Password"
+						secureTextEntry
+						textContentType="password"
+					/>
+					<SubmitButton title="Register" />
+				</Form>
+			</Screen>
+		</>
 	);
-};
-
-export default Register;
+}
 
 const styles = StyleSheet.create({
 	container: {
-		backgroundColor: "#f9fafd",
-		flex: 1,
-		justifyContent: "center",
-		alignItems: "center",
-		padding: 20,
-	},
-	logo: {
-		height: 150,
-		width: 150,
-		resizeMode: "cover",
-	},
-	text: {
-		fontFamily: "Kufam-SemiBoldItalic",
-		fontSize: 28,
-		marginBottom: 10,
-		color: "#051d5f",
-	},
-	navButton: {
-		marginTop: 15,
-	},
-	forgotButton: {
-		marginVertical: 35,
-	},
-	navButtonText: {
-		fontSize: 18,
-		fontWeight: "500",
-		color: "#2e64e5",
-		fontFamily: "Lato-Regular",
+		padding: 10,
 	},
 });
+
+export default RegisterScreen;

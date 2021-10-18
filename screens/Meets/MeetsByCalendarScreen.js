@@ -13,10 +13,10 @@ import { Agenda } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
 
 // Components
-import Screen from "../../components/shared/Screen";
+import Screen from "../../components/Screen";
 import useApi from "../../hooks/useApi";
 import meetsApi from "../../api/meets";
-import Loading from "../../components/shared/Loading";
+import Loading from "../../components/ActivityIndicator";
 
 const MeetsByCalendarScreen = () => {
 	const getCalendarMeetsApi = useApi(meetsApi.getCalendarMeets);

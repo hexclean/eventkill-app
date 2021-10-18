@@ -10,6 +10,9 @@ import AuthNavigator from "./navigation/AuthNavigator";
 import Profile from "./screens/Profile/Profile";
 import Notifications from "./screens/Profile/Notifications";
 import About from "./screens/Profile/About";
+import Login from "./screens/Auth/Login";
+import Register from "./screens/Auth/Register";
+import CreateMeet from "./screens/Profile/CreateMeet";
 
 export default function App() {
 	const [user, setUser] = useState();
@@ -31,14 +34,14 @@ export default function App() {
 	}
 
 	return (
-		// <NavigationContainer>
-		// 	<Profile />
-		// </NavigationContainer>
-
 		<NavigationContainer>
-			<AuthContext.Provider value={{ user, setUser }}>
-				{user ? <AppNavigator /> : <AuthNavigator />}
-			</AuthContext.Provider>
+			<CreateMeet />
 		</NavigationContainer>
+
+		// <NavigationContainer>
+		// 	<AuthContext.Provider value={{ user, setUser }}>
+		// 		{user ? <AppNavigator /> : <AuthNavigator />}
+		// 	</AuthContext.Provider>
+		// </NavigationContainer>
 	);
 }

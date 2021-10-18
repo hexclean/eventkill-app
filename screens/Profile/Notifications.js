@@ -4,7 +4,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
 // Components
-import Screen from "../../components/shared/Screen";
+import Screen from "../../components/Screen";
 
 const Notifications = () => {
 	const [isEnabled, setIsEnabled] = useState(false);

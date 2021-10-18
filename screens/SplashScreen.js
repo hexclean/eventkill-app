@@ -1,14 +1,19 @@
 import React from "react";
-import { StyleSheet, View, Image, Text } from "react-native";
+import { ImageBackground, StyleSheet, View, Image, Text } from "react-native";
 
 import Button from "../components/Button";
 import routes from "../navigation/routes";
 
-function SplashScreen({ navigation }) {
+function WelcomeScreen({ navigation }) {
 	return (
-		<>
+		<ImageBackground
+			blurRadius={10}
+			style={styles.background}
+			source={require("../assets/background.jpg")}
+		>
 			<View style={styles.logoContainer}>
-				<Text style={styles.tagline}>Sell What Youdsa Don't Need</Text>
+				<Image style={styles.logo} source={require("../assets/logo-red.png")} />
+				<Text style={styles.tagline}>Sell What You Don't Need</Text>
 			</View>
 			<View style={styles.buttonsContainer}>
 				<Button
@@ -18,10 +23,10 @@ function SplashScreen({ navigation }) {
 				<Button
 					title="Register"
 					color="secondary"
-					onPress={() => navigation.navigate(routes.LOGIN)}
+					onPress={() => navigation.navigate(routes.REGISTER)}
 				/>
 			</View>
-		</>
+		</ImageBackground>
 	);
 }
 
@@ -51,4 +56,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default SplashScreen;
+export default WelcomeScreen;

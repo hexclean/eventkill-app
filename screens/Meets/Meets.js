@@ -10,7 +10,7 @@ import { TabView, SceneMap } from "react-native-tab-view";
 import { Ionicons } from "@expo/vector-icons";
 
 // Components
-import Screen from "../../components/shared/Screen";
+import Screen from "../../components/Screen";
 import PendingInvitation from "./PendingMeets";
 import DeletedMeets from "./DeletedMeetsScreen";
 
