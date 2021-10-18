@@ -8,7 +8,7 @@ const declinedMeets = "/meets/declined";
 const getTodayMeets = () => client.get(today);
 const getCalendarMeets = () => client.get(calendarMeets);
 const getPendingMeets = () => client.get(pendingMeets);
-const getDeclinedMeets = () => client.get(pendingMeets);
+const getDeclinedMeets = () => client.get(declinedMeets);
 
 export default {
 	getTodayMeets,

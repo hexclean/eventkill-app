@@ -1,20 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import {
 	View,
 	Text,
 	Alert,
 	StyleSheet,
 	FlatList,
-	Image,
 	TouchableOpacity,
 	Button,
 } from "react-native";
 import { useFonts } from "expo-font";
+import { Feather } from "@expo/vector-icons";
 
 // Components
 import Screen from "../components/shared/Screen";
 import Card from "../components/Card";
-import Loading from "../components/shared/Loading";
 import meetsApi from "../api/meets";
 import useApi from "../hooks/useApi";
 import useAuth from "../auth/useAuth";
@@ -77,11 +76,9 @@ export default function HomeScreen({ navigation }) {
 			)}
 			<View style={styles.welcome}>
 				<Text style={styles.welcomeName}>Szia, {user.name}👋</Text>
-				<TouchableOpacity onPress={() => logOut()}>
-					<Image
-						style={styles.profile}
-						source={require("../assets/profile.png")}
-					/>
+				{/* <TouchableOpacity onPress={() => logOut()}> */}
+				<TouchableOpacity onPress={() => navigation.navigate("Profile")}>
+					<Feather name="settings" size={25} color="#F78F1E" />
 				</TouchableOpacity>
 			</View>
 			<View style={styles.title}>

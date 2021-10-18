@@ -1,11 +1,14 @@
-import { StatusBar } from "expo-status-bar";
-import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
-import MainContainer from "./screens/MainContainer";
-import Login from "./screens/Login";
+import React, { useState } from "react";
+import { NavigationContainer } from "@react-navigation/native";
 import AuthContext from "./auth/context";
 import authStorage from "./auth/storage";
 import AppLoading from "expo-app-loading";
+
+// Components
+import AppNavigator from "./navigation/AppNavigator";
+import AuthNavigator from "./navigation/AuthNavigator";
+import Profile from "./screens/Profile/Profile";
+import Notifications from "./screens/Profile/Notifications";
 
 export default function App() {
 	const [user, setUser] = useState();
@@ -27,8 +30,14 @@ export default function App() {
 	}
 
 	return (
-		<AuthContext.Provider value={{ user, setUser }}>
-			{user ? <MainContainer /> : <Login />}
-		</AuthContext.Provider>
+		<NavigationContainer>
+			<Profile />
+		</NavigationContainer>
+
+		// <NavigationContainer>
+		// 	<AuthContext.Provider value={{ user, setUser }}>
+		// 		{user ? <AppNavigator /> : <AuthNavigator />}
+		// 	</AuthContext.Provider>
+		// </NavigationContainer>
 	);
 }

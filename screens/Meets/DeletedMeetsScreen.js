@@ -3,12 +3,12 @@ import { StyleSheet, FlatList } from "react-native";
 import { useFonts } from "expo-font";
 
 // Components
-import Screen from "../components/shared/Screen";
-import DeletedCards from "../components/DeletedCards";
-import useApi from "../hooks/useApi";
-import meetsApi from "../api/meets";
+import Screen from "../../components/shared/Screen";
+import DeletedCards from "../../components/DeletedCards";
+import useApi from "../../hooks/useApi";
+import meetsApi from "../../api/meets";
 
-export default function PendingInvitation() {
+export default function DeletedMeetsScreen() {
 	const getDeclinedMeets = useApi(meetsApi.getDeclinedMeets);
 
 	useEffect(() => {
@@ -16,9 +16,9 @@ export default function PendingInvitation() {
 	}, []);
 
 	const [loaded] = useFonts({
-		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
-		PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
-		PoppinsBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
+		PoppinsMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
+		PoppinsRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
+		PoppinsBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
 	});
 
 	if (!loaded) {
@@ -46,5 +46,3 @@ export default function PendingInvitation() {
 		</Screen>
 	);
 }
-
-const styles = StyleSheet.create({});

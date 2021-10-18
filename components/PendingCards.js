@@ -37,12 +37,12 @@ function PendingCards(props) {
 					<Text style={styles.questionText}>Meghívó</Text>
 				</View>
 
-				<TouchableOpacity onPress={() => console.log("elutasitas", props.id)}>
+				<TouchableOpacity onPress={() => props.deleteMeet()}>
 					<View style={styles.declineView}>
 						<Text style={styles.declineText}>Elutasítás</Text>
 					</View>
 				</TouchableOpacity>
-				<TouchableOpacity onPress={() => console.log("elfogadas", props.id)}>
+				<TouchableOpacity onPress={() => props.acceptMeet()}>
 					<View style={styles.acceptView}>
 						<Text style={styles.acceptText}>Elfogadás</Text>
 					</View>

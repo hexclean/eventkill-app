@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
 	View,
 	Text,
@@ -8,28 +8,21 @@ import {
 	StyleSheet,
 	ScrollView,
 } from "react-native";
-import FormInput from "../components/FormInput";
-import FormButton from "../components/FormButton";
-import SocialButton from "../components/SocialButton";
+import FormInput from "../../components/FormInput";
+import FormButton from "../../components/FormButton";
+import SocialButton from "../../components/SocialButton";
 // import { AuthContext } from "../navigation/AuthProvider";
-import authApi from "../api/auth";
-import useAuth from "../auth/useAuth";
-const Login = ({ navigation }) => {
-	const { logIn } = useAuth();
 
+const Register = ({ navigation }) => {
 	const [email, setEmail] = useState();
 	const [password, setPassword] = useState();
-
-	const handleSubmit = async ({ email, password }) => {
-		const result = await authApi.login("erdosjozsef20@gmail.com", "123456");
-		console.log(result.data.result[0].token);
-		logIn(result.data.result[0].token);
-	};
+	const [confirmPassword, setConfirmPassword] = useState();
+	// const { login, googleLogin, fbLogin } = useContext(AuthContext);
 
 	return (
 		<ScrollView contentContainerStyle={styles.container}>
-			<Image source={require("../assets/sapiens.png")} style={styles.logo} />
-			<Text style={styles.text}>RN Social App</Text>
+			<Image source={require("../../assets/sapiens.png")} style={styles.logo} />
+			<Text style={styles.text}>Meets</Text>
 
 			<FormInput
 				labelValue={email}
@@ -49,7 +42,18 @@ const Login = ({ navigation }) => {
 				secureTextEntry={true}
 			/>
 
-			<FormButton buttonTitle="Sign In" onPress={handleSubmit} />
+			<FormInput
+				labelValue={confirmPassword}
+				onChangeText={userPassword => setConfirmPassword(userPassword)}
+				placeholderText="Confirm Password"
+				iconType="lock"
+				secureTextEntry={true}
+			/>
+
+			<FormButton
+				buttonTitle="Sign In"
+				onPress={() => login(email, password)}
+			/>
 
 			<TouchableOpacity style={styles.forgotButton} onPress={() => {}}>
 				<Text style={styles.navButtonText}>Forgot Password?</Text>
@@ -87,7 +91,7 @@ const Login = ({ navigation }) => {
 	);
 };
 
-export default Login;
+export default Register;
 
 const styles = StyleSheet.create({
 	container: {

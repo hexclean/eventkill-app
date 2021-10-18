@@ -11,13 +11,14 @@ import {
 import { useFonts } from "expo-font";
 import { Agenda } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
-// Components
-import Screen from "../components/shared/Screen";
-import listingsApi from "../api/meets";
-import useApi from "../hooks/useApi";
-import meetsApi from "../api/meets";
 
-const SettingsScreen = ({ navigation }) => {
+// Components
+import Screen from "../../components/shared/Screen";
+import useApi from "../../hooks/useApi";
+import meetsApi from "../../api/meets";
+// import fonts from "../../components/shared/Fonts";
+
+const MeetsByCalendarScreen = () => {
 	const getCalendarMeetsApi = useApi(meetsApi.getCalendarMeets);
 
 	useEffect(() => {
@@ -25,8 +26,8 @@ const SettingsScreen = ({ navigation }) => {
 	}, []);
 
 	const [loaded] = useFonts({
-		PoppinsBold: require("../assets/fonts/Poppins-Bold.ttf"),
-		PoppinsLight: require("../assets/fonts/Poppins-Light.ttf"),
+		PoppinsBold: require("../../assets/fonts/Poppins-Bold.ttf"),
+		PoppinsLight: require("../../assets/fonts/Poppins-Light.ttf"),
 	});
 	if (!loaded) {
 		return null;
@@ -52,15 +53,6 @@ const SettingsScreen = ({ navigation }) => {
 			<Agenda
 				items={getCalendarMeetsApi.data}
 				selected={"2021-10-16"}
-				// renderEmptyDate={() => {
-				// 	return (
-				// 		<View style={styles.noMeets}>
-				// 			<View style={styles.boxHeader}>
-				// 				<Text style={styles.helloName}>Nincs meeting</Text>
-				// 			</View>
-				// 		</View>
-				// 	);
-				// }}
 				renderEmptyData={() => {
 					return (
 						<TouchableOpacity>
@@ -91,7 +83,7 @@ const SettingsScreen = ({ navigation }) => {
 								<View style={styles.partner}>
 									<Image
 										style={styles.withImage}
-										source={require("../assets/profile.png")}
+										source={require("../../assets/profile.png")}
 									/>
 									<View style={styles.partnerView}>
 										<Text style={styles.partnerName}>
@@ -129,7 +121,7 @@ const styles = StyleSheet.create({
 	},
 	partnerName: {
 		paddingLeft: 12,
-		fontFamily: "PoppinsLight",
+		fontFamily: "PoppinsBold",
 		fontSize: 15,
 	},
 	partnerView: {
@@ -182,4 +174,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default SettingsScreen;
+export default MeetsByCalendarScreen;

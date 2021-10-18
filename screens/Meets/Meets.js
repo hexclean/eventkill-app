@@ -4,16 +4,15 @@ import {
 	Text,
 	StyleSheet,
 	useWindowDimensions,
-	Image,
 	TouchableOpacity,
 } from "react-native";
 import { TabView, SceneMap } from "react-native-tab-view";
 import { Ionicons } from "@expo/vector-icons";
 
 // Components
-import Screen from "../components/shared/Screen";
-import PendingInvitation from "./PendingInvitation";
-import DeletedMeets from "./DeletedMeets";
+import Screen from "../../components/shared/Screen";
+import PendingInvitation from "./PendingMeets";
+import DeletedMeets from "./DeletedMeetsScreen";
 
 const PendingInvitationTab = () => <PendingInvitation />;
 
@@ -24,7 +23,7 @@ const renderScene = SceneMap({
 	deleted: DeletedMeetsTab,
 });
 
-const Meets = ({ navigation }) => {
+const Meets = () => {
 	const layout = useWindowDimensions();
 
 	const [index, setIndex] = React.useState(0);
