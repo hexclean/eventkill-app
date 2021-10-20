@@ -5,6 +5,8 @@ import { AntDesign } from "@expo/vector-icons";
 import HomeScreen from "../screens/HomeScreen";
 import SettingsScreen from "../screens/Meets/MeetsByCalendarScreen";
 import Meets from "../screens/Meets/Meets";
+import Profile from "../screens/Profile/Profile";
+import AccountNavigator from "./AccountNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -20,7 +22,7 @@ const AppNavigator = () => {
 					),
 				}}
 			/>
-			<Tab.Screen
+			{/* <Tab.Screen
 				name="Meets"
 				component={Meets}
 				options={{
@@ -36,6 +38,16 @@ const AppNavigator = () => {
 				options={{
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="calendar" color={color} size={size} />
+					),
+				}}
+			/> */}
+			<Tab.Screen
+				name="Account"
+				component={AccountNavigator}
+				options={{
+					headerShown: false,
+					tabBarIcon: ({ color, size }) => (
+						<AntDesign name="profile" color={color} size={size} />
 					),
 				}}
 			/>

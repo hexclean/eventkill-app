@@ -6,7 +6,7 @@ import { useFonts } from "expo-font";
 // Components
 import Screen from "../../components/Screen";
 
-const About = () => {
+const CreatePartner = () => {
 	const [isEnabled, setIsEnabled] = useState(false);
 	const toggleSwitch = () => {
 		console.log("dsa");
@@ -22,7 +22,7 @@ const About = () => {
 		<Screen>
 			<View style={styles.container}>
 				<View style={styles.settings}>
-					<Text style={styles.notifications}>Fontos információk</Text>
+					<Text style={styles.notifications}>CreatePartner</Text>
 					<Text style={styles.description}>
 						Itt beállíthatod, hogy milyen értesítéseket szeretnél kapni
 					</Text>
@@ -61,4 +61,4 @@ const styles = StyleSheet.create({
 	},
 });
 
-export default About;
+export default CreatePartner;

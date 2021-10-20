@@ -21,12 +21,12 @@ const Notifications = () => {
 	return (
 		<Screen>
 			<View style={styles.container}>
-				<View style={styles.backCont}>
+				{/* <View style={styles.backCont}>
 					<Ionicons name="arrow-back" size={27} color="black" />
 					<View style={styles.backView}>
 						<Text style={styles.backText}>Vissza</Text>
 					</View>
-				</View>
+				</View> */}
 				<View style={styles.settings}>
 					<Text style={styles.notifications}>Értesítések</Text>
 					<Text style={styles.description}>

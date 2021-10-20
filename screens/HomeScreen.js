@@ -6,36 +6,23 @@ import {
 	StyleSheet,
 	FlatList,
 	TouchableOpacity,
-	Button,
 } from "react-native";
+import axios from "axios";
 import { useFonts } from "expo-font";
 import { Feather } from "@expo/vector-icons";
+import { useIsFocused } from "@react-navigation/core";
 
 // Components
 import Screen from "../components/Screen";
 import Card from "../components/Card";
-import meetsApi from "../api/meets";
-import useApi from "../hooks/useApi";
-import useAuth from "../auth/useAuth";
 import Loading from "../components/ActivityIndicator";
+import authStorage from "../auth/storage";
 
-export default function HomeScreen({ navigation }) {
-	const { user, logOut } = useAuth();
-	const [meet, setMeet] = useState();
-
-	const handleSubmit = async meet => {
-		setMeet({
-			description: "rom app",
-		});
-		const result = await meetsApi.createMeet(meet);
-
-		if (!result.ok) {
-			console.log(result);
-			return alert("Could not save the listing");
-		}
-	};
-
-	const getTodayMeetsApi = useApi(meetsApi.getTodayMeets);
+export default function HomeScreen({ navigation, props }) {
+	const isFocused = useIsFocused();
+	const [meets, setMeets] = useState(0);
+	const [meetStatus, setMeetStatus] = useState();
+	const [loading, setLoading] = useState(false);
 
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
@@ -43,34 +30,101 @@ export default function HomeScreen({ navigation }) {
 		PoppinsBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
 	});
 
+	const getTodayMeets = async () => {
+		const authToken = await authStorage.getToken();
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		setLoading(true);
+		await axios
+			.get("http://192.168.0.178:9000/api/meets/today", data)
+			.then(response => {
+				setMeets(response.data.result);
+			});
+		setLoading(false);
+	};
+
+	const getMeetStatus = async meetId => {
+		const authToken = await authStorage.getToken();
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+
+		await axios
+			.get(`http://192.168.0.178:9000/api/meets/check-status/${meetId}`, data)
+			.then(response => {
+				console.log("response.data.result", response.data.result);
+				setMeetStatus(response.data.result[0].status);
+			});
+	};
+
+	const postDeleteMeet = async meetId => {
+		const authToken = await authStorage.getToken();
+		let data = {
+			header: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		try {
+			await axios.post(
+				`http://192.168.0.178:9000/api/operation/delete/${meetId}`,
+				data
+			);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
-		getTodayMeetsApi.request();
+		getTodayMeets();
 	}, []);
 
-	const deleteMeet = items => {
+	const deleteMeet = async meetId => {
 		Alert.alert(
 			"Meeting lemondása",
 			"Leszeretnéd mondani a meetinget?",
 			[
 				{
 					text: "Mégse",
-					onPress: () => console.log("Cancel Pressed"),
 					style: "cancel",
 				},
 				{
 					text: "Igen",
-					onPress: () => {
-						const newList = list.filter(item => item.id !== items.id);
-						setList(newList);
-						if (items.active === 1) {
-							Alert.alert(
-								"Meeting elhalasztva!",
-								"Az ügyfeled is lemondta a meetinget, így elmarad!",
-								[{ text: "Rendben", onPress: () => console.log("OK Pressed") }],
-								{ cancelable: false }
-							);
+					onPress: async () => {
+						await getMeetStatus(meetId.id);
+						await postDeleteMeet(meetId.id);
+						await getTodayMeets();
+
+						// setMeets(prevState => {
+						// 	setMeets(prevState.filter(item => item.id !== meetId.id));
+						// });
+						console.log("meet", meetId.id);
+						console.log("meetStatus", meetStatus);
+						if (meetStatus === 1) {
+							Alert.alert("Lemondott Meeting", "desc", [
+								{
+									text: "Rendben",
+									style: "cancel",
+								},
+							]);
 						}
 					},
+
+					// if (state === 1) {
+					// 	Alert.alert(
+					// 		"Meeting elhalasztva!",
+					// 		"Az ügyfeled is lemondta a meetinget, így elmarad!",
+					// 		[{ text: "Rendben", onPress: () => setMeetId(state) }],
+					// 		{ cancelable: false }
+					// 	);
+					// }
 				},
 			],
 			{ cancelable: false }
@@ -81,20 +135,24 @@ export default function HomeScreen({ navigation }) {
 		return null;
 	}
 
+	// console.log("render elott", meets);
 	return (
 		<>
-			<Loading visible={getTodayMeetsApi.loading} />
+			{loading && (
+				<>
+					<Loading visible={true} />
+				</>
+			)}
 			<Screen>
-				{getTodayMeetsApi.error && (
+				{/* {getTodayMeetsApi.error && (
 					<>
 						<Text>Couldn't retrieve the listings.</Text>
 					</>
-				)}
+				)} */}
 				<View style={styles.welcome}>
-					<Text style={styles.welcomeName}>Szia, {user.id}👋</Text>
-					{/* <TouchableOpacity onPress={() => handleSubmit(meet)}> */}
-					<TouchableOpacity onPress={() => logOut()}>
-						{/* <TouchableOpacity onPress={() => navigation.navigate("Profile")}> */}
+					<Text style={styles.welcomeName}>Szia, joco👋</Text>
+
+					<TouchableOpacity>
 						<Feather name="settings" size={25} color="#F78F1E" />
 					</TouchableOpacity>
 				</View>
@@ -105,7 +163,8 @@ export default function HomeScreen({ navigation }) {
 					style={styles.list}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
-					data={getTodayMeetsApi.data}
+					data={meets}
+					extraData={meets}
 					keyExtractor={listing => listing.id.toString()}
 					renderItem={({ item }) => (
 						<Card

@@ -34,14 +34,14 @@ export default function App() {
 	}
 
 	return (
-		<NavigationContainer>
-			<CreateMeet />
-		</NavigationContainer>
-
 		// <NavigationContainer>
-		// 	<AuthContext.Provider value={{ user, setUser }}>
-		// 		{user ? <AppNavigator /> : <AuthNavigator />}
-		// 	</AuthContext.Provider>
+		// 	<CreateMeet />
 		// </NavigationContainer>
+
+		<NavigationContainer>
+			<AuthContext.Provider value={{ user, setUser }}>
+				{user ? <AppNavigator /> : <AuthNavigator />}
+			</AuthContext.Provider>
+		</NavigationContainer>
 	);
 }

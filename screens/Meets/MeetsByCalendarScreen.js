@@ -18,6 +18,7 @@ import useApi from "../../hooks/useApi";
 import meetsApi from "../../api/meets";
 import Loading from "../../components/ActivityIndicator";
 
+const date = new Date();
 const MeetsByCalendarScreen = () => {
 	const getCalendarMeetsApi = useApi(meetsApi.getCalendarMeets);
 
@@ -59,7 +60,7 @@ const MeetsByCalendarScreen = () => {
 				)}
 				<Agenda
 					items={getCalendarMeetsApi.data}
-					selected={"2021-10-16"}
+					selected={date}
 					renderEmptyData={() => {
 						return (
 							<TouchableOpacity>

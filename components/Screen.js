@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
 	},
 	view: {
 		flex: 1,
-		padding: 13,
+		padding: 8,
 	},
 });
 
