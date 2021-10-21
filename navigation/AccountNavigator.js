@@ -14,7 +14,11 @@ const Stack = createStackNavigator();
 
 const AccountNavigator = () => (
 	<Stack.Navigator>
-		<Stack.Screen name="Account" component={Profile} />
+		<Stack.Screen
+			options={{ headerShown: false }}
+			name="Account"
+			component={Profile}
+		/>
 		<Stack.Screen name="Notifications" component={Notifications} />
 		<Stack.Screen name="NewMeet" component={CreateMeet} />
 		<Stack.Screen name="About" component={About} />

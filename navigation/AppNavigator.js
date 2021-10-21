@@ -17,30 +17,32 @@ const AppNavigator = () => {
 				name="Home"
 				component={HomeScreen}
 				options={{
+					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="home" color={color} size={size} />
 					),
 				}}
 			/>
-			{/* <Tab.Screen
+			<Tab.Screen
 				name="Meets"
 				component={Meets}
 				options={{
+					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="bars" color={color} size={size} />
 					),
 				}}
 			/>
-
 			<Tab.Screen
 				name="Settings"
 				component={SettingsScreen}
 				options={{
+					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="calendar" color={color} size={size} />
 					),
 				}}
-			/> */}
+			/>
 			<Tab.Screen
 				name="Account"
 				component={AccountNavigator}

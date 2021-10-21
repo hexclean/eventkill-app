@@ -1,35 +1,20 @@
 import React, { useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	Alert,
-	StyleSheet,
-	FlatList,
-	TouchableOpacity,
-} from "react-native";
-import axios from "axios";
-import { useFonts } from "expo-font";
-import { Feather } from "@expo/vector-icons";
+import { Alert, StyleSheet, FlatList } from "react-native";
 import { useIsFocused } from "@react-navigation/core";
 
 // Components
-import Screen from "../components/Screen";
-import Card from "../components/Card";
-import Loading from "../components/ActivityIndicator";
-import authStorage from "../auth/storage";
+import Screen from "../../components/Screen";
+import AcceptedCard from "../../components/AcceptedCard";
+import axios from "axios";
+import authStorage from "../../auth/storage";
+import Loading from "../../components/ActivityIndicator";
 
-export default function HomeScreen({ navigation, props }) {
+export default function AcceptedMeets() {
 	const isFocused = useIsFocused();
 	const [meets, setMeets] = useState(null);
 	const [loading, setLoading] = useState(false);
 
-	const [loaded] = useFonts({
-		PoppinsMedium: require("../assets/fonts/Poppins-Medium.ttf"),
-		PoppinsRegular: require("../assets/fonts/Poppins-Regular.ttf"),
-		PoppinsBold: require("../assets/fonts/Poppins-SemiBold.ttf"),
-	});
-
-	const getTodayMeets = async () => {
+	const getAcceptedMeets = async () => {
 		const authToken = await authStorage.getToken();
 		let data = {
 			headers: {
@@ -39,7 +24,7 @@ export default function HomeScreen({ navigation, props }) {
 		};
 		setLoading(true);
 		await axios
-			.get("http://192.168.0.178:9000/api/meets/today", data)
+			.get("http://192.168.0.178:9000/api/meets/accepted", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});
@@ -64,10 +49,6 @@ export default function HomeScreen({ navigation, props }) {
 		}
 	};
 
-	useEffect(() => {
-		getTodayMeets();
-	}, [isFocused]);
-
 	const deleteMeet = async meet => {
 		Alert.alert(
 			"Meeting lemondása",
@@ -81,7 +62,7 @@ export default function HomeScreen({ navigation, props }) {
 					text: "Igen",
 					onPress: async () => {
 						await postDeleteMeet(meet.id);
-						await getTodayMeets();
+						await getAcceptedMeets();
 						if (meet.status === 1) {
 							Alert.alert("Lemondott Meeting", "desc", [
 								{
@@ -97,56 +78,32 @@ export default function HomeScreen({ navigation, props }) {
 		);
 	};
 
-	if (!loaded) {
-		return null;
-	}
+	useEffect(() => {
+		getAcceptedMeets();
+	}, [isFocused]);
 
 	return (
-		<>
+		<Screen>
 			{loading && (
 				<>
 					<Loading visible={true} />
 				</>
 			)}
-			<Screen>
-				{/* {getTodayMeetsApi.error && (
-					<>
-						<Text>Couldn't retrieve the listings.</Text>
-					</>
-				)} */}
-				<View style={styles.welcome}>
-					<Text style={styles.welcomeName}>Szia, joco👋</Text>
-
-					<TouchableOpacity>
-						<Feather name="settings" size={25} color="#F78F1E" />
-					</TouchableOpacity>
-				</View>
-				<View style={styles.title}>
-					<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
-				</View>
-				<FlatList
-					style={styles.list}
-					showsVerticalScrollIndicator={false}
-					showsHorizontalScrollIndicator={false}
-					data={meets}
-					extraData={meets}
-					keyExtractor={listing => listing.id.toString()}
-					renderItem={({ item }) => (
-						<Card
-							id={item.id}
-							deleteMeet={() => deleteMeet(item)}
-							meetId={item.id}
-							title={item.title}
-							time={item.time}
-							description={item.description}
-							partner={item.partner}
-						/>
-					)}
-				/>
-			</Screen>
-		</>
+			<FlatList
+				style={styles.list}
+				showsVerticalScrollIndicator={false}
+				showsHorizontalScrollIndicator={false}
+				data={meets}
+				extraData={meets}
+				keyExtractor={listing => listing.id.toString()}
+				renderItem={({ item }) => (
+					<AcceptedCard item={item} deleteMeet={() => deleteMeet(item)} />
+				)}
+			/>
+		</Screen>
 	);
 }
+
 const styles = StyleSheet.create({
 	loading: {
 		justifyContent: "center",

@@ -13,6 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import Screen from "../../components/Screen";
 import PendingInvitation from "./PendingMeets";
 import DeletedMeets from "./DeletedMeetsScreen";
+import AcceptedMeets from "./AcceptedMeets";
 
 const PendingInvitationTab = () => <PendingInvitation />;
 
@@ -21,6 +22,7 @@ const DeletedMeetsTab = () => <DeletedMeets />;
 const renderScene = SceneMap({
 	first: PendingInvitationTab,
 	deleted: DeletedMeetsTab,
+	accepted: AcceptedMeets,
 });
 
 const Meets = () => {
@@ -29,7 +31,8 @@ const Meets = () => {
 	const [index, setIndex] = React.useState(0);
 	const [routes] = React.useState([
 		{ key: "first", title: "Függőben" },
-		{ key: "deleted", title: "Elhalasztott" },
+		{ key: "accepted", title: "Elfogadott" },
+		{ key: "deleted", title: "Lemondott" },
 	]);
 
 	return (

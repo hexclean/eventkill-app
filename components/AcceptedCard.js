@@ -14,50 +14,37 @@ function PendingCards(props) {
 	const description = props.item.description;
 
 	return (
-		<View style={styles.box}>
-			<Text style={styles.helloName}>{props.item.title}</Text>
+		<TouchableOpacity onLongPress={props.deleteMeet}>
+			<View style={styles.box}>
+				<Text style={styles.helloName}>{props.item.title}</Text>
 
-			{description.length != 0 && description !== "-" ? (
-				<>
-					<View style={styles.descriptionView}>
-						<Text style={styles.description}>{props.item.description}</Text>
+				{description.length != 0 && description !== "-" ? (
+					<>
+						<View style={styles.descriptionView}>
+							<Text style={styles.description}>{props.item.description}</Text>
+						</View>
+					</>
+				) : null}
+
+				<View style={styles.partner}>
+					<View>
+						<Image
+							style={styles.withImage}
+							source={require("../assets/profile.png")}
+						/>
 					</View>
-				</>
-			) : null}
-
-			<View style={styles.partner}>
-				<View>
-					<Image
-						style={styles.withImage}
-						source={require("../assets/profile.png")}
-					/>
-				</View>
-				<View style={styles.partnerView}>
-					<Text style={styles.partnerName}>
-						{props.item.partner[0].company} - {props.item.partner[0].name}
-					</Text>
-				</View>
-			</View>
-			<View style={styles.status}>
-				<View>
-					<Text style={styles.questionText}>Meghívó</Text>
+					<View style={styles.partnerView}>
+						<Text style={styles.partnerName}>
+							{props.item.partner[0].company} - {props.item.partner[0].name}
+						</Text>
+					</View>
 				</View>
 
-				<TouchableOpacity>
-					<View style={styles.declineView}>
-						<Text style={styles.declineText}>Elutasítás</Text>
-					</View>
-				</TouchableOpacity>
-				<TouchableOpacity onPress={() => props.acceptMeet()}>
-					<View style={styles.acceptView}>
-						<Text style={styles.acceptText}>Elfogadás</Text>
-					</View>
-				</TouchableOpacity>
+				<View style={styles.createdAtView}>
+					<Text style={styles.createdAt}>Kiküldve: 2021.10.12</Text>
+				</View>
 			</View>
-			<View style={styles.createdAtView}>
-				<Text style={styles.createdAt}>Kiküldve: 2021.10.12</Text>
-			</View>
-		</View>
+		</TouchableOpacity>
 	);
 }
 
