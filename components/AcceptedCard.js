@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
 
@@ -16,15 +16,17 @@ function PendingCards(props) {
 	return (
 		<TouchableOpacity onLongPress={props.deleteMeet}>
 			<View style={styles.box}>
-				<Text style={styles.helloName}>{props.item.title}</Text>
-
-				{description.length != 0 && description !== "-" ? (
-					<>
-						<View style={styles.descriptionView}>
-							<Text style={styles.description}>{props.item.description}</Text>
-						</View>
-					</>
-				) : null}
+				<Text style={styles.helloName}>{props.item.meets[0].title}</Text>
+				{/* 
+			{description.length != 0 && description !== "-" ? (
+				<> */}
+				<View style={styles.descriptionView}>
+					<Text style={styles.description}>
+						{props.item.meets[0].description}
+					</Text>
+				</View>
+				{/* </>
+			) : null} */}
 
 				<View style={styles.partner}>
 					<View>
@@ -39,9 +41,10 @@ function PendingCards(props) {
 						</Text>
 					</View>
 				</View>
-
 				<View style={styles.createdAtView}>
-					<Text style={styles.createdAt}>Kiküldve: 2021.10.12</Text>
+					<Text style={styles.createdAt}>
+						Időpont: 2021.10.30 - 10:00 - 13:00
+					</Text>
 				</View>
 			</View>
 		</TouchableOpacity>

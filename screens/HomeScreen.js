@@ -21,7 +21,6 @@ import authStorage from "../auth/storage";
 export default function HomeScreen({ navigation, props }) {
 	const isFocused = useIsFocused();
 	const [meets, setMeets] = useState(null);
-	const [meetStatus, setMeetStatus] = useState(0);
 	const [loading, setLoading] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -165,15 +164,7 @@ export default function HomeScreen({ navigation, props }) {
 					extraData={meets}
 					keyExtractor={listing => listing.id.toString()}
 					renderItem={({ item }) => (
-						<Card
-							id={item.id}
-							deleteMeet={() => deleteMeet(item)}
-							meetId={item.id}
-							title={item.title}
-							time={item.time}
-							description={item.description}
-							partner={item.partner}
-						/>
+						<Card item={item} deleteMeet={() => deleteMeet(item)} />
 					)}
 					refreshing={refreshing}
 					onRefresh={async () => {

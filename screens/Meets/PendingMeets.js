@@ -13,6 +13,7 @@ export default function PendingMeets() {
 	const isFocused = useIsFocused();
 	const [meets, setMeets] = useState(null);
 	const [loading, setLoading] = useState(false);
+	const [refreshing, setRefreshing] = useState(false);
 
 	const getPendingMeets = async () => {
 		const authToken = await authStorage.getToken();
@@ -34,7 +35,7 @@ export default function PendingMeets() {
 	const postAcceptMeet = async meetId => {
 		const authToken = await authStorage.getToken();
 		let data = {
-			header: {
+			headers: {
 				"x-auth-token": authToken,
 				"content-type": "application/json",
 			},
@@ -42,6 +43,7 @@ export default function PendingMeets() {
 		try {
 			await axios.post(
 				`http://192.168.0.178:9000/api/operation/accept/${meetId}`,
+				{},
 				data
 			);
 			await getPendingMeets();
@@ -129,6 +131,10 @@ export default function PendingMeets() {
 						}
 					/>
 				)}
+				refreshing={refreshing}
+				onRefresh={async () => {
+					await getPendingMeets();
+				}}
 			/>
 		</Screen>
 	);

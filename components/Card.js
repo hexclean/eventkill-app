@@ -10,28 +10,40 @@ function Card(props) {
 	if (!loaded) {
 		return null;
 	}
+	const description = props.item.meets[0].description;
 
 	return (
 		<TouchableOpacity onLongPress={props.deleteMeet}>
 			<View style={styles.box}>
-				<View style={styles.boxHeader}>
-					<Text style={styles.helloName}>
-						{props.title} - {props.id}
-					</Text>
-					<Text style={styles.time}>{props.time}</Text>
-				</View>
+				<Text style={styles.helloName}>{props.item.meets[0].title}</Text>
 
-				<View style={styles.descriptionView}>
-					<Text style={styles.description}>{props.description}</Text>
-				</View>
+				{description.length != 0 && description !== "-" ? (
+					<>
+						<View style={styles.descriptionView}>
+							<Text style={styles.description}>
+								{props.item.meets[0].description}
+							</Text>
+						</View>
+					</>
+				) : null}
+
 				<View style={styles.partner}>
-					<Image
-						style={styles.withImage}
-						source={require("../assets/profile.png")}
-					/>
-					<View style={styles.partnerView}>
-						<Text style={styles.partnerName}>{props.name}</Text>
+					<View>
+						<Image
+							style={styles.withImage}
+							source={require("../assets/profile.png")}
+						/>
 					</View>
+					<View style={styles.partnerView}>
+						<Text style={styles.partnerName}>
+							{props.item.partner[0].company} - {props.item.partner[0].name}
+						</Text>
+					</View>
+				</View>
+				<View style={styles.createdAtView}>
+					<Text style={styles.createdAt}>
+						Időpont: 2021.10.30 - 10:00 - 13:00
+					</Text>
 				</View>
 			</View>
 		</TouchableOpacity>
@@ -40,7 +52,8 @@ function Card(props) {
 
 const styles = StyleSheet.create({
 	// start tabview
-	createdAt: { fontFamily: "PoppinsLight", fontSize: 14, padding: 3 },
+	createdAtView: { paddingTop: 14, fontSize: 15 },
+	createdAt: { fontFamily: "PoppinsMedium", fontSize: 14, padding: 3 },
 
 	status: {
 		flexDirection: "row",
@@ -69,7 +82,7 @@ const styles = StyleSheet.create({
 		padding: 3,
 	},
 	questionText: {
-		fontFamily: "PoppinsMedium",
+		fontFamily: "PoppinsLight",
 		fontSize: 15,
 		padding: 3,
 	},
@@ -83,7 +96,7 @@ const styles = StyleSheet.create({
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	partner: { flexDirection: "row" },
+	partner: { flexDirection: "row", marginVertical: 10 },
 	withImage: {
 		height: 30,
 		width: 30,
@@ -111,10 +124,7 @@ const styles = StyleSheet.create({
 
 		elevation: 3,
 	},
-	boxHeader: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
+
 	descriptionView: {
 		marginVertical: 7,
 	},

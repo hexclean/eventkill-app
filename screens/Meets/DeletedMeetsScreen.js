@@ -1,18 +1,37 @@
-import React, { useEffect } from "react";
-import { StyleSheet, FlatList } from "react-native";
+import React, { useEffect, useState } from "react";
+import { FlatList } from "react-native";
 import { useFonts } from "expo-font";
+import axios from "axios";
 
 // Components
 import Screen from "../../components/Screen";
 import DeletedCards from "../../components/DeletedCards";
-import useApi from "../../hooks/useApi";
-import meetsApi from "../../api/meets";
-
+import authStorage from "../../auth/storage";
 export default function DeletedMeetsScreen() {
-	const getDeclinedMeets = useApi(meetsApi.getDeclinedMeets);
+	const [refreshing, setRefreshing] = useState(false);
+	const [loading, setLoading] = useState(false);
+	const [meets, setMeets] = useState(null);
+
+	const getDeletedMeets = async () => {
+		const authToken = await authStorage.getToken();
+
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		setLoading(true);
+		await axios
+			.get("http://192.168.0.178:9000/api/meets/declined", data)
+			.then(response => {
+				setMeets(response.data.result);
+			});
+		setLoading(false);
+	};
 
 	useEffect(() => {
-		getDeclinedMeets.request();
+		getDeletedMeets();
 	}, []);
 
 	const [loaded] = useFonts({
@@ -29,19 +48,14 @@ export default function DeletedMeetsScreen() {
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
-				data={getDeclinedMeets.data}
+				data={meets}
+				extraData={meets}
 				keyExtractor={listing => listing.id.toString()}
-				renderItem={({ item }) => (
-					<DeletedCards
-						id={item.id}
-						deleteMeet={() => deleteMeet(item)}
-						meetId={item.id}
-						title={item.title}
-						time={item.time}
-						description={item.description}
-						partner={item.partner}
-					/>
-				)}
+				renderItem={({ item }) => <DeletedCards item={item} />}
+				refreshing={refreshing}
+				onRefresh={async () => {
+					await getDeletedMeets();
+				}}
 			/>
 		</Screen>
 	);
