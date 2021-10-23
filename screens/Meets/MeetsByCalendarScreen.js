@@ -19,7 +19,7 @@ import meetsApi from "../../api/meets";
 import Loading from "../../components/ActivityIndicator";
 
 const date = new Date();
-const MeetsByCalendarScreen = () => {
+const MeetsByCalendarScreen = ({ navigation }) => {
 	const getCalendarMeetsApi = useApi(meetsApi.getCalendarMeets);
 
 	useEffect(() => {
@@ -63,7 +63,7 @@ const MeetsByCalendarScreen = () => {
 					selected={date}
 					renderEmptyData={() => {
 						return (
-							<TouchableOpacity>
+							<TouchableOpacity onPress={() => navigation.navigate("NewMeet")}>
 								<View style={styles.noMeets}>
 									<Text style={styles.helloName}>Meeting létrehozása</Text>
 									<Ionicons

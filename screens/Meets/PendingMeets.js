@@ -25,7 +25,7 @@ export default function PendingMeets() {
 		};
 		setLoading(true);
 		await axios
-			.get("http://192.168.0.178:9000/api/meets/pending", data)
+			.get("http://192.168.100.70:9000/api/meets/pending", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});
@@ -42,7 +42,7 @@ export default function PendingMeets() {
 		};
 		try {
 			await axios.post(
-				`http://192.168.0.178:9000/api/operation/accept/${meetId}`,
+				`http://192.168.100.70:9000/api/operation/accept/${meetId}`,
 				{},
 				data
 			);
@@ -62,7 +62,7 @@ export default function PendingMeets() {
 		};
 		try {
 			await axios.post(
-				`http://192.168.0.178:9000/api/operation/decline/${meetId}`,
+				`http://192.168.100.70:9000/api/operation/decline/${meetId}`,
 				data
 			);
 			await getPendingMeets();

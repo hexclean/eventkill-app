@@ -6,10 +6,11 @@ import {
 	StyleSheet,
 	FlatList,
 	TouchableOpacity,
+	Image,
 } from "react-native";
 import axios from "axios";
 import { useFonts } from "expo-font";
-import { Feather } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 import { useIsFocused } from "@react-navigation/core";
 
 // Components
@@ -17,6 +18,7 @@ import Screen from "../components/Screen";
 import Card from "../components/Card";
 import Loading from "../components/ActivityIndicator";
 import authStorage from "../auth/storage";
+import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
 export default function HomeScreen({ navigation, props }) {
 	const isFocused = useIsFocused();
@@ -41,7 +43,7 @@ export default function HomeScreen({ navigation, props }) {
 		};
 		setLoading(true);
 		await axios
-			.get("http://192.168.0.178:9000/api/meets/today", data)
+			.get("http://192.168.100.70:9000/api/meets/today", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});
@@ -58,7 +60,7 @@ export default function HomeScreen({ navigation, props }) {
 		};
 		//
 		return axios.get(
-			`http://192.168.0.178:9000/api/meets/check/${meetId}`,
+			`http://192.168.100.70:9000/api/meets/check/${meetId}`,
 			data
 		);
 
@@ -75,7 +77,7 @@ export default function HomeScreen({ navigation, props }) {
 		};
 		try {
 			await axios.post(
-				`http://192.168.0.178:9000/api/operation/delete/${meetId}`,
+				`http://192.168.100.70:9000/api/operation/delete/${meetId}`,
 				{},
 				data
 			);
@@ -147,11 +149,21 @@ export default function HomeScreen({ navigation, props }) {
 					</>
 				)} */}
 				<View style={styles.welcome}>
-					<Text style={styles.welcomeName}>Szia, joco👋</Text>
+					<TouchableWithoutFeedback onPress={() => console.log("Press")}>
+						<View style={styles.profileSection}>
+							<Image
+								style={styles.profileImage}
+								source={require("../assets/profile.png")}
+							/>
+							<View style={styles.mainInfo}>
+								<Text style={styles.name}>Erdős József</Text>
+							</View>
+						</View>
+					</TouchableWithoutFeedback>
 
-					<TouchableOpacity>
-						<Feather name="settings" size={25} color="#F78F1E" />
-					</TouchableOpacity>
+					{/* <View style={styles.testtt}>
+						<MaterialIcons name="notifications" size={26} color="black" />
+					</View> */}
 				</View>
 				<View style={styles.title}>
 					<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
@@ -176,6 +188,22 @@ export default function HomeScreen({ navigation, props }) {
 	);
 }
 const styles = StyleSheet.create({
+	profileSection: { flexDirection: "row" },
+	mainInfo: {
+		justifyContent: "center",
+	},
+	testtt: { justifyContent: "center" },
+
+	name: {
+		paddingLeft: 12,
+		fontFamily: "PoppinsBold",
+		fontSize: 19,
+	},
+	profileImage: {
+		height: 50,
+		width: 50,
+		borderRadius: 50,
+	},
 	loading: {
 		justifyContent: "center",
 		alignItems: "center",
@@ -187,10 +215,10 @@ const styles = StyleSheet.create({
 	},
 	title: {
 		// marginVertical: 10,
-		paddingBottom: 6,
+		// paddingBottom: 6,
+		paddingTop: 10,
 	},
 	welcome: {
-		marginBottom: 5,
 		flexDirection: "row",
 		justifyContent: "space-between",
 	},
@@ -205,6 +233,6 @@ const styles = StyleSheet.create({
 	start: {
 		fontFamily: "PoppinsBold",
 		paddingTop: 7,
-		fontSize: 20,
+		fontSize: 16,
 	},
 });

@@ -23,7 +23,7 @@ export default function DeletedMeetsScreen() {
 		};
 		setLoading(true);
 		await axios
-			.get("http://192.168.0.178:9000/api/meets/declined", data)
+			.get("http://192.168.100.70:9000/api/meets/declined", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});

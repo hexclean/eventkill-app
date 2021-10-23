@@ -13,6 +13,7 @@ import About from "./screens/Profile/About";
 import Login from "./screens/Auth/Login";
 import Register from "./screens/Auth/Register";
 import CreateMeet from "./screens/Profile/CreateMeet";
+import { navigationRef } from "./navigation/rootNavigation";
 
 export default function App() {
 	const [user, setUser] = useState();
@@ -34,11 +35,7 @@ export default function App() {
 	}
 
 	return (
-		// <NavigationContainer>
-		// 	<CreateMeet />
-		// </NavigationContainer>
-
-		<NavigationContainer>
+		<NavigationContainer ref={navigationRef}>
 			<AuthContext.Provider value={{ user, setUser }}>
 				{user ? <AppNavigator /> : <AuthNavigator />}
 			</AuthContext.Provider>
