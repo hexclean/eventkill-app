@@ -39,9 +39,6 @@ const Meets = () => {
 		<Screen>
 			<View style={styles.welcome}>
 				<Text style={styles.start}>Gyors áttekintés</Text>
-				<TouchableOpacity onPress={() => console.log("profile")}>
-					<Ionicons name="ios-add-circle" size={30} color="black" />
-				</TouchableOpacity>
 			</View>
 			<TabView
 				navigationState={{ index, routes }}

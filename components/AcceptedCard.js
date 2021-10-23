@@ -11,22 +11,22 @@ function PendingCards(props) {
 		return null;
 	}
 
-	const description = props.item.description;
+	const description = props.item.meets[0].description;
 
 	return (
 		<TouchableOpacity onLongPress={props.deleteMeet}>
 			<View style={styles.box}>
 				<Text style={styles.helloName}>{props.item.meets[0].title}</Text>
-				{/* 
-			{description.length != 0 && description !== "-" ? (
-				<> */}
-				<View style={styles.descriptionView}>
-					<Text style={styles.description}>
-						{props.item.meets[0].description}
-					</Text>
-				</View>
-				{/* </>
-			) : null} */}
+
+				{description.length != 0 && description !== "-" ? (
+					<>
+						<View style={styles.descriptionView}>
+							<Text style={styles.description}>
+								{props.item.meets[0].description}
+							</Text>
+						</View>
+					</>
+				) : null}
 
 				<View style={styles.partner}>
 					<View>
@@ -43,7 +43,8 @@ function PendingCards(props) {
 				</View>
 				<View style={styles.createdAtView}>
 					<Text style={styles.createdAt}>
-						Időpont: 2021.10.30 - 10:00 - 13:00
+						Időpont: {props.item.meets[0].startDate} -{" "}
+						{props.item.meets[0].time}
 					</Text>
 				</View>
 			</View>
@@ -53,8 +54,8 @@ function PendingCards(props) {
 
 const styles = StyleSheet.create({
 	// start tabview
-	createdAtView: { paddingTop: 6 },
-	createdAt: { fontFamily: "PoppinsLight", fontSize: 14, padding: 3 },
+	createdAtView: { paddingTop: 14, fontSize: 15 },
+	createdAt: { fontFamily: "PoppinsMedium", fontSize: 14, padding: 3 },
 
 	status: {
 		flexDirection: "row",
@@ -83,7 +84,7 @@ const styles = StyleSheet.create({
 		padding: 3,
 	},
 	questionText: {
-		fontFamily: "PoppinsMedium",
+		fontFamily: "PoppinsLight",
 		fontSize: 15,
 		padding: 3,
 	},
@@ -142,5 +143,4 @@ const styles = StyleSheet.create({
 		fontFamily: "PoppinsLight",
 	},
 });
-
 export default PendingCards;

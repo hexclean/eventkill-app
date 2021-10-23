@@ -10,6 +10,7 @@ function Card(props) {
 	if (!loaded) {
 		return null;
 	}
+
 	const description = props.item.meets[0].description;
 
 	return (
@@ -42,7 +43,8 @@ function Card(props) {
 				</View>
 				<View style={styles.createdAtView}>
 					<Text style={styles.createdAt}>
-						Időpont: 2021.10.30 - 10:00 - 13:00
+						Időpont: {props.item.meets[0].startDate} -{" "}
+						{props.item.meets[0].time}
 					</Text>
 				</View>
 			</View>

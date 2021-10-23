@@ -1,16 +1,8 @@
 import React, { useEffect, useState } from "react";
-import {
-	View,
-	Text,
-	Alert,
-	StyleSheet,
-	FlatList,
-	TouchableOpacity,
-	Image,
-} from "react-native";
+import { View, Text, Alert, StyleSheet, FlatList, Image } from "react-native";
 import axios from "axios";
 import { useFonts } from "expo-font";
-import { MaterialIcons } from "@expo/vector-icons";
+import colors from "../config/colors";
 import { useIsFocused } from "@react-navigation/core";
 
 // Components
@@ -204,13 +196,13 @@ export default function HomeScreen({ navigation }) {
 }
 const styles = StyleSheet.create({
 	createMeetText: {
-		color: "white",
+		color: colors.white,
 		fontFamily: "PoppinsBold",
 
 		fontSize: 16,
 	},
 	createMeet: {
-		backgroundColor: "dodgerblue",
+		backgroundColor: colors.orange,
 		justifyContent: "center",
 		alignItems: "center",
 		borderRadius: 8,

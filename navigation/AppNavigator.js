@@ -11,6 +11,7 @@ import Meets from "../screens/Meets/Meets";
 import AccountNavigator from "./AccountNavigator";
 import navigation from "../navigation/rootNavigation";
 import HomeStackNavigator from "./HomeStackNavigator";
+import CreateMeet from "../screens/Profile/CreateMeet";
 
 const Tab = createBottomTabNavigator();
 
@@ -39,6 +40,7 @@ const AppNavigator = () => {
 				options={{
 					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
+						// <AntDesign name="clockcircleo" size={20} color="gray" />
 						<AntDesign name="home" color={color} size={size} />
 					),
 				}}
@@ -64,16 +66,16 @@ const AppNavigator = () => {
 					),
 				}}
 			/>
-			{/* <Tab.Screen
-				name="Account"
-				component={AccountNavigator}
+			<Tab.Screen
+				name="NewMeet"
+				component={CreateMeet}
 				options={{
 					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
-						<AntDesign name="profile" color={color} size={size} />
+						<AntDesign name="pluscircle" color={color} size={size} />
 					),
 				}}
-			/> */}
+			/>
 		</Tab.Navigator>
 	);
 };
