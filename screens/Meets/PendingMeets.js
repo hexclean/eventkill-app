@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, FlatList } from "react-native";
+import { Alert, FlatList, Text, View, StyleSheet } from "react-native";
 import { useIsFocused } from "@react-navigation/core";
 
 // Components
@@ -11,7 +11,7 @@ import Loading from "../../components/ActivityIndicator";
 
 export default function PendingMeets() {
 	const isFocused = useIsFocused();
-	const [meets, setMeets] = useState(null);
+	const [meets, setMeets] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -82,6 +82,13 @@ export default function PendingMeets() {
 					<Loading visible={true} />
 				</>
 			)}
+
+			{meets.length === 0 && (
+				<View style={styles.noMeetView}>
+					<Text style={styles.noMeetTitle}>Nincs függőben lévő meeting</Text>
+				</View>
+			)}
+
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
@@ -139,3 +146,15 @@ export default function PendingMeets() {
 		</Screen>
 	);
 }
+
+const styles = StyleSheet.create({
+	noMeetView: {
+		marginVertical: 10,
+		alignItems: "center",
+	},
+	noMeetTitle: {
+		fontFamily: "PoppinsBold",
+		paddingTop: 7,
+		fontSize: 16,
+	},
+});

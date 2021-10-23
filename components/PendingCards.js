@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
 import { useFonts } from "expo-font";
+import colors from "../config/colors";
 
 function PendingCards(props) {
 	const [loaded] = useFonts({
@@ -73,12 +74,12 @@ const styles = StyleSheet.create({
 		flex: 1,
 	},
 	declineView: {
-		borderColor: "red",
+		borderColor: colors.red,
 		borderWidth: 2,
 		borderRadius: 8,
 	},
 	acceptView: {
-		borderColor: "green",
+		borderColor: colors.green,
 		borderWidth: 2,
 		borderRadius: 8,
 	},

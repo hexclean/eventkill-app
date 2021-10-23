@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Alert, StyleSheet, FlatList } from "react-native";
+import { Alert, StyleSheet, FlatList, View, Text } from "react-native";
 import { useIsFocused } from "@react-navigation/core";
 
 // Components
@@ -11,7 +11,7 @@ import Loading from "../../components/ActivityIndicator";
 
 export default function AcceptedMeets() {
 	const isFocused = useIsFocused();
-	const [meets, setMeets] = useState(null);
+	const [meets, setMeets] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -41,13 +41,11 @@ export default function AcceptedMeets() {
 				"content-type": "application/json",
 			},
 		};
-		//
+
 		return axios.get(
 			`http://192.168.100.70:9000/api/meets/check/${meetId}`,
 			data
 		);
-
-		//
 	};
 
 	const postDeleteMeet = async meetId => {
@@ -121,8 +119,13 @@ export default function AcceptedMeets() {
 					<Loading visible={true} />
 				</>
 			)}
+			{meets.length === 0 && (
+				<View style={styles.noMeetView}>
+					<Text style={styles.noMeetTitle}>Nincs elfogadott meeting</Text>
+				</View>
+			)}
+
 			<FlatList
-				style={styles.list}
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
 				data={meets}
@@ -141,35 +144,13 @@ export default function AcceptedMeets() {
 }
 
 const styles = StyleSheet.create({
-	loading: {
-		justifyContent: "center",
+	noMeetView: {
+		marginVertical: 10,
 		alignItems: "center",
-		flex: 1,
 	},
-	profile: {
-		height: 30,
-		width: 30,
-	},
-	title: {
-		// marginVertical: 10,
-		paddingBottom: 6,
-	},
-	welcome: {
-		marginBottom: 5,
-		flexDirection: "row",
-		justifyContent: "space-between",
-	},
-	list: {
-		paddingTop: 20,
-	},
-	welcomeName: {
-		fontSize: 17,
-		// fontWeight: "400",
-		fontFamily: "PoppinsRegular",
-	},
-	start: {
+	noMeetTitle: {
 		fontFamily: "PoppinsBold",
 		paddingTop: 7,
-		fontSize: 20,
+		fontSize: 16,
 	},
 });

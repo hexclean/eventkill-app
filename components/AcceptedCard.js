@@ -106,7 +106,7 @@ const styles = StyleSheet.create({
 	title: {
 		fontSize: 25,
 		fontFamily: "Poppins-Bold",
-		color: "white",
+		// color: "white",
 	},
 	box: {
 		padding: 12,

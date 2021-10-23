@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { FlatList } from "react-native";
+import { FlatList, View, Text, StyleSheet } from "react-native";
 import { useFonts } from "expo-font";
 import axios from "axios";
 
@@ -7,10 +7,12 @@ import axios from "axios";
 import Screen from "../../components/Screen";
 import DeletedCards from "../../components/DeletedCards";
 import authStorage from "../../auth/storage";
+import Loading from "../../components/ActivityIndicator";
+
 export default function DeletedMeetsScreen() {
 	const [refreshing, setRefreshing] = useState(false);
 	const [loading, setLoading] = useState(false);
-	const [meets, setMeets] = useState(null);
+	const [meets, setMeets] = useState([]);
 
 	const getDeletedMeets = async () => {
 		const authToken = await authStorage.getToken();
@@ -45,6 +47,18 @@ export default function DeletedMeetsScreen() {
 	}
 	return (
 		<Screen>
+			{loading && (
+				<>
+					<Loading visible={true} />
+				</>
+			)}
+
+			{meets.length === 0 && (
+				<View style={styles.noMeetView}>
+					<Text style={styles.noMeetTitle}>Nincs lemondott meeting</Text>
+				</View>
+			)}
+
 			<FlatList
 				showsVerticalScrollIndicator={false}
 				showsHorizontalScrollIndicator={false}
@@ -60,3 +74,15 @@ export default function DeletedMeetsScreen() {
 		</Screen>
 	);
 }
+
+const styles = StyleSheet.create({
+	noMeetView: {
+		marginVertical: 10,
+		alignItems: "center",
+	},
+	noMeetTitle: {
+		fontFamily: "PoppinsBold",
+		paddingTop: 7,
+		fontSize: 16,
+	},
+});
