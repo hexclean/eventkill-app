@@ -20,9 +20,9 @@ import Loading from "../components/ActivityIndicator";
 import authStorage from "../auth/storage";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-export default function HomeScreen({ navigation, props }) {
+export default function HomeScreen({ navigation }) {
 	const isFocused = useIsFocused();
-	const [meets, setMeets] = useState(null);
+	const [meets, setMeets] = useState([]);
 	const [loading, setLoading] = useState(false);
 	const [refreshing, setRefreshing] = useState(false);
 
@@ -143,13 +143,10 @@ export default function HomeScreen({ navigation, props }) {
 				</>
 			)}
 			<Screen>
-				{/* {getTodayMeetsApi.error && (
-					<>
-						<Text>Couldn't retrieve the listings.</Text>
-					</>
-				)} */}
 				<View style={styles.welcome}>
-					<TouchableWithoutFeedback onPress={() => console.log("Press")}>
+					<TouchableWithoutFeedback
+						onPress={() => navigation.navigate("Profile")}
+					>
 						<View style={styles.profileSection}>
 							<Image
 								style={styles.profileImage}
@@ -165,9 +162,27 @@ export default function HomeScreen({ navigation, props }) {
 						<MaterialIcons name="notifications" size={26} color="black" />
 					</View> */}
 				</View>
-				<View style={styles.title}>
-					<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
-				</View>
+				{meets.length === 0 ? (
+					<View>
+						<View style={styles.title}>
+							<Text style={styles.start}>Mára nincs megbeszélésed!</Text>
+						</View>
+						<TouchableWithoutFeedback
+							onPress={() => navigation.navigate("NewMeet")}
+						>
+							<View style={styles.createMeet}>
+								<Text style={styles.createMeetText}>
+									Megbeszélés létrehozása!
+								</Text>
+							</View>
+						</TouchableWithoutFeedback>
+					</View>
+				) : (
+					<View style={styles.title}>
+						<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
+					</View>
+				)}
+
 				<FlatList
 					style={styles.list}
 					showsVerticalScrollIndicator={false}
@@ -188,6 +203,23 @@ export default function HomeScreen({ navigation, props }) {
 	);
 }
 const styles = StyleSheet.create({
+	createMeetText: {
+		color: "white",
+		fontFamily: "PoppinsBold",
+
+		fontSize: 16,
+	},
+	createMeet: {
+		backgroundColor: "dodgerblue",
+		justifyContent: "center",
+		alignItems: "center",
+		borderRadius: 8,
+		marginVertical: 18,
+		padding: 9,
+	},
+	empty: {
+		justifyContent: "center",
+	},
 	profileSection: { flexDirection: "row" },
 	mainInfo: {
 		justifyContent: "center",
@@ -200,8 +232,8 @@ const styles = StyleSheet.create({
 		fontSize: 19,
 	},
 	profileImage: {
-		height: 50,
-		width: 50,
+		height: 43,
+		width: 43,
 		borderRadius: 50,
 	},
 	loading: {
@@ -214,9 +246,8 @@ const styles = StyleSheet.create({
 		width: 30,
 	},
 	title: {
-		// marginVertical: 10,
-		// paddingBottom: 6,
-		paddingTop: 10,
+		alignItems: "center",
+		paddingTop: 15,
 	},
 	welcome: {
 		flexDirection: "row",

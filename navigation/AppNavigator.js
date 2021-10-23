@@ -10,6 +10,7 @@ import SettingsScreen from "../screens/Meets/MeetsByCalendarScreen";
 import Meets from "../screens/Meets/Meets";
 import AccountNavigator from "./AccountNavigator";
 import navigation from "../navigation/rootNavigation";
+import HomeStackNavigator from "./HomeStackNavigator";
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +35,7 @@ const AppNavigator = () => {
 		<Tab.Navigator>
 			<Tab.Screen
 				name="Home"
-				component={HomeScreen}
+				component={HomeStackNavigator}
 				options={{
 					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
@@ -42,6 +43,7 @@ const AppNavigator = () => {
 					),
 				}}
 			/>
+
 			<Tab.Screen
 				name="Meets"
 				component={Meets}
@@ -62,7 +64,7 @@ const AppNavigator = () => {
 					),
 				}}
 			/>
-			<Tab.Screen
+			{/* <Tab.Screen
 				name="Account"
 				component={AccountNavigator}
 				options={{
@@ -71,7 +73,7 @@ const AppNavigator = () => {
 						<AntDesign name="profile" color={color} size={size} />
 					),
 				}}
-			/>
+			/> */}
 		</Tab.Navigator>
 	);
 };
