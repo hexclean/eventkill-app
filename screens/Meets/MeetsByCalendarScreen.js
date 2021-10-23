@@ -11,20 +11,40 @@ import {
 import { useFonts } from "expo-font";
 import { Agenda } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { useIsFocused } from "@react-navigation/core";
 
 // Components
 import Screen from "../../components/Screen";
-import useApi from "../../hooks/useApi";
-import meetsApi from "../../api/meets";
 import Loading from "../../components/ActivityIndicator";
+import authStorage from "../../auth/storage";
 
 const date = new Date();
 const MeetsByCalendarScreen = ({ navigation }) => {
-	const getCalendarMeetsApi = useApi(meetsApi.getCalendarMeets);
+	const [loading, setLoading] = useState(false);
+	const isFocused = useIsFocused();
+	const [meets, setMeets] = useState([]);
+
+	const getCalendarMeets = async () => {
+		const authToken = await authStorage.getToken();
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		setLoading(true);
+		await axios
+			.get("http://192.168.100.70:9000/api/meets/calendar", data)
+			.then(response => {
+				setMeets(response.data.result);
+			});
+		setLoading(false);
+	};
 
 	useEffect(() => {
-		getCalendarMeetsApi.request();
-	}, []);
+		getCalendarMeets();
+	}, [isFocused]);
 
 	const [loaded] = useFonts({
 		PoppinsBold: require("../../assets/fonts/Poppins-Bold.ttf"),
@@ -33,111 +53,244 @@ const MeetsByCalendarScreen = ({ navigation }) => {
 	if (!loaded) {
 		return null;
 	}
-	const deleteMeet = () => {
-		Alert.alert(
-			"Meeting lemondása",
-			"Leszeretnéd mondani a meetinget?",
-			[
-				{
-					text: "Mégse",
-					onPress: () => console.log("Cancel Pressed"),
-					style: "cancel",
-				},
-				{ text: "Igen", onPress: () => console.log("OK Pressed") },
-			],
-			{ cancelable: false }
+
+	const getCheckMeetStatus = async meetId => {
+		const authToken = await authStorage.getToken();
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		//
+		return axios.get(
+			`http://192.168.100.70:9000/api/meets/check/${meetId}`,
+			data
 		);
+
+		//
+	};
+
+	const postDeleteMeet = async meetId => {
+		const authToken = await authStorage.getToken();
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		try {
+			await axios.post(
+				`http://192.168.100.70:9000/api/operation/delete/${meetId}`,
+				{},
+				data
+			);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	const deleteMeet = meet => {
+		setLoading(true);
+		getCheckMeetStatus(meet.id)
+			.then(response => {
+				setLoading(false);
+				Alert.alert(
+					"Meeting lemondása",
+					"Leszeretnéd mondani a meetinget?",
+					[
+						{
+							text: "Mégse",
+							style: "cancel",
+						},
+						{
+							text: "Igen",
+							onPress: async () => {
+								await postDeleteMeet(meet.id);
+								await getCalendarMeets();
+								if (response.data.result[0].status === 1) {
+									Alert.alert(
+										"Lemondott Meeting",
+										"A partnered is lemondta a meetinget, így elmarad!",
+										[
+											{
+												text: "Rendben",
+												style: "cancel",
+											},
+										]
+									);
+								}
+							},
+						},
+					],
+					{ cancelable: false }
+				);
+			})
+			.catch(err => {
+				setLoading(false);
+			});
 	};
 
 	return (
-		<>
-			<Loading visible={getCalendarMeetsApi.loading} />
-			<Screen>
-				{getCalendarMeetsApi.error && (
-					<>
-						<Text>Couldn't retrieve the listings.</Text>
-					</>
-				)}
-				<Agenda
-					items={getCalendarMeetsApi.data}
-					selected={date}
-					renderEmptyData={() => {
-						return (
-							<TouchableOpacity onPress={() => navigation.navigate("NewMeet")}>
-								<View style={styles.noMeets}>
-									<Text style={styles.helloName}>Meeting létrehozása</Text>
-									<Ionicons
-										style={styles.addMeet}
-										name="ios-add-circle"
-										size={24}
-										color="#F78F1E"
-									/>
-								</View>
-							</TouchableOpacity>
-						);
-					}}
-					renderItem={items => {
-						return (
-							<TouchableWithoutFeedback onLongPress={deleteMeet}>
-								<View style={styles.box}>
-									<View style={styles.boxHeader}>
-										<Text style={styles.helloName}>{items.title}</Text>
-										<Text style={styles.time}>{items.time}</Text>
-									</View>
+		<Screen>
+			{loading && (
+				<>
+					<Loading visible={true} />
+				</>
+			)}
+			{/* {getCalendarMeetsApi.error && (
+				<>
+					<Text>Couldn't retrieve the listings.</Text>
+				</>
+			)} */}
+			<Agenda
+				items={meets}
+				selected={date}
+				renderEmptyData={() => {
+					return (
+						<TouchableOpacity onPress={() => navigation.navigate("NewMeet")}>
+							<View style={styles.noMeets}>
+								<Text style={styles.helloName}>Meeting létrehozása</Text>
+								<Ionicons
+									style={styles.addMeet}
+									name="ios-add-circle"
+									size={24}
+									color="#F78F1E"
+								/>
+							</View>
+						</TouchableOpacity>
+					);
+				}}
+				renderItem={items => {
+					return (
+						<>
+							{items.status === 3 ? (
+								<TouchableOpacity onLongPress={() => deleteMeet(items)}>
+									<View style={styles.box}>
+										<Text style={styles.helloName}>{items.meets[0].title}</Text>
 
-									<View style={styles.descriptionView}>
-										<Text style={styles.description}>{items.description}</Text>
+										{items.meets[0].description.length != 0 &&
+										items.meets[0].description !== "-" ? (
+											<>
+												<View style={styles.descriptionView}>
+													<Text style={styles.description}>
+														{items.meets[0].description}
+													</Text>
+												</View>
+											</>
+										) : null}
+
+										<View style={styles.partner}>
+											<View>
+												<Image
+													style={styles.withImage}
+													source={require("../../assets/profile.png")}
+												/>
+											</View>
+											<View style={styles.partnerView}>
+												<Text style={styles.partnerName}>
+													{items.partner[0].company} - {items.partner[0].name}
+												</Text>
+											</View>
+										</View>
+										<View style={styles.createdAtView}>
+											<Text style={styles.createdAt}>
+												Időpont: {items.meets[0].startDate} -{" "}
+												{items.meets[0].time}
+											</Text>
+										</View>
 									</View>
+								</TouchableOpacity>
+							) : (
+								<View style={styles.boxInactive}>
+									<Text style={styles.helloName}>{items.meets[0].title}</Text>
+
+									{items.meets[0].description.length != 0 &&
+									items.meets[0].description !== "-" ? (
+										<>
+											<View style={styles.descriptionView}>
+												<Text style={styles.description}>
+													{items.meets[0].description}
+												</Text>
+											</View>
+										</>
+									) : null}
+
 									<View style={styles.partner}>
-										<Image
-											style={styles.withImage}
-											source={require("../../assets/profile.png")}
-										/>
+										<View>
+											<Image
+												style={styles.withImage}
+												source={require("../../assets/profile.png")}
+											/>
+										</View>
 										<View style={styles.partnerView}>
 											<Text style={styles.partnerName}>
 												{items.partner[0].company} - {items.partner[0].name}
 											</Text>
 										</View>
 									</View>
+									<View style={styles.createdAtView}>
+										<Text style={styles.createdAt}>
+											Időpont: {items.meets[0].startDate} -{" "}
+											{items.meets[0].time}
+										</Text>
+									</View>
 								</View>
-							</TouchableWithoutFeedback>
-						);
-					}}
-				/>
-			</Screen>
-		</>
+							)}
+						</>
+					);
+				}}
+			/>
+		</Screen>
 	);
 };
 
 const styles = StyleSheet.create({
-	addMeet: {
-		paddingLeft: 10,
-	},
-	noMeets: {
-		padding: 12,
-		backgroundColor: "white",
-		borderRadius: 8,
-		marginVertical: 10,
-		shadowColor: "#000",
-		shadowOffset: {
-			width: 0,
-			height: 1,
-		},
-		shadowOpacity: 0.22,
-		shadowRadius: 2.22,
+	createdAtView: { paddingTop: 14, fontSize: 15 },
+	createdAt: { fontFamily: "PoppinsMedium", fontSize: 14, padding: 3 },
+
+	status: {
 		flexDirection: "row",
-		elevation: 3,
+		justifyContent: "space-between",
+		paddingTop: 10,
+		flex: 1,
 	},
+	declineView: {
+		borderColor: "red",
+		borderWidth: 2,
+		borderRadius: 8,
+	},
+	acceptView: {
+		borderColor: "green",
+		borderWidth: 2,
+		borderRadius: 8,
+	},
+	declineText: {
+		fontFamily: "PoppinsLight",
+		fontSize: 15,
+		padding: 3,
+	},
+	acceptText: {
+		fontFamily: "PoppinsLight",
+		fontSize: 15,
+		padding: 3,
+	},
+	questionText: {
+		fontFamily: "PoppinsLight",
+		fontSize: 15,
+		padding: 3,
+	},
+	// end tabview
 	partnerName: {
 		paddingLeft: 12,
-		fontFamily: "PoppinsBold",
+		fontFamily: "PoppinsLight",
 		fontSize: 15,
 	},
 	partnerView: {
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	partner: { flexDirection: "row" },
+	partner: { flexDirection: "row", marginVertical: 10 },
 	withImage: {
 		height: 30,
 		width: 30,
@@ -149,6 +302,9 @@ const styles = StyleSheet.create({
 	},
 	box: {
 		padding: 12,
+		// marginBottom: 20,
+		// justifyContent: "space-around",
+		// marginHorizontal: 5,
 		backgroundColor: "white",
 		borderRadius: 8,
 		marginVertical: 10,
@@ -162,10 +318,26 @@ const styles = StyleSheet.create({
 
 		elevation: 3,
 	},
-	boxHeader: {
-		flexDirection: "row",
-		justifyContent: "space-between",
+	boxInactive: {
+		padding: 12,
+		opacity: 0.5,
+		// marginBottom: 20,
+		// justifyContent: "space-around",
+		// marginHorizontal: 5,
+		backgroundColor: "white",
+		borderRadius: 8,
+		marginVertical: 10,
+		shadowColor: "#000",
+		shadowOffset: {
+			width: 0,
+			height: 1,
+		},
+		shadowOpacity: 0.22,
+		shadowRadius: 2.22,
+
+		elevation: 3,
 	},
+
 	descriptionView: {
 		marginVertical: 7,
 	},
