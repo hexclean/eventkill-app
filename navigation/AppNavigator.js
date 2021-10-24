@@ -38,6 +38,8 @@ const AppNavigator = () => {
 				name="Home"
 				component={HomeStackNavigator}
 				options={{
+					title: "Főoldal",
+
 					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						// <AntDesign name="clockcircleo" size={20} color="gray" />
@@ -50,6 +52,7 @@ const AppNavigator = () => {
 				name="Meets"
 				component={Meets}
 				options={{
+					title: "Megbeszélések",
 					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="bars" color={color} size={size} />
@@ -60,6 +63,7 @@ const AppNavigator = () => {
 				name="Settings"
 				component={SettingsScreen}
 				options={{
+					title: "Naptár",
 					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="calendar" color={color} size={size} />
@@ -70,6 +74,7 @@ const AppNavigator = () => {
 				name="NewMeet"
 				component={CreateMeet}
 				options={{
+					title: "Új esemény",
 					headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="pluscircle" color={color} size={size} />

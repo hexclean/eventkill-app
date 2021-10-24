@@ -14,6 +14,7 @@ import Screen from "../../components/Screen";
 import PendingInvitation from "./PendingMeets";
 import DeletedMeets from "./DeletedMeetsScreen";
 import AcceptedMeets from "./AcceptedMeets";
+import colors from "../../config/colors";
 
 const PendingInvitationTab = () => <PendingInvitation />;
 
@@ -38,14 +39,14 @@ const Meets = () => {
 	return (
 		<Screen>
 			<View style={styles.welcome}>
-				<Text style={styles.start}>Gyors áttekintés</Text>
+				<Text style={styles.start}>Meetingek összesítése</Text>
 			</View>
 			<TabView
 				navigationState={{ index, routes }}
 				renderScene={renderScene}
 				onIndexChange={setIndex}
 				initialLayout={{ width: layout.width }}
-				tabStyle={{ backgroundColor: "red" }}
+				style={styles.tes}
 			/>
 		</Screen>
 	);
@@ -56,7 +57,7 @@ const styles = StyleSheet.create({
 		height: 30,
 		width: 30,
 	},
-
+	tes: { borderRadius: 8 },
 	welcome: {
 		flexDirection: "row",
 		justifyContent: "space-between",

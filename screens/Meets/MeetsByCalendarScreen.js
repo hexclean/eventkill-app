@@ -13,17 +13,55 @@ import { Agenda } from "react-native-calendars";
 import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/core";
+import { LocaleConfig } from "react-native-calendars";
 
 // Components
 import Screen from "../../components/Screen";
 import Loading from "../../components/ActivityIndicator";
 import authStorage from "../../auth/storage";
+import colors from "../../config/colors";
 
 const date = new Date();
 const MeetsByCalendarScreen = ({ navigation }) => {
 	const [loading, setLoading] = useState(false);
 	const isFocused = useIsFocused();
 	const [meets, setMeets] = useState([]);
+
+	LocaleConfig.locales["hu"] = {
+		monthNames: [
+			"Január",
+			"Február",
+			"Március",
+			"Április",
+			"Május",
+			"Június",
+			"Július",
+			"Augusztus",
+			"Szeptember",
+			"Október",
+			"November",
+			"December",
+		],
+		monthNamesShort: [
+			"jan.",
+			"febr.",
+			"márc.",
+			"ápr.",
+			"máj.",
+			"jún.",
+			"júl..",
+			"aug",
+			"szept.",
+			"okt.",
+			"nov.",
+			"dec.",
+		],
+		dayNames: ["Hé", "Ke", "Sze", "Csüt", "Pé", "Szo", "Va"],
+		dayNamesShort: ["Hé", "Ke", "Sze", "Csüt", "Pé", "Szo", "Va"],
+		// dayNamesShort: ["Dim.", "Lun.", "Mar.", "Mer.", "Jeu.", "Ven.", "Sam."],
+		today: "Ma",
+	};
+	LocaleConfig.defaultLocale = "hu";
 
 	const getCalendarMeets = async () => {
 		const authToken = await authStorage.getToken();
@@ -240,15 +278,46 @@ const MeetsByCalendarScreen = ({ navigation }) => {
 						</>
 					);
 				}}
+				theme={{
+					// calendarBackground: colors.white, //agenda background
+					// agendaKnobColor: colors.primary, // knob color
+					// backgroundColor: colors.background, // background color below agenda
+					// agendaDayTextColor: colors.primary, // day name
+					// agendaDayNumColor: colors.primary, // day number
+					agendaTodayColor: colors.orange, // today in list
+					monthTextColor: colors.gray, // name in calendar
+					// textDefaultColor: "red",
+					// todayBackgroundColor: colors.orange,
+					textSectionTitleColor: colors.gray,
+					selectedDayBackgroundColor: colors.orange, // calendar sel date
+					// dayTextColor: colors.primary, // calendar day
+					// dotColor: "white", // dots
+					// textDisabledColor: "red",
+				}}
+				style={styles.calendar}
 			/>
 		</Screen>
 	);
 };
 
 const styles = StyleSheet.create({
+	noMeets: { flexDirection: "row", padding: 10 },
+	addMeet: { paddingLeft: 10 },
 	createdAtView: { paddingTop: 14, fontSize: 15 },
 	createdAt: { fontFamily: "PoppinsMedium", fontSize: 14, padding: 3 },
-
+	calendar: {
+		// knobContainer: {
+		// flex: 1,
+		// position: "absolute",
+		// left: 0,
+		// right: 0,
+		// height: 24,
+		// bottom: 0,
+		// alignItems: "center",
+		borderRadius: 10,
+		// backgroundColor: "darkblue",
+		// },
+	},
 	status: {
 		flexDirection: "row",
 		justifyContent: "space-between",

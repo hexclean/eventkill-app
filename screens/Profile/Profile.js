@@ -138,22 +138,7 @@ const Profile = ({ navigation }) => {
 								</View>
 							</TouchableOpacity>
 						</View>
-						<TouchableOpacity
-							onPress={() => navigation.navigate("CreatePartner")}
-						>
-							<View style={styles.settingItems}>
-								<View>
-									<Ionicons
-										name="people-circle-outline"
-										size={25}
-										color="black"
-									/>
-								</View>
-								<View style={styles.settingsView}>
-									<Text style={styles.settingText}>Partner létrehozása</Text>
-								</View>
-							</View>
-						</TouchableOpacity>
+
 						<TouchableOpacity
 							onPress={() => navigation.navigate("NextFeatures")}
 						>

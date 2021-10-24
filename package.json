@@ -28,6 +28,7 @@
     "jwt-decode": "^3.1.2",
     "lottie-react-native": "4.0.2",
     "react": "16.13.1",
+    "react-custom-hook-use-axios": "^1.1.6",
     "react-dom": "16.13.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-42.0.0.tar.gz",
     "react-native-calendars": "^1.1267.0",

@@ -46,29 +46,111 @@ export default function PendingMeets() {
 				{},
 				data
 			);
-			await getPendingMeets();
 		} catch (error) {
 			console.log(error);
 		}
 	};
 
-	const postDeclineMeet = async meetId => {
+	const postDeleteMeet = async meetId => {
 		const authToken = await authStorage.getToken();
 		let data = {
-			header: {
+			headers: {
 				"x-auth-token": authToken,
 				"content-type": "application/json",
 			},
 		};
 		try {
 			await axios.post(
-				`http://192.168.100.70:9000/api/operation/decline/${meetId}`,
+				`http://192.168.100.70:9000/api/operation/delete/${meetId}`,
+				{},
 				data
 			);
-			await getPendingMeets();
 		} catch (error) {
 			console.log(error);
 		}
+	};
+
+	const getCheckMeetStatus = async meetId => {
+		const authToken = await authStorage.getToken();
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		//
+		return axios.get(
+			`http://192.168.100.70:9000/api/meets/check/${meetId}`,
+			data
+		);
+
+		//
+	};
+
+	const deleteMeet = meet => {
+		setLoading(true);
+		getCheckMeetStatus(meet.id)
+			.then(response => {
+				setLoading(false);
+				Alert.alert(
+					"Elutasítod a meetinget?",
+					"a meetinget?",
+					[
+						{
+							text: "Mégse",
+							style: "cancel",
+						},
+						{
+							text: "Igen",
+							onPress: async () => {
+								await postDeleteMeet(meet.id);
+								await getPendingMeets();
+								if (response.data.result[0].status === 1) {
+									Alert.alert(
+										"Lemondott Meeting",
+										"A partnered is lemondta a meetinget, így elmarad!",
+										[
+											{
+												text: "Rendben",
+												style: "cancel",
+											},
+										]
+									);
+								}
+							},
+						},
+					],
+					{ cancelable: false }
+				);
+			})
+			.catch(err => {
+				setLoading(false);
+			});
+	};
+
+	const acceptMeet = meet => {
+		Alert.alert(
+			"Elfogaod a meetinget?",
+			"a meetinget?",
+			[
+				{
+					text: "Mégse",
+					style: "cancel",
+				},
+				{
+					text: "Igen",
+					onPress: async () => {
+						await postAcceptMeet(meet.id);
+						await getPendingMeets();
+					},
+				},
+			],
+			{ cancelable: false }
+		);
+
+		// .catch(err => {
+		// 	setLoading(false);
+		// });
 	};
 
 	useEffect(() => {
@@ -98,44 +180,8 @@ export default function PendingMeets() {
 				renderItem={({ item }) => (
 					<PendingCards
 						item={item}
-						acceptMeet={() =>
-							Alert.alert(
-								"Elfogadod a meetinget?",
-								item.title,
-								[
-									{
-										text: "Mégse",
-										style: "cancel",
-									},
-									{
-										text: "Igen",
-										onPress: async () => {
-											await postAcceptMeet(item.id);
-										},
-									},
-								],
-								{ cancelable: false }
-							)
-						}
-						postDeclineMeet={() =>
-							Alert.alert(
-								"Elutasítod a meetinget?",
-								item.title,
-								[
-									{
-										text: "Mégse",
-										style: "cancel",
-									},
-									{
-										text: "Igen",
-										onPress: async () => {
-											await postDeclineMeet(item.id);
-										},
-									},
-								],
-								{ cancelable: false }
-							)
-						}
+						deleteMeet={() => deleteMeet(item)}
+						acceptMeet={() => acceptMeet(item)}
 					/>
 				)}
 				refreshing={refreshing}

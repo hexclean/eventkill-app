@@ -42,7 +42,7 @@ function PendingCards(props) {
 				</View>
 			</View>
 			<View style={styles.status}>
-				<TouchableOpacity>
+				<TouchableOpacity onPress={() => props.deleteMeet()}>
 					<View style={styles.declineView}>
 						<Text style={styles.declineText}>Elutasítás</Text>
 					</View>
