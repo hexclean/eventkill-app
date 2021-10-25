@@ -51,7 +51,6 @@ export default function Coffee() {
 	});
 
 	const onDayPress = day => {
-		console.log(day.dateString);
 		setSelectedDay(day.dateString);
 		setShowCalendar(false);
 	};

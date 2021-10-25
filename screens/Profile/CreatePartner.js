@@ -9,7 +9,6 @@ import Screen from "../../components/Screen";
 const CreatePartner = () => {
 	const [isEnabled, setIsEnabled] = useState(false);
 	const toggleSwitch = () => {
-		console.log("dsa");
 		setIsEnabled(previousState => !previousState);
 	};
 

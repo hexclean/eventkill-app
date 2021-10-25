@@ -30,14 +30,13 @@ const Profile = ({ navigation }) => {
 	const [company, setCompany] = useState(user.user.company);
 	const postEditName = useApi(actionApi.editProfile);
 	const postEditCompany = useApi(actionApi.editCompany);
-	console.log("name", name);
+
 	useEffect(() => {
 		getProfileInfo.request();
 		postEditName.request();
 		setName(getProfileInfo.data.name);
-		console.log("getProfileInfo.data.name", getProfileInfo.data.name);
+
 		setCompany(getProfileInfo.data.company);
-		console.log("call");
 	}, []);
 
 	const handleChangeName = e => {
@@ -122,7 +121,7 @@ const Profile = ({ navigation }) => {
 								</View>
 							</TouchableOpacity>
 						</View>
-						<View style={styles.settingItems}>
+						{/* <View style={styles.settingItems}>
 							<View>
 								<Ionicons
 									name="notifications-outline"
@@ -137,7 +136,7 @@ const Profile = ({ navigation }) => {
 									<Text style={styles.settingText}>Értesítések</Text>
 								</View>
 							</TouchableOpacity>
-						</View>
+						</View> */}
 
 						<TouchableOpacity
 							onPress={() => navigation.navigate("NextFeatures")}
@@ -151,7 +150,7 @@ const Profile = ({ navigation }) => {
 								</View>
 							</View>
 						</TouchableOpacity>
-						<TouchableOpacity onPress={() => navigation.navigate("About")}>
+						{/* <TouchableOpacity onPress={() => navigation.navigate("About")}>
 							<View style={styles.settingItems}>
 								<View>
 									<AntDesign name="infocirlceo" size={22} color="black" />
@@ -160,8 +159,8 @@ const Profile = ({ navigation }) => {
 									<Text style={styles.settingText}>Fontos információk</Text>
 								</View>
 							</View>
-						</TouchableOpacity>
-						<TouchableOpacity onPress={() => navigation.navigate("Coffee")}>
+						</TouchableOpacity> */}
+						{/* <TouchableOpacity onPress={() => navigation.navigate("Coffee")}>
 							<View style={styles.settingItems}>
 								<View>
 									<Feather name="coffee" size={23} color="black" />
@@ -170,7 +169,7 @@ const Profile = ({ navigation }) => {
 									<Text style={styles.settingText}>Küldj egy kávét</Text>
 								</View>
 							</View>
-						</TouchableOpacity>
+						</TouchableOpacity> */}
 						<TouchableOpacity onPress={() => logOut()}>
 							<View style={styles.settingItems}>
 								<View>

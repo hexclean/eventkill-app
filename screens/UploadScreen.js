@@ -4,7 +4,6 @@ import * as Progress from "react-native-progress";
 import AnimatedLottieView from "lottie-react-native";
 
 const UploadScreen = ({ progress = 0, visible = false, onDone }) => {
-	console.log(progress);
 	return (
 		<Modal visible={visible}>
 			<View style={styles.container}>

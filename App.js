@@ -7,12 +7,6 @@ import AppLoading from "expo-app-loading";
 // Components
 import AppNavigator from "./navigation/AppNavigator";
 import AuthNavigator from "./navigation/AuthNavigator";
-import Profile from "./screens/Profile/Profile";
-import Notifications from "./screens/Profile/Notifications";
-import About from "./screens/Profile/About";
-import Login from "./screens/Auth/Login";
-import Register from "./screens/Auth/Register";
-import CreateMeet from "./screens/Profile/CreateMeet";
 import { navigationRef } from "./navigation/rootNavigation";
 
 export default function App() {

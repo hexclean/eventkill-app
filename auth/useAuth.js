@@ -10,8 +10,6 @@ const useAuth = () => {
 	const logIn = authToken => {
 		const user = jwtDecode(authToken);
 		setUser(user);
-		console.log("authtoken", authToken);
-		console.log("user", user);
 
 		authStorage.storeToken(authToken);
 	};

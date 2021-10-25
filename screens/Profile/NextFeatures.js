@@ -9,7 +9,6 @@ import Screen from "../../components/Screen";
 const NextFeatures = () => {
 	const [isEnabled, setIsEnabled] = useState(false);
 	const toggleSwitch = () => {
-		console.log("dsa");
 		setIsEnabled(previousState => !previousState);
 	};
 
@@ -20,43 +19,43 @@ const NextFeatures = () => {
 	});
 	return (
 		<Screen>
-			<View style={styles.container}>
-				<View style={styles.settings}>
-					<Text style={styles.notifications}>Next features</Text>
-					<Text style={styles.description}>
-						Itt beállíthatod, hogy milyen értesítéseket szeretnél kapni
-					</Text>
-				</View>
+			<View style={styles.settings}>
+				<Text style={styles.notifications}>
+					Következő fejlesztések -> (1.0)
+				</Text>
+				<Text style={styles.description}>
+					1. Google naptár szinkronizálása 📅
+				</Text>
+				<Text style={styles.description}>
+					2. Push értesítések beállítása 🔔
+				</Text>
+				<Text style={styles.description}>3. Egyedi design 🔥</Text>
+				<Text style={styles.nextFeatures}>Következő fejlesztések -> (1.1)</Text>
+				<Text style={styles.description}>1. Partnerek létrehozása 🫂</Text>
+				<Text style={styles.description}>2. Analitika 📟</Text>
 			</View>
 		</Screen>
 	);
 };
 
 const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		padding: 8,
-	},
-	backCont: {
-		flexDirection: "row",
-	},
-	backView: {
-		justifyContent: "center",
-		alignItems: "center",
-		paddingLeft: 10,
-	},
 	backText: {
 		fontFamily: "PoppinsMedium",
 	},
 
-	settings: { marginVertical: 25 },
+	settings: { marginVertical: 15 },
 	notifications: {
 		fontFamily: "PoppinsMedium",
 		fontSize: 20,
 	},
+	nextFeatures: {
+		fontFamily: "PoppinsMedium",
+		fontSize: 20,
+		paddingTop: 30,
+	},
 	description: {
 		fontFamily: "PoppinsMedium",
-		fontSize: 14,
+		fontSize: 15,
 		marginTop: 10,
 	},
 });

@@ -46,7 +46,6 @@ const useAxios = (method, url, body) => {
 					url: url,
 					data: body,
 				}).then(result => {
-					console.log(result);
 					setApiData(result.data.result);
 					setIsLoading(false);
 				});

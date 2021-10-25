@@ -75,7 +75,7 @@ const AppNavigator = () => {
 				component={CreateMeet}
 				options={{
 					title: "Új esemény",
-					headerShown: false,
+					// headerShown: false,
 					tabBarIcon: ({ color, size }) => (
 						<AntDesign name="pluscircle" color={color} size={size} />
 					),
