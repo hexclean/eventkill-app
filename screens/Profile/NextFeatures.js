@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, StyleSheet, Switch, Text } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
-
 // Components
 import Screen from "../../components/Screen";
 
@@ -31,7 +30,7 @@ const NextFeatures = () => {
 				</Text>
 				<Text style={styles.description}>3. Egyedi design 🔥</Text>
 				<Text style={styles.nextFeatures}>Következő fejlesztések -> (1.1)</Text>
-				<Text style={styles.description}>1. Partnerek létrehozása 🫂</Text>
+				<Text style={styles.description}>1. Zoom szinkronizálása 🫂</Text>
 				<Text style={styles.description}>2. Analitika 📟</Text>
 			</View>
 		</Screen>

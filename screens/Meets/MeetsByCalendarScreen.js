@@ -73,7 +73,7 @@ const MeetsByCalendarScreen = ({ navigation }) => {
 		};
 		setLoading(true);
 		await axios
-			.get("http://192.168.100.70:9000/api/meets/calendar", data)
+			.get("https://api.eventkill.com/api/meets/calendar", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});
@@ -102,7 +102,7 @@ const MeetsByCalendarScreen = ({ navigation }) => {
 		};
 		//
 		return axios.get(
-			`http://192.168.100.70:9000/api/meets/check/${meetId}`,
+			`http://192.168.0.178:9000/api/meets/check/${meetId}`,
 			data
 		);
 
@@ -119,7 +119,7 @@ const MeetsByCalendarScreen = ({ navigation }) => {
 		};
 		try {
 			await axios.post(
-				`http://192.168.100.70:9000/api/operation/delete/${meetId}`,
+				`http://192.168.0.178:9000/api/operation/delete/${meetId}`,
 				{},
 				data
 			);

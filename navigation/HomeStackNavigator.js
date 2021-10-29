@@ -37,7 +37,15 @@ const HomeStackNavigator = () => (
 		/>
 		<Stack.Screen name="Notifications" component={Notifications} />
 		<Stack.Screen name="About" component={About} />
-		<Stack.Screen name="NextFeatures" component={NextFeatures} />
+		<Stack.Screen
+			options={{
+				title: "Következő fejlesztések",
+				headerBackTitle: "Vissza",
+				// headerTintColor: "black",
+			}}
+			name="NextFeatures"
+			component={NextFeatures}
+		/>
 		<Stack.Screen name="CreatePartner" component={CreatePartner} />
 		<Stack.Screen name="Coffee" component={Coffee} />
 	</Stack.Navigator>

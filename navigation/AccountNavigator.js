@@ -20,29 +20,10 @@ const AccountNavigator = () => (
 			component={Profile}
 		/>
 		<Stack.Screen name="Notifications" component={Notifications} />
-		<Stack.Screen
-			name="NewMeet"
-			options={{ title: "Főoldal" }}
-			options={{ headerShown: false }}
-			component={CreateMeet}
-		/>
+		<Stack.Screen component={CreateMeet} />
 		<Stack.Screen name="About" component={About} />
-		<Stack.Screen
-			headerMode="none"
-			headerTitle={"da"}
-			headerShown={false}
-			options={() => ({
-				title: "My Assignments",
-				headerLeft: () => null,
-			})}
-			name="NextFeatures"
-			component={NextFeatures}
-		/>
-		<Stack.Screen
-			options={{ title: "Küldj egy kávét" }}
-			name="Coffee"
-			component={Coffee}
-		/>
+		<Stack.Screen component={NextFeatures} />
+		<Stack.Screen component={Coffee} />
 	</Stack.Navigator>
 );
 

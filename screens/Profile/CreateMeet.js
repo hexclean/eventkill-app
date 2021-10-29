@@ -7,108 +7,116 @@ import {
 	TextInput,
 	FlatList,
 	TouchableOpacity,
-	ScrollView,
 } from "react-native";
-import * as Yup from "yup";
 import axios from "axios";
 import { useFonts } from "expo-font";
-import { Calendar } from "react-native-calendars";
+import { TimePickerModal } from "react-native-paper-dates";
+import { DatePickerModal } from "react-native-paper-dates";
 import { Formik } from "formik";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import * as Yup from "yup";
 
 // Components
 import Screen from "../../components/Screen";
-import meetsApi from "../../api/meets";
+import AppText from "../../components/Text";
 import UploadScreen from "../UploadScreen";
 import authStorage from "../../auth/storage";
-import users from "../../api/users";
 import colors from "../../config/colors";
-import AppText from "../../components/Text";
-const date = new Date();
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function CreateMeet({ navigation }) {
-	const validationSchema = Yup.object().shape({
-		title: Yup.string()
-			.required("A címnek legalább 4, legfeljebb 60 karakterből kell állnia.")
-			.min(4)
-			.label("Title"),
-		user: Yup.string()
-			.required("Partner kiválasztása kötelező")
-			.min(1)
-			.label("User"),
-		date: Yup.string()
-			.required("Dátum kiválasztása kötelező")
-			.min(1)
-			.label("User"),
-	});
+	// ! Start Date selector
+	const [date, setDate] = React.useState(new Date());
+	const [test, setTest] = useState("");
+	const [dateOpen, setDateOpen] = React.useState(false);
 
-	const [showCalendar, setShowCalendar] = useState(false);
-	const [selectedDate, setSelectedDate] = useState();
+	const onDismissSingleDate = React.useCallback(() => {
+		setDateOpen(false);
+	}, [setDateOpen]);
+
+	const onConfirmSingleDate = React.useCallback(
+		params => {
+			setDateOpen(false);
+			setDate(params.date);
+		},
+		[setDateOpen, setDate]
+	);
+	// ! End Date selector
+
+	// ! Start Time selector
+	const [visible, setVisible] = React.useState(false);
+	const [hours, setHours] = React.useState("");
+	const [minutes, setMinutes] = React.useState("");
+	const onDismiss = React.useCallback(() => {
+		setVisible(false);
+	}, [setVisible]);
+
+	const onConfirm = React.useCallback(
+		({ hours, minutes }) => {
+			setVisible(false);
+			setHours(hours);
+			setMinutes(minutes);
+		},
+		[setVisible]
+	);
+	// ! End Time selector
+
 	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
-	const [partner, setPartner] = useState("");
-	const [showUsers, setShowUsers] = useState(false);
-	const showCalendarHandler = () => setShowCalendar(true);
+	const [users, setUsers] = useState([]);
 	const [selectedUser, setSelectedUser] = useState([]);
 
-	const [date, setDate] = useState(new Date(1598051730000));
-	const [mode, setMode] = useState("date");
-	const [show, setShow] = useState(false);
+	const [partner, setPartner] = useState("");
+	const [showUsers, setShowUsers] = useState(false);
+
+	// ! Inputs
+	const handleTitle = e => setTitle(e);
+	const handleDescription = e => setDescription(e);
 	//
 	const [uploadVisible, setUploadVisible] = useState(false);
 	const [progress, setProgress] = useState(0);
 
-	// !
-	const onChange = (event, selectedDate) => {
-		const currentDate = selectedDate || date;
-		setShow(Platform.OS === "ios");
-		setDate(currentDate);
-	};
+	// const handleSubmit = async () => {
+	// 	const authToken = await authStorage.getToken();
+	// 	const items = {
+	// 		title: title,
+	// 		user: selectedUser,
+	// 		description: description,
+	// 		date: date,
+	// 		time: `${hours}:${minutes}`,
+	// 		// invitedUserId: selectedUser.id,
+	// 		// time: "10:00 - 11:30",
+	// 	};
+	// 	console.log(items);
+	// 	let data = {
+	// 		headers: {
+	// 			"x-auth-token": authToken,
+	// 			"content-type": "application/json",
+	// 		},
 
-	const handleSubmit = async meetId => {
-		checkFormValidation();
-		if (sendForm === false) {
-			const authToken = await authStorage.getToken();
-			const items = {
-				title: title,
-				description: description,
-				startDate: selectedDate,
-				invitedUserId: selectedUser.id,
-				time: "10:00 - 11:30",
-			};
-			let data = {
-				headers: {
-					"x-auth-token": authToken,
-					"content-type": "application/json",
-				},
+	// 		onUploadProgress: progress =>
+	// 			setProgress(progress.loaded / progress.total),
+	// 	};
+	// 	try {
+	// 		setProgress(0);
+	// 		setUploadVisible(true);
+	// 		await axios
+	// 			.post("http://192.168.0.178:9000/api/meets/create", items, data)
+	// 			.then(response => {
+	// 				if (response.data.status !== 200) {
+	// 					setUploadVisible(false);
+	// 				}
+	// 			});
+	// 		// setTitle("");
+	// 		// setDescription("");
+	// 		// setSelectedDate();
+	// 		// setSelectedUser([]);
+	// 		// setSendForm(true);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// };
 
-				onUploadProgress: progress =>
-					setProgress(progress.loaded / progress.total),
-			};
-			try {
-				setProgress(0);
-				setUploadVisible(true);
-
-				await axios
-					.post("http://192.168.100.70:9000/api/meets/create", items, data)
-					.then(response => {
-						if (response.data.status !== 200) {
-							setUploadVisible(false);
-						}
-					});
-
-				setTitle("");
-				setDescription("");
-				setSelectedDate();
-				setSelectedUser([]);
-				setSendForm(true);
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	};
-
-	const [loaded] = useFonts({
+	useFonts({
 		PoppinsMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
 		PoppinsRegular: require("../../assets/fonts/Poppins-Regular.ttf"),
 		PoppinsBold: require("../../assets/fonts/Poppins-SemiBold.ttf"),
@@ -116,17 +124,12 @@ export default function CreateMeet({ navigation }) {
 		PoppinsThin: require("../../assets/fonts/Poppins-Thin.ttf"),
 	});
 
-	const onDayPress = day => {
-		setSelectedDate(day.dateString);
-		setShowCalendar(false);
-	};
-
 	useEffect(() => {
-		fetchPosts();
+		getUsers();
 		return () => {};
 	}, []);
 
-	const fetchPosts = async meetId => {
+	const getUsers = async () => {
 		const authToken = await authStorage.getToken();
 		let data = {
 			headers: {
@@ -136,22 +139,25 @@ export default function CreateMeet({ navigation }) {
 		};
 		// setLoading(true);
 		await axios
-			.get(`http://192.168.100.70:9000/api/meets/people`, data)
+			.get(`http://192.168.0.178:9000/api/meets/people`, data)
 			.then(response => {
-				setPartner(response.data.result);
+				setUsers(response.data.result);
 			});
 		// setLoading(false);
 	};
 
 	const ItemView = ({ item }) => {
 		return (
-			<TouchableWithoutFeedback onPress={() => selectAnUser(item)}>
-				<View style={styles.searchedUsers}>
-					<Text autoCorrect={false} style={styles.itemStyle}>
-						{item.name}
-					</Text>
-				</View>
-			</TouchableWithoutFeedback>
+			<View style={styles.searchedUsers}>
+				<Text autoCorrect={false} style={styles.itemStyle}>
+					{item.name}
+				</Text>
+				<TouchableWithoutFeedback onPress={() => selectAnUser(item)}>
+					<View style={styles.addUserView}>
+						<Text style={styles.selectButton}>Kiválasztás</Text>
+					</View>
+				</TouchableWithoutFeedback>
+			</View>
 		);
 	};
 
@@ -172,7 +178,7 @@ export default function CreateMeet({ navigation }) {
 		};
 		if (text) {
 			await axios
-				.get(`http://192.168.100.70:9000/api/meets/people/${text}`, data)
+				.get(`http://192.168.0.178:9000/api/meets/people/${text}`, data)
 				.then(response => {
 					// if (response.data.result.length > 0) {
 					setShowUsers(true);
@@ -182,31 +188,59 @@ export default function CreateMeet({ navigation }) {
 		}
 	};
 
+	const validationSchema = Yup.object().shape({
+		title: Yup.string().required("asd").min(4).label("Title"),
+		// user: Yup.number().required("number").min(1).label("user"),
+	});
+
 	return (
 		<Screen>
-			<Formik
-				initialValues={{
-					title: "",
-					date: "",
-					user: "",
-					// description: "",
-					// date: "",
-				}}
-				onSubmit={values => console.log(values)}
-				validationSchema={validationSchema}
-			>
-				{({ handleChange, handleSubmit, errors }) => (
-					<>
-						<UploadScreen
-							onDone={() => setUploadVisible(false)}
-							progress={progress}
-							visible={uploadVisible}
-						/>
+			<ScrollView>
+				<UploadScreen
+					onDone={() => setUploadVisible(false)}
+					progress={progress}
+					visible={uploadVisible}
+				/>
 
-						<ScrollView
-							showsVerticalScrollIndicator={false}
-							showsHorizontalScrollIndicator={false}
-						>
+				<TimePickerModal
+					visible={visible}
+					onDismiss={onDismiss}
+					onConfirm={onConfirm}
+					hours={12} // default: current hours
+					minutes={14} // default: current minutes
+					label="Idő kiválasztása" // optional, default 'Select time'
+					cancelLabel="Mégse" // optional, default: 'Cancel'
+					confirmLabel="Mentés" // optional, default: 'Ok'
+					animationType="fade" // optional, default is 'none'
+					locale="en" // optional, default is automically detected by your system
+				/>
+
+				<DatePickerModal
+					locale="en"
+					mode="single"
+					visible={dateOpen}
+					onDismiss={onDismissSingleDate}
+					date={date}
+					onConfirm={onConfirmSingleDate}
+					saveLabel="Mentés"
+					label="Válaszd ki az időpontot"
+				/>
+				<Formik
+					initialValues={{
+						title: "",
+						user: "",
+					}}
+					onSubmit={values => console.log(values)}
+					validationSchema={validationSchema}
+				>
+					{({
+						handleChange,
+						handleSubmit,
+						errors,
+						setFieldTouched,
+						touched,
+					}) => (
+						<>
 							<View style={styles.inputView}>
 								<Text style={styles.title}>Partner (kötelező)</Text>
 								<TextInput
@@ -214,19 +248,21 @@ export default function CreateMeet({ navigation }) {
 									placeholderTextColor="#666666"
 									placeholder="Partner neve"
 									onChangeText={text => searchFilter(text)}
+									// onChangeText={handleChange(selectedUser)}
 								/>
 								{showUsers && (
 									<>
 										<FlatList
-											data={partner}
+											data={users}
 											keyExtractor={(item, index) => index.toString()}
-											// ItemSeparatorComponent={ItemSeparatorView}
 											renderItem={ItemView}
 											selectedUser={() => selectAnUser(item)}
 										/>
 									</>
 								)}
-								<AppText style={{ color: "red" }}>{errors.user}</AppText>
+								{/* {touched.title && (
+									<AppText style={{ color: "red" }}>{errors.user}</AppText>
+								)} */}
 							</View>
 							<View style={styles.inputView}>
 								<Text style={styles.title}>Cím (kötelező)</Text>
@@ -236,8 +272,11 @@ export default function CreateMeet({ navigation }) {
 									placeholder="Meeting címe"
 									multiline={true}
 									onChangeText={handleChange("title")}
+									onBlur={() => setFieldTouched("title")}
 								/>
-								<AppText style={{ color: "red" }}>{errors.title}</AppText>
+								{touched.title && (
+									<AppText style={{ color: "red" }}>{errors.title}</AppText>
+								)}
 							</View>
 							<View style={styles.inputView}>
 								<Text style={styles.title}>Leírás (nem kötelező)</Text>
@@ -247,113 +286,103 @@ export default function CreateMeet({ navigation }) {
 									placeholder="Meeting leírása"
 									multiline={true}
 									value={description}
-									onChangeText={e => {
-										handleDescription(e);
-									}}
+									onChangeText={e => handleDescription(e)}
 								/>
 							</View>
 
-							<View style={styles.inputView}>
-								<Text style={styles.title}>Dátum (kötelező)</Text>
+							<View
+								onPress={() => setDateOpen(true)}
+								uppercase={false}
+								mode="outlined"
+								style={styles.inputView}
+							>
+								<Text
+									onPress={() => setDateOpen(true)}
+									uppercase={false}
+									mode="outlined"
+									style={styles.title}
+								>
+									Dátum (kötelező)
+								</Text>
 								<TextInput
-									onFocus={() => console.log("s")}
 									style={styles.input}
 									placeholderTextColor="#666666"
-									placeholder="Meeting időpontja"
-									// value={handleChange("date")}
-									// onChangeText={handleChange("date")}
-									// onTouchStart={() => showCalendarHandler()}
+									placeholder="datum"
 									editable={false}
+									value={test}
 								/>
-
-								<AppText style={{ color: "red" }}>{errors.date}</AppText>
 							</View>
-
-							{showCalendar && (
-								<Calendar
+							<View
+								onPress={() => setVisible(true)}
+								uppercase={false}
+								mode="outlined"
+								style={styles.inputView}
+							>
+								<Text
+									onPress={() => setVisible(true)}
+									uppercase={false}
+									mode="outlined"
+									style={styles.title}
+								>
+									Ido (kötelező)
+								</Text>
+								<TextInput
 									style={styles.input}
-									current={new Date()}
-									// minDate={new Date() - 5}
-									markingType={"multi-dot"}
-									onDayPress={day => onDayPress(day)}
-									enableSwipeMonths={true}
-									markedDates={{
-										"2021-10-22": {
-											selected: true,
-											dots: [
-												{
-													key: "vacation",
-													color: "blue",
-													selectedDotColor: "red",
-												},
-												{
-													key: "massage",
-													color: "red",
-													selectedDotColor: "white",
-												},
-											],
-										},
-									}}
+									placeholderTextColor="#666666"
+									placeholder="Időpontja"
+									editable={false}
+									value={hours && minutes && hours + ":" + minutes}
 								/>
-							)}
-
-							<View style={styles.time}>
-								<View>
-									<Text style={styles.title}>Start (kötelező)</Text>
-
-									<DateTimePicker
-										testID="dateTimePicker"
-										value={date}
-										mode={mode}
-										is24Hour={true}
-										display="default"
-										onChange={onChange}
-										mode="time"
-									/>
-								</View>
-								<View style={styles.endTime}>
-									<Text style={styles.title}>End (kötelező)</Text>
-
-									<DateTimePicker
-										testID="dateTimePicker"
-										value={date}
-										mode={mode}
-										is24Hour={true}
-										display="default"
-										onChange={e => console.log("e::", e)}
-										mode="time"
-									/>
-								</View>
+								{/* <AppText style={{ color: "red" }}>{errors.time}</AppText> */}
 							</View>
-							<TouchableOpacity onPress={() => handleSubmit()}>
+							<TouchableOpacity onPress={handleSubmit}>
 								<View style={styles.createView}>
 									<View style={styles.creat}>
 										<Text style={styles.createText}>Létrehozás</Text>
 									</View>
 								</View>
 							</TouchableOpacity>
-						</ScrollView>
-					</>
-				)}
-			</Formik>
+						</>
+					)}
+				</Formik>
+			</ScrollView>
 		</Screen>
 	);
 }
 
 const styles = StyleSheet.create({
+	selectButton: {
+		// justifyContent: "center",
+		// alignContent: "center",
+		// alignItems: "center",
+		color: colors.white,
+		fontFamily: "PoppinsRegular",
+		alignSelf: "center",
+		alignItems: "center",
+		// alignSelf: "center",
+		// padding: 8,
+		// textAlign: "center",
+		// textAlignVertical: "center",
+		// textAlign: "center",
+	},
+	addUserView: {
+		// justifyContent: "center",
+		paddingRight: 20,
+		backgroundColor: colors.orange,
+		borderRadius: 6,
+		padding: 8,
+		// width: 200,
+		flexDirection: "row",
+		// alignItems: "center",
+	},
 	searchedUsers: {
-		// backgroundColor: "red",
+		justifyContent: "space-between",
 		borderWidth: 1,
 		borderColor: colors.borderColor,
 		borderRadius: 8,
 		marginTop: 12,
-		// paddingTop: 10,
-		// marginBott: 2,
-		// marginVertical: 5,
-		// justifyContent: "center",
-		alignItems: "center",
-		// alignContent: "center",
-		// justifyContent: "center",
+		// flex: 1,
+		flexDirection: "row",
 	},
 	createView: {
 		marginVertical: 30,
@@ -373,9 +402,6 @@ const styles = StyleSheet.create({
 	time: { flexDirection: "row" },
 	endTime: { paddingLeft: 30 },
 	itemStyle: {
-		justifyContent: "center",
-		alignItems: "center",
-		alignContent: "center",
 		padding: 15,
 		fontFamily: "PoppinsRegular",
 		fontSize: 14,
@@ -473,4 +499,18 @@ const styles = StyleSheet.create({
 	// 	fontSize: 16,
 	// 	color: "white",
 	// },
+	container: {
+		flex: 1,
+		backgroundColor: "white",
+		padding: 10,
+	},
+	titleText: {
+		padding: 8,
+		fontSize: 16,
+		textAlign: "center",
+		fontWeight: "bold",
+	},
+	headingText: {
+		padding: 8,
+	},
 });

@@ -111,16 +111,6 @@ const Profile = ({ navigation }) => {
 						<Text style={styles.profile}>Beállítások</Text>
 					</View>
 					<ScrollView>
-						<View style={styles.settingItems}>
-							<View>
-								<Ionicons name="add-circle-outline" size={25} color="black" />
-							</View>
-							<TouchableOpacity onPress={() => navigation.navigate("NewMeet")}>
-								<View style={styles.settingsView}>
-									<Text style={styles.settingText}>Esemény létrehozása</Text>
-								</View>
-							</TouchableOpacity>
-						</View>
 						{/* <View style={styles.settingItems}>
 							<View>
 								<Ionicons
