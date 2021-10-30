@@ -6,48 +6,65 @@ import {
 	Image,
 	ScrollView,
 	TextInput,
+	Alert,
 } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import axios from "axios";
+import { AntDesign } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 import { MaterialIcons } from "@expo/vector-icons";
-import { AntDesign } from "@expo/vector-icons";
-import { Feather } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import actionApi from "../../api/actions";
 import useApi from "../../hooks/useApi";
-
+import { useIsFocused } from "@react-navigation/core";
 // Components
 import Screen from "../../components/Screen";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import useAuth from "../../auth/useAuth";
 import getProfile from "../../api/profile";
 import Loading from "../../components/ActivityIndicator";
-
+import authStorage from "../../auth/storage";
 const Profile = ({ navigation }) => {
+	const isFocused = useIsFocused();
+	const [nameReq, setNameReq] = useState("");
+	const [companyReq, setCompanyReq] = useState("");
+	const getTodayMeets = async () => {
+		const authToken = await authStorage.getToken();
+
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
+		};
+		// setLoading(true);
+		await axios
+			.get("https://api.eventkill.com/api/profile", data)
+			.then(response => {
+				setNameReq(response.data.result.name);
+				setCompanyReq(response.data.result.company);
+				// setMeets(response.data.result);
+			});
+		// setLoading(false);
+	};
+	useEffect(() => {
+		getTodayMeets();
+	}, [isFocused]);
 	const { user, logOut } = useAuth();
-	const getProfileInfo = useApi(getProfile.getProfileData);
-	const [name, setName] = useState(user.user.name);
-	const [company, setCompany] = useState(user.user.company);
+
 	const postEditName = useApi(actionApi.editProfile);
 	const postEditCompany = useApi(actionApi.editCompany);
 
-	useEffect(() => {
-		getProfileInfo.request();
-		postEditName.request();
-		setName(getProfileInfo.data.name);
-
-		setCompany(getProfileInfo.data.company);
-	}, []);
-
 	const handleChangeName = e => {
 		postEditName.request(e);
-		setName(e);
+		setNameReq(e);
 	};
 
 	const handleChangeCompany = e => {
 		postEditCompany.request(e);
-		setCompany(e);
+		setCompanyReq(e);
 	};
+	const [company, setCompany] = useState(companyReq);
 
 	const [loaded] = useFonts({
 		PoppinsMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
@@ -60,26 +77,65 @@ const Profile = ({ navigation }) => {
 		return null;
 	}
 
+	const deleteAccount = async () => {
+		try {
+			Alert.alert(
+				"Fiók törlése",
+				"A fiókod törlésével minden adatod törlődik véglegesen!",
+				[
+					{
+						text: "Mégse",
+						style: "cancel",
+					},
+					{
+						text: "Igen",
+						onPress: async () => {
+							const authToken = await authStorage.getToken();
+
+							let data = {
+								headers: {
+									"x-auth-token": authToken,
+									"content-type": "application/json",
+								},
+							};
+							await axios.post(
+								"https://api.eventkill.com/api/profile/delete-account",
+								{},
+								data
+							);
+							logOut();
+						},
+					},
+				]
+			);
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	return (
 		<>
-			<Loading visible={getProfileInfo.loading} />
+			{/* <Loading visible={getProfileInfo.loading} /> */}
 			<Screen>
-				{getProfileInfo.error && (
+				{/* {getProfileInfo.error && (
 					<>
 						<Text>Couldn't retrieve the listings.</Text>
 					</>
-				)}
+				)} */}
 				<View style={styles.head}>
 					{/* <View style={styles.headContainer}>
 					<Ionicons name="arrow-back" size={27} color="black" />
 				</View> */}
+					{/* <View>
+						<Ionicons name="close" size={30} color="black" />
+					</View> */}
 					<View style={styles.profileInfo}>
 						<Image
 							style={styles.profileImage}
 							source={require("../../assets/profile.png")}
 						/>
 						<View style={styles.mainInfo}>
-							<Text style={styles.name}>{name}</Text>
+							<Text style={styles.name}>{nameReq}</Text>
 							<Text style={styles.username}>@erdosjozsef</Text>
 						</View>
 					</View>
@@ -90,7 +146,7 @@ const Profile = ({ navigation }) => {
 								handleChangeCompany(e);
 							}}
 							style={styles.profileData}
-							value={company}
+							value={companyReq}
 						/>
 						<Text style={styles.tapToChange}>Kattints a módosításhoz</Text>
 						<View style={styles.separator} />
@@ -101,7 +157,7 @@ const Profile = ({ navigation }) => {
 								handleChangeName(e);
 							}}
 							style={styles.profileData}
-							value={name}
+							value={nameReq}
 						/>
 						<Text style={styles.tapToChange}>Kattints a módosításhoz</Text>
 						<View style={styles.separator} />
@@ -137,6 +193,16 @@ const Profile = ({ navigation }) => {
 								</View>
 								<View style={styles.settingsView}>
 									<Text style={styles.settingText}>Következő fejlesztések</Text>
+								</View>
+							</View>
+						</TouchableOpacity>
+						<TouchableOpacity onPress={() => deleteAccount()}>
+							<View style={styles.settingItems}>
+								<View>
+									<AntDesign name="delete" size={24} color="black" />
+								</View>
+								<View style={styles.settingsView}>
+									<Text style={styles.settingText}>Fiók végleges törlése</Text>
 								</View>
 							</View>
 						</TouchableOpacity>

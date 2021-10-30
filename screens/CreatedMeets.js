@@ -7,12 +7,12 @@ import { useIsFocused } from "@react-navigation/core";
 import { Entypo } from "@expo/vector-icons";
 // Components
 import Screen from "../components/Screen";
-import Card from "../components/Card";
+import CreatedCart from "../components/CreatedCart";
 import Loading from "../components/ActivityIndicator";
 import authStorage from "../auth/storage";
 import { TouchableWithoutFeedback } from "react-native-gesture-handler";
 
-export default function HomeScreen({ navigation }) {
+export default function CreatedScreen({ navigation }) {
 	const isFocused = useIsFocused();
 	const [meets, setMeets] = useState([]);
 	const [loading, setLoading] = useState(false);
@@ -35,7 +35,7 @@ export default function HomeScreen({ navigation }) {
 		};
 		setLoading(true);
 		await axios
-			.get("https://api.eventkill.com/api/meets/today", data)
+			.get("https://api.eventkill.com/api/meets/sent", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});
@@ -82,47 +82,6 @@ export default function HomeScreen({ navigation }) {
 		getTodayMeets();
 	}, [isFocused]);
 
-	const deleteMeet = meet => {
-		setLoading(true);
-		getCheckMeetStatus(meet.id)
-			.then(response => {
-				setLoading(false);
-				Alert.alert(
-					"Meeting lemondása",
-					"Leszeretnéd mondani a meetinget?",
-					[
-						{
-							text: "Mégse",
-							style: "cancel",
-						},
-						{
-							text: "Igen",
-							onPress: async () => {
-								await postDeleteMeet(meet.id);
-								await getTodayMeets();
-								if (response.data.result[0].status === 1) {
-									Alert.alert(
-										"Lemondott Meeting",
-										"A partnered is lemondta a meetinget, így elmarad!",
-										[
-											{
-												text: "Rendben",
-												style: "cancel",
-											},
-										]
-									);
-								}
-							},
-						},
-					],
-					{ cancelable: false }
-				);
-			})
-			.catch(err => {
-				setLoading(false);
-			});
-	};
-
 	if (!loaded) {
 		return null;
 	}
@@ -136,17 +95,6 @@ export default function HomeScreen({ navigation }) {
 			)}
 			<Screen>
 				<View style={styles.welcome}>
-					<TouchableWithoutFeedback
-						onPress={() => navigation.navigate("Profile")}
-					>
-						<View style={styles.profileSection}>
-							<Entypo name="menu" size={30} color="black" />
-							<View style={styles.mainInfo}>
-								<Text style={styles.name}>Erdős József</Text>
-							</View>
-						</View>
-					</TouchableWithoutFeedback>
-
 					{/* <View style={styles.testtt}>
 						<MaterialIcons name="notifications" size={26} color="black" />
 					</View> */}
@@ -154,7 +102,9 @@ export default function HomeScreen({ navigation }) {
 				{meets.length === 0 ? (
 					<View>
 						<View style={styles.title}>
-							<Text style={styles.start}>Mára nincs megbeszélésed!</Text>
+							<Text style={styles.start}>
+								Még nem hoztál létre megbeszélést!
+							</Text>
 						</View>
 						<TouchableWithoutFeedback
 							onPress={() => navigation.navigate("NewMeet")}
@@ -168,7 +118,7 @@ export default function HomeScreen({ navigation }) {
 					</View>
 				) : (
 					<View style={styles.title}>
-						<Text style={styles.start}>Mára tervezett megbeszéléseid</Text>
+						<Text style={styles.start}>Létrehozott megbeszélések</Text>
 					</View>
 				)}
 
@@ -179,9 +129,7 @@ export default function HomeScreen({ navigation }) {
 					data={meets}
 					extraData={meets}
 					keyExtractor={listing => listing.id.toString()}
-					renderItem={({ item }) => (
-						<Card item={item} deleteMeet={() => deleteMeet(item)} />
-					)}
+					renderItem={({ item }) => <CreatedCart item={item} />}
 					refreshing={refreshing}
 					onRefresh={async () => {
 						await getTodayMeets();

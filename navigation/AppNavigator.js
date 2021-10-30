@@ -16,7 +16,7 @@ import navigation from "../navigation/rootNavigation";
 import HomeStackNavigator from "./HomeStackNavigator";
 import CreateMeet from "../screens/Profile/CreateMeet";
 import colors from "../config/colors";
-
+import CreatedMeets from "../screens/CreatedMeets";
 const Tab = createBottomTabNavigator();
 
 const AppNavigator = () => {
@@ -135,6 +135,7 @@ const AppNavigator = () => {
 				name="Meets"
 				options={{
 					headerShown: false,
+					tabBarVisible: false,
 					tabBarLabel: "Megbeszélések",
 					tabBarIcon: ({ color }) => (
 						<FontAwesome name="meetup" size={28} color="black" />
@@ -180,11 +181,12 @@ const AppNavigator = () => {
 				name="Profile"
 				options={{
 					tabBarLabel: "Kiküldött",
+					headerShown: false,
 					tabBarIcon: ({ color }) => (
 						<Entypo name="new-message" size={23} color="black" />
 					),
 				}}
-				component={HomeScreen}
+				component={CreatedMeets}
 			/>
 		</Tab.Navigator>
 	);

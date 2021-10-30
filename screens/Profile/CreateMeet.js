@@ -7,13 +7,12 @@ import {
 	TextInput,
 	FlatList,
 	TouchableOpacity,
+	Animated,
 } from "react-native";
 import axios from "axios";
 import { useFonts } from "expo-font";
 import { TimePickerModal } from "react-native-paper-dates";
 import { DatePickerModal } from "react-native-paper-dates";
-import { Formik } from "formik";
-import * as Yup from "yup";
 
 // Components
 import Screen from "../../components/Screen";
@@ -24,15 +23,25 @@ import colors from "../../config/colors";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function CreateMeet({ navigation }) {
+	const [request, setRequest] = useState({
+		title: "",
+		time: "",
+		isValidTitle: false,
+		isValidTime: false,
+	});
+	const [disable, setDisabled] = useState(true);
+	const [title, setTitle] = useState("");
+	const [selectedDate, setSelectedDate] = useState(false);
+	const [partnerError, setPartnerError] = useState(false);
+
 	// ! Start Date selector
 	const [date, setDate] = React.useState(new Date());
-	const [test, setTest] = useState("");
 	const [dateOpen, setDateOpen] = React.useState(false);
 
 	const onDismissSingleDate = React.useCallback(() => {
 		setDateOpen(false);
 	}, [setDateOpen]);
-
+	const [formattedDate, setFormattedDate] = useState("");
 	const onConfirmSingleDate = React.useCallback(
 		params => {
 			setDateOpen(false);
@@ -55,17 +64,17 @@ export default function CreateMeet({ navigation }) {
 			setVisible(false);
 			setHours(hours);
 			setMinutes(minutes);
+			startTimeInputChange(hours);
 		},
 		[setVisible]
 	);
 	// ! End Time selector
 
-	const [title, setTitle] = useState("");
 	const [description, setDescription] = useState("");
 	const [users, setUsers] = useState([]);
 	const [selectedUser, setSelectedUser] = useState([]);
 
-	const [partner, setPartner] = useState("");
+	const [partner, setPartner] = useState([]);
 	const [showUsers, setShowUsers] = useState(false);
 
 	// ! Inputs
@@ -167,7 +176,6 @@ export default function CreateMeet({ navigation }) {
 	};
 
 	const searchFilter = async text => {
-		setSelectedUser([]);
 		const authToken = await authStorage.getToken();
 
 		let data = {
@@ -188,10 +196,47 @@ export default function CreateMeet({ navigation }) {
 		}
 	};
 
-	const validationSchema = Yup.object().shape({
-		title: Yup.string().required("asd").min(4).label("Title"),
-		// user: Yup.number().required("number").min(1).label("user"),
-	});
+	const textInputChange = val => {
+		if (val.trim().length >= 3) {
+			setRequest({
+				...request,
+				title: val,
+				isValidTitle: true,
+			});
+		} else {
+			setRequest({
+				...request,
+				title: val,
+				isValidTitle: false,
+			});
+		}
+	};
+
+	const startTimeInputChange = val => {
+		console.log(!val);
+		if (val.length >= 1) {
+			setRequest({
+				...request,
+				time: val,
+				isValidTime: true,
+			});
+		} else {
+			setRequest({
+				...request,
+				time: val,
+				isValidTime: false,
+			});
+		}
+	};
+
+	const send = () => {
+		console.log(request.isValidTime === true);
+		if (request.isValidTime === true && request.isValidTitle === true) {
+			console.log("Valid");
+		} else {
+			console.log("NOT");
+		}
+	};
 
 	return (
 		<Screen>
@@ -225,126 +270,100 @@ export default function CreateMeet({ navigation }) {
 					saveLabel="Mentés"
 					label="Válaszd ki az időpontot"
 				/>
-				<Formik
-					initialValues={{
-						title: "",
-						user: "",
-					}}
-					onSubmit={values => console.log(values)}
-					validationSchema={validationSchema}
-				>
-					{({
-						handleChange,
-						handleSubmit,
-						errors,
-						setFieldTouched,
-						touched,
-					}) => (
-						<>
-							<View style={styles.inputView}>
-								<Text style={styles.title}>Partner (kötelező)</Text>
-								<TextInput
-									style={styles.input}
-									placeholderTextColor="#666666"
-									placeholder="Partner neve"
-									onChangeText={text => searchFilter(text)}
-									// onChangeText={handleChange(selectedUser)}
-								/>
-								{showUsers && (
-									<>
-										<FlatList
-											data={users}
-											keyExtractor={(item, index) => index.toString()}
-											renderItem={ItemView}
-											selectedUser={() => selectAnUser(item)}
-										/>
-									</>
-								)}
-								{/* {touched.title && (
-									<AppText style={{ color: "red" }}>{errors.user}</AppText>
-								)} */}
-							</View>
-							<View style={styles.inputView}>
-								<Text style={styles.title}>Cím (kötelező)</Text>
-								<TextInput
-									style={styles.input}
-									placeholderTextColor="#666666"
-									placeholder="Meeting címe"
-									multiline={true}
-									onChangeText={handleChange("title")}
-									onBlur={() => setFieldTouched("title")}
-								/>
-								{touched.title && (
-									<AppText style={{ color: "red" }}>{errors.title}</AppText>
-								)}
-							</View>
-							<View style={styles.inputView}>
-								<Text style={styles.title}>Leírás (nem kötelező)</Text>
-								<TextInput
-									style={styles.textarea}
-									placeholderTextColor="#666666"
-									placeholder="Meeting leírása"
-									multiline={true}
-									value={description}
-									onChangeText={e => handleDescription(e)}
-								/>
-							</View>
 
-							<View
-								onPress={() => setDateOpen(true)}
-								uppercase={false}
-								mode="outlined"
-								style={styles.inputView}
-							>
-								<Text
-									onPress={() => setDateOpen(true)}
-									uppercase={false}
-									mode="outlined"
-									style={styles.title}
-								>
-									Dátum (kötelező)
-								</Text>
-								<TextInput
-									style={styles.input}
-									placeholderTextColor="#666666"
-									placeholder="datum"
-									editable={false}
-									value={test}
-								/>
-							</View>
-							<View
-								onPress={() => setVisible(true)}
-								uppercase={false}
-								mode="outlined"
-								style={styles.inputView}
-							>
-								<Text
-									onPress={() => setVisible(true)}
-									uppercase={false}
-									mode="outlined"
-									style={styles.title}
-								>
-									Ido (kötelező)
-								</Text>
-								<TextInput
-									style={styles.input}
-									placeholderTextColor="#666666"
-									placeholder="Időpontja"
-									editable={false}
-									value={hours && minutes && hours + ":" + minutes}
-								/>
-								{/* <AppText style={{ color: "red" }}>{errors.time}</AppText> */}
-							</View>
-							<TouchableOpacity onPress={handleSubmit}>
-								<View style={styles.createView}>
-									<View style={styles.creat}>
-										<Text style={styles.createText}>Létrehozás</Text>
-									</View>
-								</View>
-							</TouchableOpacity>
+				<View style={styles.inputView}>
+					<Text style={styles.title}>Partner (kötelező)</Text>
+					<TextInput
+						style={styles.input}
+						placeholderTextColor="#666666"
+						placeholder="Partner neve"
+						onChangeText={text => searchFilter(text)}
+						// onChangeText={handleChange(selectedUser)}
+					/>
+					{showUsers && (
+						<>
+							<FlatList
+								data={users}
+								keyExtractor={(item, index) => index.toString()}
+								renderItem={ItemView}
+								selectedUser={() => selectAnUser(item)}
+							/>
 						</>
 					)}
-				</Formik>
+					{partnerError && (
+						<AppText style={{ color: "red" }}>
+							Partner kiválasztása kötelező!
+						</AppText>
+					)}
+				</View>
+				<View style={styles.inputView}>
+					<Text style={styles.title}>Cím (kötelező)</Text>
+					<TextInput
+						style={styles.input}
+						placeholderTextColor="#666666"
+						placeholder="Meeting címe"
+						multiline={true}
+						onChangeText={val => textInputChange(val)}
+					/>
+					{request.isValidTitle ? null : (
+						<Animated.View>
+							<Text style={{ color: "red" }}>Text is required</Text>
+						</Animated.View>
+					)}
+				</View>
+				<View style={styles.inputView}>
+					<Text style={styles.title}>Leírás (nem kötelező)</Text>
+					<TextInput
+						style={styles.textarea}
+						placeholderTextColor="#666666"
+						placeholder="Meeting leírása"
+						multiline={true}
+						value={description}
+						onChangeText={e => handleDescription(e)}
+					/>
+				</View>
+
+				<View uppercase={false} mode="outlined" style={styles.inputView}>
+					<Text uppercase={false} mode="outlined" style={styles.title}>
+						Dátum (kötelező)
+					</Text>
+					<TouchableOpacity onPress={() => setDateOpen(true)}>
+						<TextInput
+							placeholderTextColor="#666666"
+							placeholder="Időpontja"
+							style={styles.input}
+							pointerEvents="none"
+							value={date.toISOString().slice(0, 10)}
+						/>
+					</TouchableOpacity>
+					{selectedDate && (
+						<AppText style={{ color: "red" }}>
+							Dátum kiválasztása kötelező!
+						</AppText>
+					)}
+				</View>
+				<View uppercase={false} mode="outlined" style={styles.inputView}>
+					<Text uppercase={false} mode="outlined" style={styles.title}>
+						Ido (kötelező)
+					</Text>
+					<TouchableOpacity onPress={() => setVisible(true)}>
+						<TextInput
+							placeholderTextColor="#666666"
+							placeholder="Időpontja"
+							style={styles.input}
+							pointerEvents="none"
+							value={hours && minutes && hours + ":" + minutes}
+						/>
+					</TouchableOpacity>
+				</View>
+
+				<TouchableOpacity onPress={() => send()}>
+					<View style={styles.createView}>
+						<View style={styles.creat}>
+							<Text style={styles.createText}>Létrehozás</Text>
+						</View>
+					</View>
+				</TouchableOpacity>
 			</ScrollView>
 		</Screen>
 	);
