@@ -52,7 +52,7 @@ export default function HomeScreen({ navigation }) {
 		};
 		//
 		return axios.get(
-			`http://192.168.0.178:9000/api/meets/check/${meetId}`,
+			`https://api.eventkill.com/api/meets/check/${meetId}`,
 			data
 		);
 
@@ -69,7 +69,7 @@ export default function HomeScreen({ navigation }) {
 		};
 		try {
 			await axios.post(
-				`http://192.168.0.178:9000/api/operation/delete/${meetId}`,
+				`https://api.eventkill.com/api/operation/delete/${meetId}`,
 				{},
 				data
 			);

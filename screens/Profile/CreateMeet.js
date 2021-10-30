@@ -100,7 +100,7 @@ export default function CreateMeet({ navigation }) {
 	// 		setProgress(0);
 	// 		setUploadVisible(true);
 	// 		await axios
-	// 			.post("http://192.168.0.178:9000/api/meets/create", items, data)
+	// 			.post("https://api.eventkill.com/api/meets/create", items, data)
 	// 			.then(response => {
 	// 				if (response.data.status !== 200) {
 	// 					setUploadVisible(false);
@@ -139,7 +139,7 @@ export default function CreateMeet({ navigation }) {
 		};
 		// setLoading(true);
 		await axios
-			.get(`http://192.168.0.178:9000/api/meets/people`, data)
+			.get(`https://api.eventkill.com/api/meets/people`, data)
 			.then(response => {
 				setUsers(response.data.result);
 			});
@@ -178,7 +178,7 @@ export default function CreateMeet({ navigation }) {
 		};
 		if (text) {
 			await axios
-				.get(`http://192.168.0.178:9000/api/meets/people/${text}`, data)
+				.get(`https://api.eventkill.com/api/meets/people/${text}`, data)
 				.then(response => {
 					// if (response.data.result.length > 0) {
 					setShowUsers(true);

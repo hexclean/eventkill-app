@@ -25,7 +25,7 @@ export default function PendingMeets() {
 		};
 		setLoading(true);
 		await axios
-			.get("http://192.168.0.178:9000/api/meets/pending", data)
+			.get("https://api.eventkill.com/api/meets/pending", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});
@@ -42,7 +42,7 @@ export default function PendingMeets() {
 		};
 		try {
 			await axios.post(
-				`http://192.168.0.178:9000/api/operation/accept/${meetId}`,
+				`https://api.eventkill.com/api/operation/accept/${meetId}`,
 				{},
 				data
 			);
@@ -61,7 +61,7 @@ export default function PendingMeets() {
 		};
 		try {
 			await axios.post(
-				`http://192.168.0.178:9000/api/operation/delete/${meetId}`,
+				`https://api.eventkill.com/api/operation/delete/${meetId}`,
 				{},
 				data
 			);
@@ -80,7 +80,7 @@ export default function PendingMeets() {
 		};
 		//
 		return axios.get(
-			`http://192.168.0.178:9000/api/meets/check/${meetId}`,
+			`https://api.eventkill.com/api/meets/check/${meetId}`,
 			data
 		);
 

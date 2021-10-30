@@ -1,7 +1,7 @@
 // import { useState, useEffect } from "react";
 // import axios from "axios";
 
-// axios.defaults.baseURL = "http://192.168.100.70:9000/api/meets";
+// axios.defaults.baseURL = "https://api.eventkill.com/api/meets";
 
 // const useAxios = ({ url, method, body = null, headers = null }) => {
 // 	const [response, setResponse] = useState(null);

@@ -1,7 +1,7 @@
 import axios from "axios";
 import authStorage from "../auth/storage";
 
-const apiUrl = "http://192.168.0.178:9000/api/";
+const apiUrl = "https://api.eventkill.com/api/";
 axios.defaults.withCredentials = true;
 
 export const get = async (resource, qs) => {

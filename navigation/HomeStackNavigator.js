@@ -19,6 +19,7 @@ const HomeStackNavigator = () => (
 			options={{ headerShown: false }}
 			name="Home"
 			component={HomeScreen}
+			tabBarVisible={false}
 		/>
 		<Stack.Screen
 			name="NewMeet"
@@ -27,8 +28,9 @@ const HomeStackNavigator = () => (
 		/>
 		<Stack.Screen
 			name="Profile"
-			options={{ headerShown: false }}
+			options={{ headerShown: false, tabBarVisible: false }}
 			component={Profile}
+			tabBarVisible={false}
 		/>
 		<Stack.Screen
 			options={{ headerShown: false }}
@@ -41,7 +43,6 @@ const HomeStackNavigator = () => (
 			options={{
 				title: "Következő fejlesztések",
 				headerBackTitle: "Vissza",
-				// headerTintColor: "black",
 			}}
 			name="NextFeatures"
 			component={NextFeatures}

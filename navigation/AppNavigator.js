@@ -3,15 +3,19 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { AntDesign } from "@expo/vector-icons";
 import * as Notifications from "expo-notifications";
 import * as Permissions from "expo-permissions";
-
+import { View, Text, StyleSheet, Button } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
 // Components
 import HomeScreen from "../screens/HomeScreen";
-import SettingsScreen from "../screens/Meets/MeetsByCalendarScreen";
+import CalendarScreen from "../screens/Meets/MeetsByCalendarScreen";
 import Meets from "../screens/Meets/Meets";
 import AccountNavigator from "./AccountNavigator";
 import navigation from "../navigation/rootNavigation";
 import HomeStackNavigator from "./HomeStackNavigator";
 import CreateMeet from "../screens/Profile/CreateMeet";
+import colors from "../config/colors";
 
 const Tab = createBottomTabNavigator();
 
@@ -32,57 +36,162 @@ const AppNavigator = () => {
 			console.log(error);
 		}
 	};
+	const customTabBarStyle = {
+		activeTintColor: colors.orange,
+		inactiveTintColor: "gray",
+		style: { backgroundColor: "white" },
+	};
 	return (
-		<Tab.Navigator>
+		// <Tab.Navigator
+		// 	tabBarOptions={{
+		// 		showLabel: false,
+		// 		style: {
+		// 			position: "absolute",
+		// 			bottom: 25,
+		// 			left: 20,
+		// 			right: 20,
+		// 			elevation: 0,
+		// 			backgroundColor: "#ffffff",
+		// 			borderRadius: 15,
+		// 			height: 90,
+		// 		},
+		// 	}}
+		// >
+		// 	<Tab.Screen
+		// 		name="Home"
+		// 		component={HomeStackNavigator}
+		// 		// options={{
+		// 		// 	title: "Kezdőlap",
+		// 		// 	headerShown: false,
+		// 		// 	tabBarIcon: ({ color, size }) => (
+		// 		// 		<AntDesign name="home" color={color} size={20} />
+		// 		// 	),
+		// 		// }}
+		// 	/>
+
+		// 	<Tab.Screen
+		// 		name="Meets"
+		// 		component={Meets}
+		// 		// options={{
+		// 		// 	title: "Megbeszélések",
+		// 		// 	headerShown: false,
+		// 		// 	tabBarIcon: ({ color, size }) => (
+		// 		// 		<AntDesign name="bars" color={color} size={20} />
+		// 		// 	),
+		// 		// }}
+		// 	/>
+		// 	<Tab.Screen
+		// 		name="Settings"
+		// 		component={SettingsScreen}
+		// 		// options={{
+		// 		// 	title: "Naptár",
+		// 		// 	headerShown: false,
+		// 		// 	tabBarIcon: ({ color, size }) => (
+		// 		// 		<AntDesign name="calendar" color={color} size={20} />
+		// 		// 	),
+		// 		// }}
+		// 	/>
+		// 	<Tab.Screen
+		// 		name="NewMeet"
+		// 		component={CreateMeet}
+		// 		// options={{
+		// 		// 	title: "Új esemény",
+		// 		// 	// headerShown: false,
+		// 		// 	tabBarIcon: ({ color, size }) => (
+		// 		// 		<AntDesign name="pluscircle" color={color} size={20} />
+		// 		// 	),
+		// 		// }}
+		// 	/>
+		// 	<Tab.Screen
+		// 		name="test"
+		// 		component={CreateMeet}
+		// 		// options={{
+		// 		// 	title: "Új esemény",
+		// 		// 	// headerShown: false,
+		// 		// 	tabBarIcon: ({ color, size }) => (
+		// 		// 		<AntDesign name="pluscircle" color={color} size={20} />
+		// 		// 	),
+		// 		// }}
+		// 	/>
+		// </Tab.Navigator>
+		<Tab.Navigator
+			initialRouteName="Home"
+			activeColor="#fff"
+			tabBarOptions={customTabBarStyle}
+			shifting="false"
+		>
 			<Tab.Screen
 				name="Home"
-				component={HomeStackNavigator}
 				options={{
-					title: "Főoldal",
-
 					headerShown: false,
-					tabBarIcon: ({ color, size }) => (
-						// <AntDesign name="clockcircleo" size={20} color="gray" />
-						<AntDesign name="home" color={color} size={size} />
+					tabBarLabel: "Kezdőlap",
+					tabBarIcon: ({ color }) => (
+						<AntDesign name="home" size={24} color="black" />
 					),
 				}}
+				component={HomeStackNavigator}
 			/>
-
 			<Tab.Screen
 				name="Meets"
+				options={{
+					headerShown: false,
+					tabBarLabel: "Megbeszélések",
+					tabBarIcon: ({ color }) => (
+						<FontAwesome name="meetup" size={28} color="black" />
+					),
+				}}
 				component={Meets}
-				options={{
-					title: "Megbeszélések",
-					headerShown: false,
-					tabBarIcon: ({ color, size }) => (
-						<AntDesign name="bars" color={color} size={size} />
-					),
-				}}
-			/>
-			<Tab.Screen
-				name="Settings"
-				component={SettingsScreen}
-				options={{
-					title: "Naptár",
-					headerShown: false,
-					tabBarIcon: ({ color, size }) => (
-						<AntDesign name="calendar" color={color} size={size} />
-					),
-				}}
 			/>
 			<Tab.Screen
 				name="NewMeet"
-				component={CreateMeet}
 				options={{
-					title: "Új esemény",
-					// headerShown: false,
-					tabBarIcon: ({ color, size }) => (
-						<AntDesign name="pluscircle" color={color} size={size} />
+					title: "Új megbeszélés létrehozása",
+					tabBarLabel: "Létrehozás",
+					tabBarIcon: ({ color }) => (
+						<View
+							style={{
+								position: "absolute",
+								bottom: 0, // space from bottombar
+								height: 60,
+								width: 68,
+								borderRadius: 68,
+								justifyContent: "center",
+								alignItems: "center",
+							}}
+						>
+							<AntDesign name="pluscircle" size={28} color="black" />
+						</View>
 					),
 				}}
+				component={CreateMeet}
+			/>
+			<Tab.Screen
+				name="Store"
+				options={{
+					headerShown: false,
+					tabBarLabel: "Naptár",
+					tabBarIcon: ({ color }) => (
+						<AntDesign name="calendar" size={23} color="black" />
+					),
+				}}
+				component={CalendarScreen}
+			/>
+			<Tab.Screen
+				name="Profile"
+				options={{
+					tabBarLabel: "Kiküldött",
+					tabBarIcon: ({ color }) => (
+						<Entypo name="new-message" size={23} color="black" />
+					),
+				}}
+				component={HomeScreen}
 			/>
 		</Tab.Navigator>
 	);
 };
+
+// const styles = StyleSheet.create({
+
+// })
 
 export default AppNavigator;

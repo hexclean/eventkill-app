@@ -26,7 +26,7 @@ export default function AcceptedMeets() {
 		};
 		setLoading(true);
 		await axios
-			.get("http://192.168.0.178:9000/api/meets/accepted", data)
+			.get("https://api.eventkill.com/api/meets/accepted", data)
 			.then(response => {
 				setMeets(response.data.result);
 			});
@@ -43,7 +43,7 @@ export default function AcceptedMeets() {
 		};
 
 		return axios.get(
-			`http://192.168.0.178:9000/api/meets/check/${meetId}`,
+			`https://api.eventkill.com/api/meets/check/${meetId}`,
 			data
 		);
 	};
@@ -58,7 +58,7 @@ export default function AcceptedMeets() {
 		};
 		try {
 			await axios.post(
-				`http://192.168.0.178:9000/api/operation/delete/${meetId}`,
+				`https://api.eventkill.com/api/operation/delete/${meetId}`,
 				{},
 				data
 			);
