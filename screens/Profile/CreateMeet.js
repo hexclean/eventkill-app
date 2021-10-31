@@ -25,7 +25,6 @@ import { ScrollView } from "react-native-gesture-handler";
 export default function CreateMeet({ navigation }) {
 	const [title, setTitle] = useState("");
 	const [selectedDate, setSelectedDate] = useState("");
-	const [partnerError, setPartnerError] = useState(false);
 
 	// ! Start Date selector
 	const [date, setDate] = React.useState(new Date());
@@ -39,6 +38,7 @@ export default function CreateMeet({ navigation }) {
 			setDateOpen(false);
 			setDate(params.date);
 			setSelectedDate(params.date);
+			setDateError(false);
 		},
 		[setDateOpen, setDate]
 	);
@@ -55,6 +55,7 @@ export default function CreateMeet({ navigation }) {
 		({ hours, minutes }) => {
 			setVisibleStartTime(false);
 			setStartTime(hours + ":" + minutes);
+			setStartTimeError(false);
 		},
 		[setVisibleStartTime]
 	);
@@ -70,6 +71,7 @@ export default function CreateMeet({ navigation }) {
 		({ hours, minutes }) => {
 			setVisibleEndTime(false);
 			setEndTime(hours + ":" + minutes);
+			setEndTimeError(false);
 		},
 		[setVisibleEndTime]
 	);
@@ -84,7 +86,15 @@ export default function CreateMeet({ navigation }) {
 	const [showUsers, setShowUsers] = useState(false);
 
 	// ! Inputs
-	const handleTitle = e => setTitle(e);
+	const handleTitle = e => {
+		if (e.trim().length < 4) {
+			setTitle(e);
+			setTitleError(true);
+		} else {
+			setTitle(e);
+			setTitleError(false);
+		}
+	};
 	const handleDescription = e => setDescription(e);
 	//
 	const [uploadVisible, setUploadVisible] = useState(false);
@@ -92,15 +102,15 @@ export default function CreateMeet({ navigation }) {
 
 	// const handleSubmit = async () => {
 	// 	const authToken = await authStorage.getToken();
-	// 	const items = {
-	// 		title: title,
-	// 		user: selectedUser,
-	// 		description: description,
-	// 		date: date,
-	// 		time: `${hours}:${minutes}`,
-	// 		// invitedUserId: selectedUser.id,
-	// 		// time: "10:00 - 11:30",
-	// 	};
+	// const items = {
+	// 	title: title,
+	// 	user: selectedUser,
+	// 	description: description,
+	// 	date: date,
+	// 	time: `${hours}:${minutes}`,
+	// 	// invitedUserId: selectedUser.id,
+	// 	// time: "10:00 - 11:30",
+	// };
 	// 	console.log(items);
 	// 	let data = {
 	// 		headers: {
@@ -179,6 +189,7 @@ export default function CreateMeet({ navigation }) {
 	const selectAnUser = user => {
 		setSelectedUser(user);
 		setShowUsers(false);
+		setUserError(false);
 	};
 
 	const searchFilter = async text => {
@@ -202,6 +213,12 @@ export default function CreateMeet({ navigation }) {
 		}
 	};
 
+	const [titleError, setTitleError] = useState(false);
+	const [userError, setUserError] = useState(false);
+	const [dateError, setDateError] = useState(false);
+	const [startTimeError, setStartTimeError] = useState(false);
+	const [endTimeError, setEndTimeError] = useState(false);
+
 	const validateForm = () => {
 		let formTitle = title.trim().length;
 		let formUser = selectedUser.id;
@@ -209,33 +226,32 @@ export default function CreateMeet({ navigation }) {
 		let formStartTime = !startTime;
 		let formEndTime = !endTime;
 
-		if (formTitle < 3) {
-			// console.log("KISEBB");
+		if (formTitle < 4) {
+			setTitleError(true);
 		} else {
-			// console.log("NAGYOBB");
+			setTitleError(false);
 		}
 
 		if (formUser === undefined) {
-			// console.log("KISEBB");
+			setUserError(true);
 		} else {
-			// console.log("NAGYOBB");
+			setUserError(false);
 		}
 
-		if (formDate === false) {
-			// console.log("KISEBB");
+		if (formDate === true) {
+			setDateError(true);
 		} else {
-			// console.log("NAGYOBB");
+			setDateError(false);
 		}
-
-		if (formStartTime === false) {
-			// console.log("KISEBB");
+		if (formStartTime === true) {
+			setStartTimeError(true);
 		} else {
-			// console.log("NAGYOBB");
+			setStartTimeError(false);
 		}
-		if (formEndTime === false) {
-			// console.log("KISEBB");
+		if (formEndTime === true) {
+			setEndTimeError(true);
 		} else {
-			// console.log("NAGYOBB");
+			setEndTimeError(false);
 		}
 
 		if (
@@ -245,9 +261,15 @@ export default function CreateMeet({ navigation }) {
 			formStartTime === false &&
 			formEndTime === false
 		) {
-			console.log("MENTHETO");
-		} else {
-			console.log("HIBA");
+			let items = {
+				title: title.trim(),
+				user: selectedUser.id,
+				description: description.trim(),
+				date: date,
+				startTime: startTime,
+				endTime: endTime,
+			};
+			console.log(items);
 		}
 	};
 
@@ -315,7 +337,7 @@ export default function CreateMeet({ navigation }) {
 							/>
 						</>
 					)}
-					{partnerError && (
+					{userError && (
 						<AppText style={{ color: "red" }}>
 							Partner kiválasztása kötelező!
 						</AppText>
@@ -330,6 +352,11 @@ export default function CreateMeet({ navigation }) {
 						multiline={true}
 						onChangeText={val => handleTitle(val)}
 					/>
+					{titleError && (
+						<AppText style={{ color: "red" }}>
+							Cím legalább 4 karaktert kell tartalmazzon!
+						</AppText>
+					)}
 				</View>
 				<View style={styles.inputView}>
 					<Text style={styles.title}>Leírás (nem kötelező)</Text>
@@ -356,37 +383,47 @@ export default function CreateMeet({ navigation }) {
 							value={date.toISOString().slice(0, 10)}
 						/>
 					</TouchableOpacity>
+					{dateError && (
+						<AppText style={{ color: "red" }}>
+							Dátum kiválasztása kötelező!
+						</AppText>
+					)}
 				</View>
-				<View style={styles.timeView}>
-					<View uppercase={false} mode="outlined" style={styles.inputView}>
-						<Text uppercase={false} mode="outlined" style={styles.title}>
-							Ido (kötelező)
-						</Text>
-						<TouchableOpacity onPress={() => setVisibleStartTime(true)}>
-							<TextInput
-								placeholderTextColor="#666666"
-								placeholder="Időpontja"
-								style={styles.input}
-								pointerEvents="none"
-								value={startTime && startTime}
-							/>
-						</TouchableOpacity>
-					</View>
-					<View uppercase={false} mode="outlined" style={styles.endTime}>
-						<Text uppercase={false} mode="outlined" style={styles.title}>
-							Ido (kötelező)
-						</Text>
-						<TouchableOpacity onPress={() => setVisibleEndTime(true)}>
-							<TextInput
-								placeholderTextColor="#666666"
-								placeholder="Időpontja"
-								style={styles.input}
-								pointerEvents="none"
-								value={endTime && endTime}
-							/>
-						</TouchableOpacity>
-					</View>
+
+				<View uppercase={false} mode="outlined" style={styles.inputView}>
+					<Text uppercase={false} mode="outlined" style={styles.title}>
+						Ido (kötelező)
+					</Text>
+					<TouchableOpacity onPress={() => setVisibleStartTime(true)}>
+						<TextInput
+							placeholderTextColor="#666666"
+							placeholder="Időpontja"
+							style={styles.input}
+							pointerEvents="none"
+							value={startTime && startTime}
+						/>
+					</TouchableOpacity>
+					{startTimeError && (
+						<AppText style={{ color: "red" }}>Kiválasztása kötelező!</AppText>
+					)}
 				</View>
+				<View uppercase={false} mode="outlined" style={styles.inputView}>
+					<Text uppercase={false} mode="outlined" style={styles.title}>
+						Ido (kötelező)
+					</Text>
+					<TouchableOpacity onPress={() => setVisibleEndTime(true)}>
+						<TextInput
+							placeholderTextColor="#666666"
+							placeholder="Időpontja"
+							style={styles.input}
+							pointerEvents="none"
+							value={endTime && endTime}
+						/>
+					</TouchableOpacity>
+				</View>
+				{endTimeError && (
+					<AppText style={{ color: "red" }}>Kiválasztása kötelező!</AppText>
+				)}
 
 				<TouchableOpacity onPress={() => validateForm()}>
 					<View style={styles.createView}>
