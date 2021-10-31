@@ -100,46 +100,45 @@ export default function CreateMeet({ navigation }) {
 	const [uploadVisible, setUploadVisible] = useState(false);
 	const [progress, setProgress] = useState(0);
 
-	// const handleSubmit = async () => {
-	// 	const authToken = await authStorage.getToken();
-	// const items = {
-	// 	title: title,
-	// 	user: selectedUser,
-	// 	description: description,
-	// 	date: date,
-	// 	time: `${hours}:${minutes}`,
-	// 	// invitedUserId: selectedUser.id,
-	// 	// time: "10:00 - 11:30",
-	// };
-	// 	console.log(items);
-	// 	let data = {
-	// 		headers: {
-	// 			"x-auth-token": authToken,
-	// 			"content-type": "application/json",
-	// 		},
+	const handleSubmit = async () => {
+		let items = {
+			title: title.trim(),
+			user: selectedUser.id,
+			description: description.trim(),
+			date: date,
+			startTime: startTime,
+			endTime: endTime,
+		};
+		const authToken = await authStorage.getToken();
+		let data = {
+			headers: {
+				"x-auth-token": authToken,
+				"content-type": "application/json",
+			},
 
-	// 		onUploadProgress: progress =>
-	// 			setProgress(progress.loaded / progress.total),
-	// 	};
-	// 	try {
-	// 		setProgress(0);
-	// 		setUploadVisible(true);
-	// 		await axios
-	// 			.post("https://api.eventkill.com/api/meets/create", items, data)
-	// 			.then(response => {
-	// 				if (response.data.status !== 200) {
-	// 					setUploadVisible(false);
-	// 				}
-	// 			});
-	// 		// setTitle("");
-	// 		// setDescription("");
-	// 		// setSelectedDate();
-	// 		// setSelectedUser([]);
-	// 		// setSendForm(true);
-	// 	} catch (error) {
-	// 		console.log(error);
-	// 	}
-	// };
+			onUploadProgress: progress =>
+				setProgress(progress.loaded / progress.total),
+		};
+		try {
+			setProgress(0);
+			setUploadVisible(true);
+			await axios
+				.post("https://api.eventkill.com/api/meets/create", items, data)
+				.then(response => {
+					if (response.data.status !== 200) {
+						setUploadVisible(false);
+					}
+				});
+			setTitle("");
+			setDescription("");
+			setShowSelectedDate("");
+			setStartTime("");
+			setEndTime("");
+			setSelectedUser([]);
+		} catch (error) {
+			console.log(error);
+		}
+	};
 
 	useFonts({
 		PoppinsMedium: require("../../assets/fonts/Poppins-Medium.ttf"),
@@ -186,11 +185,9 @@ export default function CreateMeet({ navigation }) {
 					if (response.data.result.length === 0) {
 						setPartner([]);
 						setShowUsers(true);
-						console.log(partner.length);
 					} else {
 						setPartner(response.data.result);
 						setShowUsers(true);
-						console.log(partner.length);
 					}
 				});
 		}
@@ -244,15 +241,7 @@ export default function CreateMeet({ navigation }) {
 			formStartTime === false &&
 			formEndTime === false
 		) {
-			let items = {
-				title: title.trim(),
-				user: selectedUser.id,
-				description: description.trim(),
-				date: date,
-				startTime: startTime,
-				endTime: endTime,
-			};
-			// console.log(items);
+			handleSubmit();
 		}
 	};
 
@@ -309,11 +298,12 @@ export default function CreateMeet({ navigation }) {
 						placeholderTextColor="#666666"
 						placeholder="Partner neve"
 						onChangeText={text => searchFilter(text)}
+						// value={selectedUser.name}
 					/>
 
-					{partner.length === 0 && showUsers === true ? (
+					{/* {partner.length === 0 && showUsers === true ? (
 						<>
-							<View style={styles.searchedUsers}>
+							<View>
 								<Text> NO data</Text>
 							</View>
 						</>
@@ -326,9 +316,9 @@ export default function CreateMeet({ navigation }) {
 								selectedUser={() => selectAnUser(item)}
 							/>
 						</>
-					)}
+					)} */}
 
-					{/* {showUsers && (
+					{showUsers && (
 						<>
 							<FlatList
 								data={partner}
@@ -337,7 +327,7 @@ export default function CreateMeet({ navigation }) {
 								selectedUser={() => selectAnUser(item)}
 							/>
 						</>
-					)} */}
+					)}
 
 					{userError && (
 						<AppText style={{ color: "red" }}>
@@ -353,6 +343,7 @@ export default function CreateMeet({ navigation }) {
 						placeholder="Meeting címe"
 						multiline={true}
 						onChangeText={val => handleTitle(val)}
+						value={title}
 					/>
 					{titleError && (
 						<AppText style={{ color: "red" }}>
