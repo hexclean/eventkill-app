@@ -23,15 +23,8 @@ import colors from "../../config/colors";
 import { ScrollView } from "react-native-gesture-handler";
 
 export default function CreateMeet({ navigation }) {
-	const [request, setRequest] = useState({
-		title: "",
-		time: "",
-		isValidTitle: false,
-		isValidTime: false,
-	});
-	const [disable, setDisabled] = useState(true);
 	const [title, setTitle] = useState("");
-	const [selectedDate, setSelectedDate] = useState(false);
+	const [selectedDate, setSelectedDate] = useState("");
 	const [partnerError, setPartnerError] = useState(false);
 
 	// ! Start Date selector
@@ -41,11 +34,11 @@ export default function CreateMeet({ navigation }) {
 	const onDismissSingleDate = React.useCallback(() => {
 		setDateOpen(false);
 	}, [setDateOpen]);
-	const [formattedDate, setFormattedDate] = useState("");
 	const onConfirmSingleDate = React.useCallback(
 		params => {
 			setDateOpen(false);
 			setDate(params.date);
+			setSelectedDate(params.date);
 		},
 		[setDateOpen, setDate]
 	);
@@ -64,7 +57,6 @@ export default function CreateMeet({ navigation }) {
 			setVisible(false);
 			setHours(hours);
 			setMinutes(minutes);
-			startTimeInputChange(hours);
 		},
 		[setVisible]
 	);
@@ -196,45 +188,46 @@ export default function CreateMeet({ navigation }) {
 		}
 	};
 
-	const textInputChange = val => {
-		if (val.trim().length >= 3) {
-			setRequest({
-				...request,
-				title: val,
-				isValidTitle: true,
-			});
-		} else {
-			setRequest({
-				...request,
-				title: val,
-				isValidTitle: false,
-			});
-		}
-	};
+	const validateForm = () => {
+		let formTitle = title.trim().length;
+		let formUser = selectedUser.id;
+		let formDate = !selectedDate;
+		let formStartTime = !hours;
 
-	const startTimeInputChange = val => {
-		console.log(!val);
-		if (val.length >= 1) {
-			setRequest({
-				...request,
-				time: val,
-				isValidTime: true,
-			});
+		if (formTitle < 3) {
+			console.log("KISEBB");
 		} else {
-			setRequest({
-				...request,
-				time: val,
-				isValidTime: false,
-			});
+			console.log("NAGYOBB");
 		}
-	};
 
-	const send = () => {
-		console.log(request.isValidTime === true);
-		if (request.isValidTime === true && request.isValidTitle === true) {
-			console.log("Valid");
+		if (formUser === undefined) {
+			console.log("KISEBB");
 		} else {
-			console.log("NOT");
+			console.log("NAGYOBB");
+		}
+
+		if (formDate === false) {
+			console.log("KISEBB");
+		} else {
+			console.log("NAGYOBB");
+		}
+
+		if (formStartTime === false) {
+			console.log("KISEBB");
+		} else {
+			console.log("NAGYOBB");
+		}
+
+		console.log("00", formStartTime);
+		if (
+			formTitle > 3 === true &&
+			formUser != undefined &&
+			formDate === false &&
+			formStartTime === false
+		) {
+			console.log("MENTHETO");
+		} else {
+			console.log("HIBA");
 		}
 	};
 
@@ -278,7 +271,6 @@ export default function CreateMeet({ navigation }) {
 						placeholderTextColor="#666666"
 						placeholder="Partner neve"
 						onChangeText={text => searchFilter(text)}
-						// onChangeText={handleChange(selectedUser)}
 					/>
 					{showUsers && (
 						<>
@@ -303,13 +295,8 @@ export default function CreateMeet({ navigation }) {
 						placeholderTextColor="#666666"
 						placeholder="Meeting címe"
 						multiline={true}
-						onChangeText={val => textInputChange(val)}
+						onChangeText={val => handleTitle(val)}
 					/>
-					{request.isValidTitle ? null : (
-						<Animated.View>
-							<Text style={{ color: "red" }}>Text is required</Text>
-						</Animated.View>
-					)}
 				</View>
 				<View style={styles.inputView}>
 					<Text style={styles.title}>Leírás (nem kötelező)</Text>
@@ -336,28 +323,39 @@ export default function CreateMeet({ navigation }) {
 							value={date.toISOString().slice(0, 10)}
 						/>
 					</TouchableOpacity>
-					{selectedDate && (
-						<AppText style={{ color: "red" }}>
-							Dátum kiválasztása kötelező!
-						</AppText>
-					)}
 				</View>
-				<View uppercase={false} mode="outlined" style={styles.inputView}>
-					<Text uppercase={false} mode="outlined" style={styles.title}>
-						Ido (kötelező)
-					</Text>
-					<TouchableOpacity onPress={() => setVisible(true)}>
-						<TextInput
-							placeholderTextColor="#666666"
-							placeholder="Időpontja"
-							style={styles.input}
-							pointerEvents="none"
-							value={hours && minutes && hours + ":" + minutes}
-						/>
-					</TouchableOpacity>
+				<View style={styles.timeView}>
+					<View uppercase={false} mode="outlined" style={styles.inputView}>
+						<Text uppercase={false} mode="outlined" style={styles.title}>
+							Ido (kötelező)
+						</Text>
+						<TouchableOpacity onPress={() => setVisible(true)}>
+							<TextInput
+								placeholderTextColor="#666666"
+								placeholder="Időpontja"
+								style={styles.input}
+								pointerEvents="none"
+								value={hours && minutes && hours + ":" + minutes}
+							/>
+						</TouchableOpacity>
+					</View>
+					<View uppercase={false} mode="outlined" style={styles.endTime}>
+						<Text uppercase={false} mode="outlined" style={styles.title}>
+							Ido (kötelező)
+						</Text>
+						<TouchableOpacity onPress={() => setVisible(true)}>
+							<TextInput
+								placeholderTextColor="#666666"
+								placeholder="Időpontja"
+								style={styles.input}
+								pointerEvents="none"
+								value={hours && minutes && hours + ":" + minutes}
+							/>
+						</TouchableOpacity>
+					</View>
 				</View>
 
-				<TouchableOpacity onPress={() => send()}>
+				<TouchableOpacity onPress={() => validateForm()}>
 					<View style={styles.createView}>
 						<View style={styles.creat}>
 							<Text style={styles.createText}>Létrehozás</Text>
@@ -370,6 +368,14 @@ export default function CreateMeet({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+	endTime: {
+		marginVertical: 5,
+	},
+	timeView: {
+		flexDirection: "row",
+		// justifyContent: "center",
+		alignItems: "center",
+	},
 	selectButton: {
 		// justifyContent: "center",
 		// alignContent: "center",

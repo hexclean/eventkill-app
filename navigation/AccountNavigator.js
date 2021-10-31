@@ -20,7 +20,6 @@ const AccountNavigator = () => (
 			component={Profile}
 		/>
 		<Stack.Screen name="Notifications" component={Notifications} />
-		<Stack.Screen component={CreateMeet} />
 		<Stack.Screen name="About" component={About} />
 		<Stack.Screen component={NextFeatures} />
 		<Stack.Screen component={Coffee} />

@@ -7,6 +7,7 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import { SimpleLineIcons } from "@expo/vector-icons";
 // Components
 import HomeScreen from "../screens/HomeScreen";
 import CalendarScreen from "../screens/Meets/MeetsByCalendarScreen";
@@ -138,7 +139,7 @@ const AppNavigator = () => {
 					tabBarVisible: false,
 					tabBarLabel: "Megbeszélések",
 					tabBarIcon: ({ color }) => (
-						<FontAwesome name="meetup" size={28} color="black" />
+						<SimpleLineIcons name="list" size={24} color="black" />
 					),
 				}}
 				component={Meets}
