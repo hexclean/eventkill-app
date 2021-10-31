@@ -45,23 +45,37 @@ export default function CreateMeet({ navigation }) {
 	// ! End Date selector
 
 	// ! Start Time selector
-	const [visible, setVisible] = React.useState(false);
-	const [hours, setHours] = React.useState("");
-	const [minutes, setMinutes] = React.useState("");
-	const onDismiss = React.useCallback(() => {
-		setVisible(false);
-	}, [setVisible]);
+	const [visibleStartTime, setVisibleStartTime] = React.useState(false);
+	const [startTime, setStartTime] = useState("");
+	const onDismissStartTime = React.useCallback(() => {
+		setVisibleStartTime(false);
+	}, [setVisibleStartTime]);
 
-	const onConfirm = React.useCallback(
+	const onConfirmStartTime = React.useCallback(
 		({ hours, minutes }) => {
-			setVisible(false);
-			setHours(hours);
-			setMinutes(minutes);
+			setVisibleStartTime(false);
+			setStartTime(hours + ":" + minutes);
 		},
-		[setVisible]
+		[setVisibleStartTime]
 	);
 	// ! End Time selector
+	// ! Start END Time selector
+	const [visibleEndTime, setVisibleEndTime] = React.useState(false);
+	const [endTime, setEndTime] = useState("");
+	const onDismissEndTime = React.useCallback(() => {
+		setVisibleEndTime(false);
+	}, [setVisibleEndTime]);
 
+	const onConfirmEndTime = React.useCallback(
+		({ hours, minutes }) => {
+			setVisibleEndTime(false);
+			setEndTime(hours + ":" + minutes);
+		},
+		[setVisibleEndTime]
+	);
+	// ! End END Time selector
+
+	///
 	const [description, setDescription] = useState("");
 	const [users, setUsers] = useState([]);
 	const [selectedUser, setSelectedUser] = useState([]);
@@ -192,38 +206,44 @@ export default function CreateMeet({ navigation }) {
 		let formTitle = title.trim().length;
 		let formUser = selectedUser.id;
 		let formDate = !selectedDate;
-		let formStartTime = !hours;
+		let formStartTime = !startTime;
+		let formEndTime = !endTime;
 
 		if (formTitle < 3) {
-			console.log("KISEBB");
+			// console.log("KISEBB");
 		} else {
-			console.log("NAGYOBB");
+			// console.log("NAGYOBB");
 		}
 
 		if (formUser === undefined) {
-			console.log("KISEBB");
+			// console.log("KISEBB");
 		} else {
-			console.log("NAGYOBB");
+			// console.log("NAGYOBB");
 		}
 
 		if (formDate === false) {
-			console.log("KISEBB");
+			// console.log("KISEBB");
 		} else {
-			console.log("NAGYOBB");
+			// console.log("NAGYOBB");
 		}
 
 		if (formStartTime === false) {
-			console.log("KISEBB");
+			// console.log("KISEBB");
 		} else {
-			console.log("NAGYOBB");
+			// console.log("NAGYOBB");
+		}
+		if (formEndTime === false) {
+			// console.log("KISEBB");
+		} else {
+			// console.log("NAGYOBB");
 		}
 
-		console.log("00", formStartTime);
 		if (
 			formTitle > 3 === true &&
 			formUser != undefined &&
 			formDate === false &&
-			formStartTime === false
+			formStartTime === false &&
+			formEndTime === false
 		) {
 			console.log("MENTHETO");
 		} else {
@@ -241,9 +261,22 @@ export default function CreateMeet({ navigation }) {
 				/>
 
 				<TimePickerModal
-					visible={visible}
-					onDismiss={onDismiss}
-					onConfirm={onConfirm}
+					visible={visibleStartTime}
+					onDismiss={onDismissStartTime}
+					onConfirm={onConfirmStartTime}
+					hours={12} // default: current hours
+					minutes={14} // default: current minutes
+					label="Idő kiválasztása" // optional, default 'Select time'
+					cancelLabel="Mégse" // optional, default: 'Cancel'
+					confirmLabel="Mentés" // optional, default: 'Ok'
+					animationType="fade" // optional, default is 'none'
+					locale="en" // optional, default is automically detected by your system
+				/>
+
+				<TimePickerModal
+					visible={visibleEndTime}
+					onDismiss={onDismissEndTime}
+					onConfirm={onConfirmEndTime}
 					hours={12} // default: current hours
 					minutes={14} // default: current minutes
 					label="Idő kiválasztása" // optional, default 'Select time'
@@ -329,13 +362,13 @@ export default function CreateMeet({ navigation }) {
 						<Text uppercase={false} mode="outlined" style={styles.title}>
 							Ido (kötelező)
 						</Text>
-						<TouchableOpacity onPress={() => setVisible(true)}>
+						<TouchableOpacity onPress={() => setVisibleStartTime(true)}>
 							<TextInput
 								placeholderTextColor="#666666"
 								placeholder="Időpontja"
 								style={styles.input}
 								pointerEvents="none"
-								value={hours && minutes && hours + ":" + minutes}
+								value={startTime && startTime}
 							/>
 						</TouchableOpacity>
 					</View>
@@ -343,13 +376,13 @@ export default function CreateMeet({ navigation }) {
 						<Text uppercase={false} mode="outlined" style={styles.title}>
 							Ido (kötelező)
 						</Text>
-						<TouchableOpacity onPress={() => setVisible(true)}>
+						<TouchableOpacity onPress={() => setVisibleEndTime(true)}>
 							<TextInput
 								placeholderTextColor="#666666"
 								placeholder="Időpontja"
 								style={styles.input}
 								pointerEvents="none"
-								value={hours && minutes && hours + ":" + minutes}
+								value={endTime && endTime}
 							/>
 						</TouchableOpacity>
 					</View>
