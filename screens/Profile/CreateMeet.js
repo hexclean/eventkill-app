@@ -7,7 +7,6 @@ import {
 	TextInput,
 	FlatList,
 	TouchableOpacity,
-	Animated,
 } from "react-native";
 import axios from "axios";
 import { useFonts } from "expo-font";
@@ -25,6 +24,7 @@ import { ScrollView } from "react-native-gesture-handler";
 export default function CreateMeet({ navigation }) {
 	const [title, setTitle] = useState("");
 	const [selectedDate, setSelectedDate] = useState("");
+	const [showSelectedDate, setShowSelectedDate] = useState("");
 
 	// ! Start Date selector
 	const [date, setDate] = React.useState(new Date());
@@ -38,6 +38,7 @@ export default function CreateMeet({ navigation }) {
 			setDateOpen(false);
 			setDate(params.date);
 			setSelectedDate(params.date);
+			setShowSelectedDate(params.date);
 			setDateError(false);
 		},
 		[setDateOpen, setDate]
@@ -66,11 +67,11 @@ export default function CreateMeet({ navigation }) {
 	const onDismissEndTime = React.useCallback(() => {
 		setVisibleEndTime(false);
 	}, [setVisibleEndTime]);
-
 	const onConfirmEndTime = React.useCallback(
 		({ hours, minutes }) => {
 			setVisibleEndTime(false);
 			setEndTime(hours + ":" + minutes);
+
 			setEndTimeError(false);
 		},
 		[setVisibleEndTime]
@@ -380,7 +381,9 @@ export default function CreateMeet({ navigation }) {
 							placeholder="Időpontja"
 							style={styles.input}
 							pointerEvents="none"
-							value={date.toISOString().slice(0, 10)}
+							value={
+								showSelectedDate && showSelectedDate.toISOString().slice(0, 10)
+							}
 						/>
 					</TouchableOpacity>
 					{dateError && (
