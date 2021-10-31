@@ -182,13 +182,9 @@ export default function CreateMeet({ navigation }) {
 			await axios
 				.get(`https://api.eventkill.com/api/meets/people/${text}`, data)
 				.then(response => {
-					if (response.data.result.length === 0) {
-						setPartner([]);
-						setShowUsers(true);
-					} else {
-						setPartner(response.data.result);
-						setShowUsers(true);
-					}
+					setPartner(response.data.result);
+					setShowUsers(true);
+					setSelectedUser([]);
 				});
 		}
 	};
@@ -247,7 +243,10 @@ export default function CreateMeet({ navigation }) {
 
 	return (
 		<Screen>
-			<ScrollView>
+			<ScrollView
+				showsVerticalScrollIndicator={false}
+				showsHorizontalScrollIndicator={false}
+			>
 				<UploadScreen
 					onDone={() => setUploadVisible(false)}
 					progress={progress}
@@ -298,25 +297,8 @@ export default function CreateMeet({ navigation }) {
 						placeholderTextColor="#666666"
 						placeholder="Partner neve"
 						onChangeText={text => searchFilter(text)}
-						// value={selectedUser.name}
+						value={selectedUser && selectedUser.name}
 					/>
-
-					{/* {partner.length === 0 && showUsers === true ? (
-						<>
-							<View>
-								<Text> NO data</Text>
-							</View>
-						</>
-					) : (
-						<>
-							<FlatList
-								data={partner}
-								keyExtractor={(item, index) => index.toString()}
-								renderItem={ItemView}
-								selectedUser={() => selectAnUser(item)}
-							/>
-						</>
-					)} */}
 
 					{showUsers && (
 						<>

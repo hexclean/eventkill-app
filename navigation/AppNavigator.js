@@ -8,6 +8,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
 // Components
 import HomeScreen from "../screens/HomeScreen";
 import CalendarScreen from "../screens/Meets/MeetsByCalendarScreen";
@@ -127,7 +129,8 @@ const AppNavigator = () => {
 					headerShown: false,
 					tabBarLabel: "Kezdőlap",
 					tabBarIcon: ({ color }) => (
-						<AntDesign name="home" size={24} color="black" />
+						// <AntDesign name="home" size={22} color="black" />
+						<Ionicons name="time-outline" size={22} color="black" />
 					),
 				}}
 				component={HomeStackNavigator}
@@ -139,7 +142,12 @@ const AppNavigator = () => {
 					tabBarVisible: false,
 					tabBarLabel: "Megbeszélések",
 					tabBarIcon: ({ color }) => (
-						<SimpleLineIcons name="list" size={24} color="black" />
+						// <SimpleLineIcons name="list" size={22} color="black" />
+						<MaterialCommunityIcons
+							name="format-list-checkbox"
+							size={22}
+							color="black"
+						/>
 					),
 				}}
 				component={Meets}
@@ -150,19 +158,20 @@ const AppNavigator = () => {
 					title: "Új megbeszélés létrehozása",
 					tabBarLabel: "Létrehozás",
 					tabBarIcon: ({ color }) => (
-						<View
-							style={{
-								position: "absolute",
-								bottom: 0, // space from bottombar
-								height: 60,
-								width: 68,
-								borderRadius: 68,
-								justifyContent: "center",
-								alignItems: "center",
-							}}
-						>
-							<AntDesign name="pluscircle" size={28} color="black" />
-						</View>
+						// <View
+						// 	style={{
+						// 		position: "absolute",
+						// 		bottom: 0, // space from bottombar
+						// 		height: 60,
+						// 		width: 68,
+						// 		borderRadius: 68,
+						// 		justifyContent: "center",
+						// 		alignItems: "center",
+						// 	}}
+						// >
+						// <AntDesign name="pluscircle" size={30} color="black" />
+						<MaterialIcons name="add-circle-outline" size={34} color="black" />
+						// </View>
 					),
 				}}
 				component={CreateMeet}
@@ -173,7 +182,7 @@ const AppNavigator = () => {
 					headerShown: false,
 					tabBarLabel: "Naptár",
 					tabBarIcon: ({ color }) => (
-						<AntDesign name="calendar" size={23} color="black" />
+						<AntDesign name="calendar" size={22} color="black" />
 					),
 				}}
 				component={CalendarScreen}
@@ -184,7 +193,7 @@ const AppNavigator = () => {
 					tabBarLabel: "Kiküldött",
 					headerShown: false,
 					tabBarIcon: ({ color }) => (
-						<Entypo name="new-message" size={23} color="black" />
+						<Entypo name="add-to-list" size={22} color="black" />
 					),
 				}}
 				component={CreatedMeets}
