@@ -80,7 +80,6 @@ export default function CreateMeet({ navigation }) {
 
 	///
 	const [description, setDescription] = useState("");
-	const [users, setUsers] = useState([]);
 	const [selectedUser, setSelectedUser] = useState([]);
 
 	const [partner, setPartner] = useState([]);
@@ -150,28 +149,6 @@ export default function CreateMeet({ navigation }) {
 		PoppinsThin: require("../../assets/fonts/Poppins-Thin.ttf"),
 	});
 
-	useEffect(() => {
-		getUsers();
-		return () => {};
-	}, []);
-
-	const getUsers = async () => {
-		const authToken = await authStorage.getToken();
-		let data = {
-			headers: {
-				"x-auth-token": authToken,
-				"content-type": "application/json",
-			},
-		};
-		// setLoading(true);
-		await axios
-			.get(`https://api.eventkill.com/api/meets/people`, data)
-			.then(response => {
-				setUsers(response.data.result);
-			});
-		// setLoading(false);
-	};
-
 	const ItemView = ({ item }) => {
 		return (
 			<View style={styles.searchedUsers}>
@@ -206,10 +183,15 @@ export default function CreateMeet({ navigation }) {
 			await axios
 				.get(`https://api.eventkill.com/api/meets/people/${text}`, data)
 				.then(response => {
-					// if (response.data.result.length > 0) {
-					setShowUsers(true);
-					setPartner(response.data.result);
-					// }
+					if (response.data.result.length === 0) {
+						setPartner([]);
+						setShowUsers(true);
+						console.log(partner.length);
+					} else {
+						setPartner(response.data.result);
+						setShowUsers(true);
+						console.log(partner.length);
+					}
 				});
 		}
 	};
@@ -270,7 +252,7 @@ export default function CreateMeet({ navigation }) {
 				startTime: startTime,
 				endTime: endTime,
 			};
-			console.log(items);
+			// console.log(items);
 		}
 	};
 
@@ -328,16 +310,35 @@ export default function CreateMeet({ navigation }) {
 						placeholder="Partner neve"
 						onChangeText={text => searchFilter(text)}
 					/>
-					{showUsers && (
+
+					{partner.length === 0 && showUsers === true ? (
+						<>
+							<View style={styles.searchedUsers}>
+								<Text> NO data</Text>
+							</View>
+						</>
+					) : (
 						<>
 							<FlatList
-								data={users}
+								data={partner}
 								keyExtractor={(item, index) => index.toString()}
 								renderItem={ItemView}
 								selectedUser={() => selectAnUser(item)}
 							/>
 						</>
 					)}
+
+					{/* {showUsers && (
+						<>
+							<FlatList
+								data={partner}
+								keyExtractor={(item, index) => index.toString()}
+								renderItem={ItemView}
+								selectedUser={() => selectAnUser(item)}
+							/>
+						</>
+					)} */}
+
 					{userError && (
 						<AppText style={{ color: "red" }}>
 							Partner kiválasztása kötelező!
