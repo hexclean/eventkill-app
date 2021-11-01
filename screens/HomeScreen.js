@@ -139,12 +139,7 @@ export default function HomeScreen({ navigation }) {
 					<TouchableWithoutFeedback
 						onPress={() => navigation.navigate("Profile")}
 					>
-						<View style={styles.profileSection}>
-							<Entypo name="menu" size={30} color="black" />
-							<View style={styles.mainInfo}>
-								<Text style={styles.name}>Erdős József</Text>
-							</View>
-						</View>
+						<Entypo name="menu" size={30} color="black" />
 					</TouchableWithoutFeedback>
 
 					{/* <View style={styles.testtt}>
@@ -209,7 +204,6 @@ const styles = StyleSheet.create({
 	empty: {
 		justifyContent: "center",
 	},
-	profileSection: { flexDirection: "row" },
 	mainInfo: {
 		justifyContent: "center",
 	},

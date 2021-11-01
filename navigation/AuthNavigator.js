@@ -14,8 +14,22 @@ const AuthNavigator = () => (
 			component={SplashScreen}
 			options={{ headerShown: false }}
 		/>
-		<Stack.Screen name="Login" component={LoginScreen} />
-		<Stack.Screen name="Register" component={RegisterScreen} />
+		<Stack.Screen
+			options={{
+				title: "Bejelentkezés",
+				headerBackTitle: "Vissza",
+			}}
+			name="Login"
+			component={LoginScreen}
+		/>
+		<Stack.Screen
+			options={{
+				title: "Regisztráció",
+				headerBackTitle: "Vissza",
+			}}
+			name="Register"
+			component={RegisterScreen}
+		/>
 	</Stack.Navigator>
 );
 

@@ -2,6 +2,7 @@ import React from "react";
 import { ImageBackground, StyleSheet, View, Image, Text } from "react-native";
 
 import Button from "../components/Button";
+import colors from "../config/colors";
 import routes from "../navigation/routes";
 
 function WelcomeScreen({ navigation }) {
@@ -9,19 +10,19 @@ function WelcomeScreen({ navigation }) {
 		<ImageBackground
 			blurRadius={10}
 			style={styles.background}
-			source={require("../assets/background.jpg")}
+			source={require("../assets/online.jpeg")}
 		>
 			<View style={styles.logoContainer}>
 				<Image style={styles.logo} source={require("../assets/logo-red.png")} />
-				<Text style={styles.tagline}>Sell What You Don't Need</Text>
+				<Text style={styles.tagline}>Eventkill</Text>
 			</View>
 			<View style={styles.buttonsContainer}>
 				<Button
-					title="Login"
+					title="Bejelentkezés"
 					onPress={() => navigation.navigate(routes.LOGIN)}
 				/>
 				<Button
-					title="Register"
+					title="Regisztráció"
 					color="secondary"
 					onPress={() => navigation.navigate(routes.REGISTER)}
 				/>
@@ -53,6 +54,7 @@ const styles = StyleSheet.create({
 		fontSize: 25,
 		fontWeight: "600",
 		paddingVertical: 20,
+		color: colors.white,
 	},
 });
 

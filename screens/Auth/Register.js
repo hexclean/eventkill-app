@@ -16,33 +16,36 @@ import useApi from "../../hooks/useApi";
 import ActivityIndicator from "../../components/ActivityIndicator";
 
 const validationSchema = Yup.object().shape({
-	name: Yup.string().required().label("Name"),
+	name: Yup.string().required().min(2).label("Name"),
+	company: Yup.string().required().min(1).label("Company"),
 	email: Yup.string().required().email().label("Email"),
-	password: Yup.string().required().min(4).label("Password"),
+	password: Yup.string().required().min(6).label("Password"),
 });
 
 function RegisterScreen() {
+	const [registerFailed, setRegisterFailed] = useState(false);
+	const [loginFailed, setLoginFailed] = useState(false);
 	const registerApi = useApi(usersApi.register);
 	const loginApi = useApi(authApi.login);
 	const auth = useAuth();
 	const [error, setError] = useState();
 
 	const handleSubmit = async userInfo => {
-		const result = await registerApi.request(userInfo);
+		const request = {
+			name: userInfo.name,
+			email: userInfo.email,
+			password: userInfo.password,
+			company: userInfo.company,
+			deviceToken: "token",
+		};
+		const result = await registerApi.request(request);
+		if (result.data.status !== 200) return setRegisterFailed(true);
+		setRegisterFailed(false);
 
-		if (!result.ok) {
-			if (result.data) setError(result.data.error);
-			else {
-				setError("An unexpected error occurred.");
-			}
-			return;
-		}
-
-		const { data: authToken } = await loginApi.request(
-			userInfo.email,
-			userInfo.password
-		);
-		auth.logIn(authToken);
+		const login = await authApi.login(userInfo.email, userInfo.password);
+		if (login.data.status !== 200) return setLoginFailed(true);
+		setLoginFailed(false);
+		auth.logIn(login.data.result[0].token);
 	};
 
 	return (
@@ -50,16 +53,31 @@ function RegisterScreen() {
 			<ActivityIndicator visible={registerApi.loading || loginApi.loading} />
 			<Screen style={styles.container}>
 				<Form
-					initialValues={{ name: "", email: "", password: "" }}
+					initialValues={{
+						name: "",
+						email: "",
+						password: "",
+						company: "",
+					}}
 					onSubmit={handleSubmit}
 					validationSchema={validationSchema}
 				>
-					<ErrorMessage error={error} visible={error} />
+					<ErrorMessage
+						error="Az e-mail címmel már regisztráltak"
+						visible={registerFailed}
+					/>
+					<ErrorMessage error="Login error" visible={loginFailed} />
 					<FormField
 						autoCorrect={false}
 						icon="account"
 						name="name"
-						placeholder="Name"
+						placeholder="Név"
+					/>
+					<FormField
+						autoCorrect={false}
+						icon="briefcase"
+						name="company"
+						placeholder="Cégnév"
 					/>
 					<FormField
 						autoCapitalize="none"
@@ -67,7 +85,7 @@ function RegisterScreen() {
 						icon="email"
 						keyboardType="email-address"
 						name="email"
-						placeholder="Email"
+						placeholder="E-mail"
 						textContentType="emailAddress"
 					/>
 					<FormField
@@ -75,11 +93,11 @@ function RegisterScreen() {
 						autoCorrect={false}
 						icon="lock"
 						name="password"
-						placeholder="Password"
+						placeholder="Jelszó"
 						secureTextEntry
 						textContentType="password"
 					/>
-					<SubmitButton title="Register" />
+					<SubmitButton title="Regisztráció" />
 				</Form>
 			</Screen>
 		</>

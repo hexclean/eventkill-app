@@ -20,10 +20,8 @@ const validationSchema = Yup.object().shape({
 const Login = props => {
 	const auth = useAuth();
 	const [loginFailed, setLoginFailed] = useState(false);
-
 	const handleSubmit = async ({ email, password }) => {
 		const result = await authApi.login(email, password);
-		console.log(result.data.status);
 		if (result.data.status !== 200) return setLoginFailed(true);
 		setLoginFailed(false);
 		auth.logIn(result.data.result[0].token);
@@ -63,7 +61,7 @@ const Login = props => {
 					secureTextEntry
 					textContentType="password"
 				/>
-				<SubmitButton title="Login" />
+				<SubmitButton title="Bejelentkezés" />
 			</Form>
 		</Screen>
 	);

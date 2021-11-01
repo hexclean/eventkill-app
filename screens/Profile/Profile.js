@@ -27,6 +27,7 @@ import authStorage from "../../auth/storage";
 const Profile = ({ navigation }) => {
 	const isFocused = useIsFocused();
 	const [nameReq, setNameReq] = useState("");
+	const [username, setUsername] = useState("");
 	const [companyReq, setCompanyReq] = useState("");
 	const getTodayMeets = async () => {
 		const authToken = await authStorage.getToken();
@@ -43,6 +44,7 @@ const Profile = ({ navigation }) => {
 			.then(response => {
 				setNameReq(response.data.result.name);
 				setCompanyReq(response.data.result.company);
+				setUsername(response.data.result.username);
 				// setMeets(response.data.result);
 			});
 		// setLoading(false);
@@ -136,7 +138,7 @@ const Profile = ({ navigation }) => {
 						/>
 						<View style={styles.mainInfo}>
 							<Text style={styles.name}>{nameReq}</Text>
-							<Text style={styles.username}>@erdosjozsef</Text>
+							<Text style={styles.username}>{username}</Text>
 						</View>
 					</View>
 
