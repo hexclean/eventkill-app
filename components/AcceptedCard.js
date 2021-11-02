@@ -1,6 +1,6 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableOpacity, Image } from "react-native";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 import { useFonts } from "expo-font";
 
 function PendingCards(props) {
@@ -16,16 +16,12 @@ function PendingCards(props) {
 
   return (
     <View style={styles.box}>
-      <TouchableOpacity onPress={props.deleteMeet}>
-        <View style={styles.headerView}>
-          <Text style={styles.helloName}>{props.item.meets[0].title}</Text>
-          <MaterialCommunityIcons
-            name="dots-horizontal"
-            size={24}
-            color="black"
-          />
-        </View>
-      </TouchableOpacity>
+      <View style={styles.headerView}>
+        <Text style={styles.helloName}>{props.item.meets[0].title}</Text>
+        <TouchableOpacity onPress={props.deleteMeet}>
+          <EvilIcons name="trash" size={25} color="black" />
+        </TouchableOpacity>
+      </View>
 
       {description.length != 0 && description !== "-" ? (
         <>

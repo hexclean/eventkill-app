@@ -13,7 +13,7 @@ import { Ionicons } from "@expo/vector-icons";
 import axios from "axios";
 import { useIsFocused } from "@react-navigation/core";
 import { LocaleConfig } from "react-native-calendars";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { EvilIcons } from "@expo/vector-icons";
 
 // Components
 import Screen from "../../components/Screen";
@@ -134,8 +134,8 @@ const MeetsByCalendarScreen = ({ navigation }) => {
       .then((response) => {
         setLoading(false);
         Alert.alert(
-          "Meeting lemondása",
-          "Leszeretnéd mondani a meetinget?",
+          `${meet.meets[0].title}`,
+          "Leszeretnéd mondani a megbeszélést?",
           [
             {
               text: "Mégse",
@@ -148,8 +148,8 @@ const MeetsByCalendarScreen = ({ navigation }) => {
                 await getCalendarMeets();
                 if (response.data.result[0].status === 1) {
                   Alert.alert(
-                    "Lemondott Meeting",
-                    "A partnered is lemondta a meetinget, így elmarad!",
+                    "Deal!",
+                    "Mindketten lemondtátok a megbeszélést, így elmarad!",
                     [
                       {
                         text: "Rendben",
@@ -192,7 +192,7 @@ const MeetsByCalendarScreen = ({ navigation }) => {
                 <Ionicons
                   style={styles.addMeet}
                   name="ios-add-circle"
-                  size={24}
+                  size={25}
                   color="#F78F1E"
                 />
               </View>
@@ -204,18 +204,12 @@ const MeetsByCalendarScreen = ({ navigation }) => {
             <>
               {items.status === 3 ? (
                 <View style={styles.box}>
-                  <TouchableOpacity onPress={deleteMeet}>
-                    <View style={styles.headerView}>
-                      <Text style={styles.helloName}>
-                        {items.meets[0].title}
-                      </Text>
-                      <MaterialCommunityIcons
-                        name="dots-horizontal"
-                        size={24}
-                        color="black"
-                      />
-                    </View>
-                  </TouchableOpacity>
+                  <View style={styles.headerView}>
+                    <Text style={styles.helloName}>{items.meets[0].title}</Text>
+                    <TouchableOpacity onPress={() => deleteMeet(items)}>
+                      <EvilIcons name="trash" size={24} color="black" />
+                    </TouchableOpacity>
+                  </View>
 
                   {items.meets[0].description.length != 0 &&
                   items.meets[0].description !== "-" ? (
@@ -243,8 +237,7 @@ const MeetsByCalendarScreen = ({ navigation }) => {
                   </View>
                   <View style={styles.createdAtView}>
                     <Text style={styles.createdAt}>
-                      Időpont: {items.meets[0].startDate} -{" "}
-                      {items.meets[0].time}
+                      Időpont: {items.meets[0].startDate} ({items.meets[0].time}
                     </Text>
                   </View>
                 </View>
@@ -272,14 +265,14 @@ const MeetsByCalendarScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.partnerView}>
                       <Text style={styles.partnerName}>
-                        {items.partner[0].company} - {items.partner[0].name}
+                        {items.partner[0].name} - {items.partner[0].company}
                       </Text>
                     </View>
                   </View>
                   <View style={styles.createdAtView}>
                     <Text style={styles.createdAt}>
-                      Időpont: {items.meets[0].startDate} -{" "}
-                      {items.meets[0].time}
+                      Időpont: {items.meets[0].startDate} ({items.meets[0].time}
+                      )
                     </Text>
                   </View>
                 </View>
