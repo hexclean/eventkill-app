@@ -27,6 +27,7 @@ export default function PendingMeets() {
     await axios
       .get("https://api.eventkill.com/api/meets/pending", data)
       .then((response) => {
+        console.log(response.data.result);
         setMeets(response.data.result);
       });
     setLoading(false);
@@ -105,7 +106,10 @@ export default function PendingMeets() {
               onPress: async () => {
                 await postDeleteMeet(meet.id);
                 await getPendingMeets();
-                if (response.data.result[0].status === 1) {
+                if (
+                  response.data.result.creatorStatus === 4 &&
+                  response.data.result.partnerStatus === 4
+                ) {
                   Alert.alert(
                     "Deal!",
                     "Mindketten lemondtátok a megbeszélést, így elmarad!",

@@ -88,8 +88,8 @@ export default function HomeScreen({ navigation }) {
       .then((response) => {
         setLoading(false);
         Alert.alert(
-          "Meeting lemondása",
-          "Leszeretnéd mondani a meetinget?",
+          `${meet.meets[0].title}`,
+          "Leszeretnéd mondani a megbeszélést?",
           [
             {
               text: "Mégse",

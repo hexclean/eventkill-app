@@ -41,8 +41,8 @@ function DeletedCards(props) {
       </View>
       <View style={styles.createdAtView}>
         <Text style={styles.createdAt}>
-          Tervezett időpont: {props.item.meets[0].startDate} -{" "}
-          {props.item.meets[0].time}
+          Időpont: {props.item.startDate} ({props.item.meets[0].startTime}:
+          {props.item.meets[0].endTime})
         </Text>
       </View>
     </View>
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   },
   box: {
     padding: 12,
-    opacity: 0.5,
+    opacity: 0.3,
     // marginBottom: 20,
     // justifyContent: "space-around",
     // marginHorizontal: 5,

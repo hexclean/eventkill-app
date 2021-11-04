@@ -55,7 +55,8 @@ function PendingCards(props) {
       </View>
       <View style={styles.createdAtView}>
         <Text style={styles.createdAt}>
-          Időpont: {props.item.meets[0].startDate} - {props.item.meets[0].time}
+          Időpont: {props.item.startDate} ({props.item.meets[0].startTime}:
+          {props.item.meets[0].endTime})
         </Text>
       </View>
     </View>

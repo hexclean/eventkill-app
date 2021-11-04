@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
   },
   boxInactive: {
     padding: 12,
-    opacity: 0.5,
+    opacity: 0.3,
     // marginBottom: 20,
     // justifyContent: "space-around",
     // marginHorizontal: 5,
