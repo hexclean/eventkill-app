@@ -146,7 +146,10 @@ const MeetsByCalendarScreen = ({ navigation }) => {
               onPress: async () => {
                 await postDeleteMeet(meet.id);
                 await getCalendarMeets();
-                if (response.data.result[0].status === 1) {
+                if (
+                  response.data.result.creatorStatus === 4 &&
+                  response.data.result.partnerStatus === 4
+                ) {
                   Alert.alert(
                     "Deal!",
                     "Mindketten lemondtátok a megbeszélést, így elmarad!",
@@ -237,7 +240,8 @@ const MeetsByCalendarScreen = ({ navigation }) => {
                   </View>
                   <View style={styles.createdAtView}>
                     <Text style={styles.createdAt}>
-                      Időpont: {items.meets[0].startDate} ({items.meets[0].time}
+                      Időpont: {items.formattedStartDate} (
+                      {items.meets[0].startTime}:{items.meets[0].endTime})
                     </Text>
                   </View>
                 </View>
@@ -271,8 +275,8 @@ const MeetsByCalendarScreen = ({ navigation }) => {
                   </View>
                   <View style={styles.createdAtView}>
                     <Text style={styles.createdAt}>
-                      Időpont: {items.meets[0].startDate} ({items.meets[0].time}
-                      )
+                      Időpont: {items.formattedStartDate} (
+                      {items.meets[0].startTime}:{items.meets[0].endTime})
                     </Text>
                   </View>
                 </View>

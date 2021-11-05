@@ -100,7 +100,18 @@ export default function HomeScreen({ navigation }) {
               onPress: async () => {
                 await postDeleteMeet(meet.id);
                 await getTodayMeets();
-                if (response.data.result[0].status === 1) {
+                console.log(
+                  "creatorStatus",
+                  response.data.result.creatorStatus
+                );
+                console.log(
+                  "partnerStatus",
+                  response.data.result.partnerStatus
+                );
+                if (
+                  response.data.result.creatorStatus === 4 &&
+                  response.data.result.partnerStatus === 4
+                ) {
                   Alert.alert(
                     "Deal!",
                     "Mindketten lemondtátok a megbeszélést, így elmarad!",
