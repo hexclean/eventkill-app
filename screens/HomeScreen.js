@@ -100,14 +100,14 @@ export default function HomeScreen({ navigation }) {
               onPress: async () => {
                 await postDeleteMeet(meet.id);
                 await getTodayMeets();
-                console.log(
-                  "creatorStatus",
-                  response.data.result.creatorStatus
-                );
-                console.log(
-                  "partnerStatus",
-                  response.data.result.partnerStatus
-                );
+                // console.log(
+                //   "creatorStatus",
+                //   response.data.result.creatorStatus
+                // );
+                // console.log(
+                //   "partnerStatus",
+                //   response.data.result.partnerStatus
+                // );
                 if (
                   response.data.result.creatorStatus === 4 &&
                   response.data.result.partnerStatus === 4
