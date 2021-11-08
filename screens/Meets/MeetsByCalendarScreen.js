@@ -147,7 +147,7 @@ const MeetsByCalendarScreen = ({ navigation }) => {
                 await postDeleteMeet(meet.id);
                 await getCalendarMeets();
                 if (
-                  response.data.result.creatorStatus === 4 &&
+                  response.data.result.creatorStatus === 4 ||
                   response.data.result.partnerStatus === 4
                 ) {
                   Alert.alert(
@@ -205,7 +205,7 @@ const MeetsByCalendarScreen = ({ navigation }) => {
         renderItem={(items) => {
           return (
             <>
-              {items.status === 3 ? (
+              {items.status != 4 && items.status != 3 ? (
                 <View style={styles.box}>
                   <View style={styles.headerView}>
                     <Text style={styles.helloName}>{items.meets[0].title}</Text>

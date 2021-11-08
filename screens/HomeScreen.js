@@ -109,7 +109,7 @@ export default function HomeScreen({ navigation }) {
                 //   response.data.result.partnerStatus
                 // );
                 if (
-                  response.data.result.creatorStatus === 4 &&
+                  response.data.result.creatorStatus === 4 ||
                   response.data.result.partnerStatus === 4
                 ) {
                   Alert.alert(
