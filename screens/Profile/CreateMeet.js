@@ -108,6 +108,7 @@ export default function CreateMeet({ navigation }) {
       date: date,
       startTime: startTime,
       endTime: endTime,
+      email: partnerEmail,
     };
     const authToken = await authStorage.getToken();
     let data = {
@@ -135,6 +136,8 @@ export default function CreateMeet({ navigation }) {
       setStartTime("");
       setEndTime("");
       setSelectedUser([]);
+      setPartnerEmail("");
+      setValidatedEmail(false);
     } catch (error) {
       console.log(error);
     }
@@ -194,24 +197,44 @@ export default function CreateMeet({ navigation }) {
   const [dateError, setDateError] = useState(false);
   const [startTimeError, setStartTimeError] = useState(false);
   const [endTimeError, setEndTimeError] = useState(false);
+  const [validatedEmails, setValidatedEmail] = useState(false);
+  // const [validatedEmail, setValidatedEmail] = useState(false);
 
   const validateForm = () => {
+    const re =
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    const validatedEmail = re.test(String(partnerEmail).toLowerCase());
     let formTitle = title.trim().length;
+    let test = false;
     let formUser = selectedUser.id;
+    let email = partnerEmail.trim().length;
     let formDate = !selectedDate;
     let formStartTime = !startTime;
     let formEndTime = !endTime;
-
     if (formTitle < 4) {
       setTitleError(true);
     } else {
       setTitleError(false);
     }
-
-    if (formUser === undefined) {
+    // console.log(validatedEmail);
+    // console.log(email > 1, "email");
+    if (formUser === undefined && validatedEmail === false) {
+      console.log("1");
       setUserError(true);
+      test = true;
+      setValidatedEmail(false);
     } else {
       setUserError(false);
+    }
+
+    if (formUser === undefined && email > 1 && validatedEmail === false) {
+      test = true;
+      setUserError(false);
+      setValidatedEmail(true);
+    } else {
+      setValidatedEmail(false);
+      setUserError(false);
+      test = false;
     }
 
     if (formDate === true) {
@@ -229,10 +252,10 @@ export default function CreateMeet({ navigation }) {
     } else {
       setEndTimeError(false);
     }
-
+    // console.log("yest", test);
     if (
       formTitle > 3 === true &&
-      formUser != undefined &&
+      test === false &&
       formDate === false &&
       formStartTime === false &&
       formEndTime === false
@@ -240,6 +263,24 @@ export default function CreateMeet({ navigation }) {
       handleSubmit();
     }
   };
+
+  const [showRegisteredUsers, setShowRegisteredUsers] = useState(false);
+  const [showByEmail, setShowByEmail] = useState(false);
+  const [partnerEmail, setPartnerEmail] = useState("");
+
+  const showUsersFromDb = () => {
+    setPartnerEmail("");
+    setShowByEmail(false);
+    setShowRegisteredUsers(true);
+  };
+
+  const showEmail = () => {
+    setSelectedUser([]);
+    setShowRegisteredUsers(false);
+    setShowByEmail(true);
+  };
+
+  const handleEmail = (e) => setPartnerEmail(e);
 
   return (
     <Screen>
@@ -290,33 +331,74 @@ export default function CreateMeet({ navigation }) {
           label="Válaszd ki az időpontot"
         />
 
-        <View style={styles.inputView}>
+        <View style={styles.partnerView}>
           <Text style={styles.title}>Partner (kötelező)</Text>
-          <TextInput
-            style={styles.input}
-            placeholderTextColor="#666666"
-            placeholder="Partner neve"
-            onChangeText={(text) => searchFilter(text)}
-            value={selectedUser && selectedUser.name}
-          />
-
-          {showUsers && (
-            <>
-              <FlatList
-                data={partner}
-                keyExtractor={(item, index) => index.toString()}
-                renderItem={ItemView}
-                selectedUser={() => selectAnUser(item)}
-              />
-            </>
-          )}
-
-          {userError && (
-            <AppText style={{ color: "red" }}>
-              Partner kiválasztása kötelező!
-            </AppText>
-          )}
+          <Text style={styles.selectPartnerTitle}>
+            Keress partnert a beregisztrált felhasználók között. Ha nincs
+            találat hívd meg e-mail cím alapján.
+          </Text>
+          <View style={styles.selectableView}>
+            <TouchableOpacity onPress={showUsersFromDb}>
+              <View style={styles.byRegisteredUser}>
+                <Text style={styles.byRegisteredUserText}>
+                  Partner keresése
+                </Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={showEmail}>
+              <View style={styles.byEmail}>
+                <Text style={styles.byEmailText}>E-mail cím szerint</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
+        {showByEmail && (
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#666666"
+              placeholder="Írd be a partnered e-mail címét"
+              multiline={false}
+              keyboardType="email-address"
+              onChangeText={(val) => handleEmail(val)}
+              value={partnerEmail}
+            />
+          </View>
+        )}
+
+        {showRegisteredUsers && (
+          <View style={styles.inputView}>
+            <TextInput
+              style={styles.input}
+              placeholderTextColor="#666666"
+              placeholder="Keresés a beregisztrált felhasználók között"
+              onChangeText={(text) => searchFilter(text)}
+              value={selectedUser && selectedUser.name}
+            />
+
+            {showUsers && (
+              <>
+                <FlatList
+                  data={partner}
+                  keyExtractor={(item, index) => index.toString()}
+                  renderItem={ItemView}
+                  selectedUser={() => selectAnUser(item)}
+                />
+              </>
+            )}
+          </View>
+        )}
+
+        {userError && (
+          <AppText style={{ color: "red" }}>
+            Partner megadása kötelező! (add meg az e-mail címét vagy válaszd ki
+            a felhasználók közül)
+          </AppText>
+        )}
+        {validatedEmails && (
+          <AppText style={{ color: "red" }}>Helytelen e-mail cím!</AppText>
+        )}
+
         <View style={styles.inputView}>
           <Text style={styles.title}>Cím (kötelező)</Text>
           <TextInput
@@ -415,6 +497,30 @@ export default function CreateMeet({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  selectPartnerTitle: {
+    fontFamily: "PoppinsRegular",
+    // marginVertical: 8,
+    fontSize: 13,
+  },
+  byRegisteredUserText: { padding: 8 },
+  byEmailText: { padding: 8 },
+  byEmail: {
+    borderRadius: 4,
+    borderColor: colors.orange,
+    borderWidth: 1,
+    marginLeft: 10,
+  },
+  byRegisteredUser: {
+    borderRadius: 4,
+    borderColor: colors.orange,
+    borderWidth: 1,
+  },
+  selectableView: {
+    paddingTop: 10,
+    flexDirection: "row",
+    justifyContent: "center",
+  },
+  partnerView: { marginVertical: 5 },
   endTime: {
     marginVertical: 5,
   },

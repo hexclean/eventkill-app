@@ -26,6 +26,7 @@ const validationSchema = Yup.object().shape({
 const Login = (props) => {
   const auth = useAuth();
   const [loginFailed, setLoginFailed] = useState(false);
+  
   const handleSubmit = async ({ email, password }) => {
     const result = await authApi.login(email, password);
     if (result.data.status !== 200) return setLoginFailed(true);
