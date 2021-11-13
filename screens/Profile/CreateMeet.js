@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -7,12 +7,12 @@ import {
   TextInput,
   FlatList,
   TouchableOpacity,
+  Button,
 } from "react-native";
 import axios from "axios";
 import { useFonts } from "expo-font";
-import { TimePickerModal } from "react-native-paper-dates";
-import { DatePickerModal } from "react-native-paper-dates";
-
+import { DateTimePickerModal as TimeData } from "react-native-modal-datetime-picker";
+import moment from "moment";
 // Components
 import Screen from "../../components/Screen";
 import AppText from "../../components/Text";
@@ -21,61 +21,70 @@ import authStorage from "../../auth/storage";
 import colors from "../../config/colors";
 import { ScrollView } from "react-native-gesture-handler";
 
-export default function CreateMeet({ navigation }) {
+export default function CreateMeet() {
+  const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
+  const [serverData, setServerData] = useState("");
+  const showDatePicker = () => {
+    setDatePickerVisibility(true);
+  };
+
+  const hideDatePicker = () => {
+    setDatePickerVisibility(false);
+  };
+
+  const handleConfirm = (date) => {
+    setServerData(date);
+    const finalData = moment(date).format("YYYY-MM-DD");
+    setShowSelectedDate(finalData);
+    setDateError(false);
+    hideDatePicker();
+  };
+
+  // ! Start time
+  const [isStartDatePickerVisible, setStartDatePickerVisibility] =
+    useState(false);
+
+  const showStartTImePicker = () => {
+    setStartDatePickerVisibility(true);
+  };
+
+  const hideStartTimePicker = () => {
+    setStartDatePickerVisibility(false);
+  };
+
+  const handleConfirmStartDate = (date) => {
+    const startDate = moment(date).format("HH:mm");
+    setStartTime(startDate);
+    setStartTimeError(false);
+    hideStartTimePicker();
+  };
+  // ! End TIme
+  const [isEndDatePickerVisible, setEndDatePickerVisibility] = useState(false);
+
+  const showEndTImePicker = () => {
+    setEndDatePickerVisibility(true);
+  };
+
+  const hideEndTimePicker = () => {
+    setEndDatePickerVisibility(false);
+  };
+
+  const handleConfirmEndDate = (date) => {
+    const endTime = moment(date).format("HH:mm");
+    setEndTime(endTime);
+    setEndTimeError(false);
+    hideEndTimePicker();
+  };
+
   const [title, setTitle] = useState("");
-  const [selectedDate, setSelectedDate] = useState("");
   const [showSelectedDate, setShowSelectedDate] = useState("");
 
-  // ! Start Date selector
-  const [date, setDate] = React.useState(new Date());
-  const [dateOpen, setDateOpen] = React.useState(false);
-
-  const onDismissSingleDate = React.useCallback(() => {
-    setDateOpen(false);
-  }, [setDateOpen]);
-  const onConfirmSingleDate = React.useCallback(
-    (params) => {
-      setDateOpen(false);
-      setDate(params.date);
-      setSelectedDate(params.date);
-      setShowSelectedDate(params.date);
-      setDateError(false);
-    },
-    [setDateOpen, setDate]
-  );
-  // ! End Date selector
-
   // ! Start Time selector
-  const [visibleStartTime, setVisibleStartTime] = React.useState(false);
   const [startTime, setStartTime] = useState("");
-  const onDismissStartTime = React.useCallback(() => {
-    setVisibleStartTime(false);
-  }, [setVisibleStartTime]);
-
-  const onConfirmStartTime = React.useCallback(
-    ({ hours, minutes }) => {
-      setVisibleStartTime(false);
-      setStartTime(hours + ":" + minutes);
-      setStartTimeError(false);
-    },
-    [setVisibleStartTime]
-  );
   // ! End Time selector
   // ! Start END Time selector
-  const [visibleEndTime, setVisibleEndTime] = React.useState(false);
   const [endTime, setEndTime] = useState("");
-  const onDismissEndTime = React.useCallback(() => {
-    setVisibleEndTime(false);
-  }, [setVisibleEndTime]);
-  const onConfirmEndTime = React.useCallback(
-    ({ hours, minutes }) => {
-      setVisibleEndTime(false);
-      setEndTime(hours + ":" + minutes);
 
-      setEndTimeError(false);
-    },
-    [setVisibleEndTime]
-  );
   // ! End END Time selector
 
   ///
@@ -105,7 +114,7 @@ export default function CreateMeet({ navigation }) {
       title: title.trim(),
       user: selectedUser.id,
       description: description.trim(),
-      date: date,
+      date: serverData,
       startTime: startTime,
       endTime: endTime,
       email: partnerEmail,
@@ -198,7 +207,6 @@ export default function CreateMeet({ navigation }) {
   const [startTimeError, setStartTimeError] = useState(false);
   const [endTimeError, setEndTimeError] = useState(false);
   const [validatedEmails, setValidatedEmail] = useState(false);
-  // const [validatedEmail, setValidatedEmail] = useState(false);
 
   const validateForm = () => {
     const re =
@@ -208,7 +216,7 @@ export default function CreateMeet({ navigation }) {
     let test = false;
     let formUser = selectedUser.id;
     let email = partnerEmail.trim().length;
-    let formDate = !selectedDate;
+    let formDate = !showSelectedDate;
     let formStartTime = !startTime;
     let formEndTime = !endTime;
     if (formTitle < 4) {
@@ -216,26 +224,34 @@ export default function CreateMeet({ navigation }) {
     } else {
       setTitleError(false);
     }
-    // console.log(validatedEmail);
-    // console.log(email > 1, "email");
+
     if (formUser === undefined && validatedEmail === false) {
-      console.log("1");
       setUserError(true);
       test = true;
       setValidatedEmail(false);
     } else {
+      test = false;
       setUserError(false);
     }
-
+    console.log(email < 1);
+    console.log(validatedEmail);
     if (formUser === undefined && email > 1 && validatedEmail === false) {
       test = true;
-      setUserError(false);
       setValidatedEmail(true);
     } else {
-      setValidatedEmail(false);
-      setUserError(false);
       test = false;
+      setValidatedEmail(false);
     }
+
+    // if (formUser === undefined && email > 1 && validatedEmail === false) {
+    //   test = true;
+    //   setUserError(false);
+    //   setValidatedEmail(true);
+    // } else {
+    //   setValidatedEmail(false);
+    //   setUserError(false);
+    //   test = false;
+    // }
 
     if (formDate === true) {
       setDateError(true);
@@ -252,7 +268,6 @@ export default function CreateMeet({ navigation }) {
     } else {
       setEndTimeError(false);
     }
-    // console.log("yest", test);
     if (
       formTitle > 3 === true &&
       test === false &&
@@ -292,43 +307,6 @@ export default function CreateMeet({ navigation }) {
           onDone={() => setUploadVisible(false)}
           progress={progress}
           visible={uploadVisible}
-        />
-
-        <TimePickerModal
-          visible={visibleStartTime}
-          onDismiss={onDismissStartTime}
-          onConfirm={onConfirmStartTime}
-          hours={12} // default: current hours
-          minutes={14} // default: current minutes
-          label="Idő kiválasztása" // optional, default 'Select time'
-          cancelLabel="Mégse" // optional, default: 'Cancel'
-          confirmLabel="Mentés" // optional, default: 'Ok'
-          animationType="fade" // optional, default is 'none'
-          locale="en" // optional, default is automically detected by your system
-        />
-
-        <TimePickerModal
-          visible={visibleEndTime}
-          onDismiss={onDismissEndTime}
-          onConfirm={onConfirmEndTime}
-          hours={12} // default: current hours
-          minutes={14} // default: current minutes
-          label="Idő kiválasztása" // optional, default 'Select time'
-          cancelLabel="Mégse" // optional, default: 'Cancel'
-          confirmLabel="Mentés" // optional, default: 'Ok'
-          animationType="fade" // optional, default is 'none'
-          locale="en" // optional, default is automically detected by your system
-        />
-
-        <DatePickerModal
-          locale="en"
-          mode="single"
-          visible={dateOpen}
-          onDismiss={onDismissSingleDate}
-          date={date}
-          onConfirm={onConfirmSingleDate}
-          saveLabel="Mentés"
-          label="Válaszd ki az időpontot"
         />
 
         <View style={styles.partnerView}>
@@ -398,7 +376,30 @@ export default function CreateMeet({ navigation }) {
         {validatedEmails && (
           <AppText style={{ color: "red" }}>Helytelen e-mail cím!</AppText>
         )}
-
+        <View>
+          <TimeData
+            isVisible={isDatePickerVisible}
+            mode="date"
+            onConfirm={handleConfirm}
+            onCancel={hideDatePicker}
+          />
+        </View>
+        <View>
+          <TimeData
+            isVisible={isStartDatePickerVisible}
+            mode="time"
+            onConfirm={handleConfirmStartDate}
+            onCancel={hideStartTimePicker}
+          />
+        </View>
+        <View>
+          <TimeData
+            isVisible={isEndDatePickerVisible}
+            mode="time"
+            onConfirm={handleConfirmEndDate}
+            onCancel={hideEndTimePicker}
+          />
+        </View>
         <View style={styles.inputView}>
           <Text style={styles.title}>Cím (kötelező)</Text>
           <TextInput
@@ -431,15 +432,13 @@ export default function CreateMeet({ navigation }) {
           <Text uppercase={false} mode="outlined" style={styles.title}>
             Dátum (kötelező)
           </Text>
-          <TouchableOpacity onPress={() => setDateOpen(true)}>
+          <TouchableOpacity onPress={showDatePicker}>
             <TextInput
               placeholderTextColor="#666666"
               placeholder="Megbeszélés időpontja"
               style={styles.input}
               pointerEvents="none"
-              value={
-                showSelectedDate && showSelectedDate.toISOString().slice(0, 10)
-              }
+              value={showSelectedDate && showSelectedDate}
             />
           </TouchableOpacity>
           {dateError && (
@@ -453,7 +452,7 @@ export default function CreateMeet({ navigation }) {
           <Text uppercase={false} mode="outlined" style={styles.title}>
             Kezdés (kötelező)
           </Text>
-          <TouchableOpacity onPress={() => setVisibleStartTime(true)}>
+          <TouchableOpacity onPress={showStartTImePicker}>
             <TextInput
               placeholderTextColor="#666666"
               placeholder="Megbeszélés kezdés ideje"
@@ -470,7 +469,7 @@ export default function CreateMeet({ navigation }) {
           <Text uppercase={false} mode="outlined" style={styles.title}>
             Befejezés (kötelező)
           </Text>
-          <TouchableOpacity onPress={() => setVisibleEndTime(true)}>
+          <TouchableOpacity onPress={showEndTImePicker}>
             <TextInput
               placeholderTextColor="#666666"
               placeholder="Megbeszélés befejezés ideje"
