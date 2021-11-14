@@ -207,12 +207,13 @@ export default function CreateMeet() {
   const [startTimeError, setStartTimeError] = useState(false);
   const [endTimeError, setEndTimeError] = useState(false);
   const [validatedEmails, setValidatedEmail] = useState(false);
-
+  const [descError, setDescError] = useState(false);
   const validateForm = () => {
     const re =
       /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
     const validatedEmail = re.test(String(partnerEmail).toLowerCase());
     let formTitle = title.trim().length;
+    let formDescription = description.trim().length;
     let test = false;
     let formUser = selectedUser.id;
     let email = partnerEmail.trim().length;
@@ -223,6 +224,11 @@ export default function CreateMeet() {
       setTitleError(true);
     } else {
       setTitleError(false);
+    }
+    if (formDescription > 150) {
+      setDescError(true);
+    } else {
+      setDescError(false);
     }
 
     if (formUser === undefined && validatedEmail === false) {
@@ -243,16 +249,6 @@ export default function CreateMeet() {
       setValidatedEmail(false);
     }
 
-    // if (formUser === undefined && email > 1 && validatedEmail === false) {
-    //   test = true;
-    //   setUserError(false);
-    //   setValidatedEmail(true);
-    // } else {
-    //   setValidatedEmail(false);
-    //   setUserError(false);
-    //   test = false;
-    // }
-
     if (formDate === true) {
       setDateError(true);
     } else {
@@ -270,6 +266,7 @@ export default function CreateMeet() {
     }
     if (
       formTitle > 3 === true &&
+      formDescription > 150 === true &&
       test === false &&
       formDate === false &&
       formStartTime === false &&
@@ -426,6 +423,11 @@ export default function CreateMeet() {
             value={description}
             onChangeText={(e) => handleDescription(e)}
           />
+          {descError && (
+            <AppText style={{ color: "red" }}>
+              Leírás hossza maximum 150 karakter lehet!
+            </AppText>
+          )}
         </View>
 
         <View uppercase={false} mode="outlined" style={styles.inputView}>
@@ -434,6 +436,7 @@ export default function CreateMeet() {
           </Text>
           <TouchableOpacity onPress={showDatePicker}>
             <TextInput
+              editable={false}
               placeholderTextColor="#666666"
               placeholder="Megbeszélés időpontja"
               style={styles.input}
@@ -454,6 +457,7 @@ export default function CreateMeet() {
           </Text>
           <TouchableOpacity onPress={showStartTImePicker}>
             <TextInput
+              editable={false}
               placeholderTextColor="#666666"
               placeholder="Megbeszélés kezdés ideje"
               style={styles.input}
@@ -465,12 +469,14 @@ export default function CreateMeet() {
             <AppText style={{ color: "red" }}>Kiválasztása kötelező!</AppText>
           )}
         </View>
+        <Button title="Show Date Picker" onPress={showDatePicker} />
         <View uppercase={false} mode="outlined" style={styles.inputView}>
           <Text uppercase={false} mode="outlined" style={styles.title}>
             Befejezés (kötelező)
           </Text>
           <TouchableOpacity onPress={showEndTImePicker}>
             <TextInput
+              editable={false}
               placeholderTextColor="#666666"
               placeholder="Megbeszélés befejezés ideje"
               style={styles.input}
